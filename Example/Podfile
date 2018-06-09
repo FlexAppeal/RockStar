@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'Rockstar_Example' do
+  pod 'Rockstar', :path => '../'
+
+  target 'Rockstar_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
