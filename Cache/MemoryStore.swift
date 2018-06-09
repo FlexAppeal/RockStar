@@ -23,11 +23,11 @@ public final class MemoryStore<Entity: MemoryStoreable> {
     private var entities = [Entity.Identifier: Entity]()
     private let source: AnyMemoryDataSources<Entity>
     
-    init<Source: MemoryStoreDataSource>(source: Source) where Source.Entity == Entity {
+    public init<Source: MemoryStoreDataSource>(source: Source) where Source.Entity == Entity {
         self.source = .init(source: source)
     }
     
-    subscript(id: Entity.Identifier) -> Observer<Entity> {
+    public subscript(id: Entity.Identifier) -> Observer<Entity> {
         if let entity = entities[id] {
             return Observer(result: entity)
         }
@@ -35,7 +35,7 @@ public final class MemoryStore<Entity: MemoryStoreable> {
         return source.fetchOne(id)
     }
     
-    subscript<S: Sequence>(ids: S) -> Observer<[Entity]> where S.Element == Entity.Identifier {
+    public subscript<S: Sequence>(ids: S) -> Observer<[Entity]> where S.Element == Entity.Identifier {
         var cachedEntities = [Entity]()
         var unresolvedIds = Set<Entity.Identifier>()
         
