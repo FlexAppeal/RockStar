@@ -1,0 +1,22 @@
+{
+  "name": "Rockstar",
+  "version": "0.1.0",
+  "summary": "A short description of Rockstar.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/joannis/Rockstar",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "joannis": "joannis@orlandos.nl"
+  },
+  "source": {
+    "git": "https://github.com/joannis/Rockstar.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "Rockstar/Classes/**/*"
+}

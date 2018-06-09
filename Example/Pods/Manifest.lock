@@ -1,0 +1,16 @@
+PODS:
+  - Rockstar (0.1.0)
+
+DEPENDENCIES:
+  - Rockstar (from `../`)
+
+EXTERNAL SOURCES:
+  Rockstar:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Rockstar: 76fdc6a5477c67a3500897dac06f07382d013215
+
+PODFILE CHECKSUM: 594bd918ff79f4875388e54c07342a40fdf453dd
+
+COCOAPODS: 1.5.2
