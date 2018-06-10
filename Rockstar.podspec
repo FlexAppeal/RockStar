@@ -20,7 +20,7 @@ APIs designed to leverage the existing ecosystems, providing swifty APIs to crea
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'joannis' => 'joannis@orlandos.nl' }
-  s.source           = { :git => 'https://github.com/joannis/Rockstar.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/RockStarSwift/RockStar.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/joannisorlandos'
 
   s.ios.deployment_target = '8.0'
