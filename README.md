@@ -1,6 +1,5 @@
 # Rockstar
 
-[![CI Status](https://img.shields.io/travis/joannis/Rockstar.svg?style=flat)](https://travis-ci.org/joannis/Rockstar)
 [![Version](https://img.shields.io/cocoapods/v/Rockstar.svg?style=flat)](https://cocoapods.org/pods/Rockstar)
 [![License](https://img.shields.io/cocoapods/l/Rockstar.svg?style=flat)](https://cocoapods.org/pods/Rockstar)
 [![Platform](https://img.shields.io/cocoapods/p/Rockstar.svg?style=flat)](https://cocoapods.org/pods/Rockstar)
