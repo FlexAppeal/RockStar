@@ -35,21 +35,20 @@ public struct AnyServiceFactory {
 }
 
 extension ServiceBuilder {
-    public func register<S: Service>(_ service: S, substituting type: Any.Type) {
+    public func register<S: Service, Result>(_ service: S, substituting type: Result.Type) {
+        assert(service is Result, "The registered service does not match the resulting type")
+        
         self.register(SingleValueFactory(service: service), substituting: type)
     }
     
-    public func register<S: Service>(_ service: S, substituting types: [Any.Type]) {
-        self.register(SingleValueFactory(service: service), substituting: types)
-    }
-    
-    public func register<Factory: ServiceFactory>(_ factory: Factory, substituting type: Any.Type) {
-        self.register(factory, substituting: [type])
-    }
-    
-    public func register<Factory: ServiceFactory>(_ factory: Factory, substituting types: [Any.Type]) {
-        let ids = types.map(ObjectIdentifier.init)
-        let factory = AnyServiceFactory(factory: factory)
-        self.syncFactories.append((factory, ids))
+    public func register<Factory: ServiceFactory, Result>(_ factory: Factory, substituting type: Result.Type) {
+        let id = ObjectIdentifier(type)
+        var factory = AnyServiceFactory(factory: factory)
+        
+        if let existing = self.syncFactories[id] {
+            factory = self.syncResolution.resolve(old: existing, new: factory)
+        }
+        
+        self.syncFactories[id] = factory
     }
 }

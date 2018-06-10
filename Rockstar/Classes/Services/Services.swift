@@ -4,8 +4,8 @@ fileprivate extension String {
 
 public final class ServiceBuilder {
     public let environment: Environment
-    var syncFactories = [(AnyServiceFactory, [ObjectIdentifier])]()
-    var asyncFactories = [(AnyAsyncServiceFactory, [ObjectIdentifier])]()
+    var syncFactories = [ObjectIdentifier: AnyServiceFactory]()
+    var asyncFactories = [ObjectIdentifier: AnyAsyncServiceFactory]()
     public var syncResolution = ServiceResolution<AnyServiceFactory>.crash(.defaultCrashMessage)
     public var asyncResolution = ServiceResolution<AnyAsyncServiceFactory>.crash(.defaultCrashMessage)
     
@@ -38,17 +38,7 @@ public final class ServiceBuilder {
     }
     
     public func finalize() -> Services {
-        var services = Services()
-        
-        for (factory, ids) in syncFactories {
-            services.sync.append(factory, forKeys: ids, resolution: syncResolution)
-        }
-        
-        for (factory, ids) in asyncFactories {
-            services.async.append(factory, forKeys: ids, resolution: asyncResolution)
-        }
-        
-        return services
+        return Services(sync: self.syncFactories, async: self.asyncFactories)
     }
 }
 
@@ -74,19 +64,9 @@ public enum ServiceResolution<Value> {
     }
 }
 
-fileprivate extension Dictionary where Key == ObjectIdentifier {
-    mutating func append(_ value: Value, forKeys newKeys: [Key], resolution: ServiceResolution<Value>) {
-        for key in newKeys {
-            if let old = self[key] {
-                self[key] = resolution.resolve(old: old, new: value)
-            } else {
-                self[key] = value
-            }
-        }
-    }
-}
+struct ServiceNotFound: Error {}
 
 public struct Services {
-    fileprivate var sync = [ObjectIdentifier: AnyServiceFactory]()
-    fileprivate var async = [ObjectIdentifier: AnyAsyncServiceFactory]()
+    fileprivate var sync: [ObjectIdentifier: AnyServiceFactory]
+    fileprivate var async: [ObjectIdentifier: AnyAsyncServiceFactory]
 }

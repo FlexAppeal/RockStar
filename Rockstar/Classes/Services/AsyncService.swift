@@ -35,21 +35,20 @@ public struct AnyAsyncServiceFactory {
 }
 
 extension ServiceBuilder {
-    public func register<S: AsyncService>(_ service: Observer<S>, substituting type: Any.Type) {
+    public func register<S: AsyncService, Result>(_ service: Observer<S>, substituting type: Result.Type) {
+        assert(S.self is Result, "The registered service does not match the resulting type")
+        
         self.register(AsyncSingleValueFactory(service: service), substituting: type)
     }
     
-    public func register<S: AsyncService>(_ service: Observer<S>, substituting types: [Any.Type]) {
-        self.register(AsyncSingleValueFactory(service: service), substituting: types)
-    }
-    
-    public func register<Factory: AsyncServiceFactory>(_ factory: Factory, substituting type: Any.Type) {
-        self.register(factory, substituting: [type])
-    }
-    
-    public func register<Factory: AsyncServiceFactory>(_ factory: Factory, substituting types: [Any.Type]) {
-        let ids = types.map(ObjectIdentifier.init)
-        let factory = AnyAsyncServiceFactory(factory: factory)
-        self.asyncFactories.append((factory, ids))
+    public func register<Factory: AsyncServiceFactory, Result>(_ factory: Factory, substituting type: Result.Type) {
+        let id = ObjectIdentifier(type)
+        var factory = AnyAsyncServiceFactory(factory: factory)
+        
+        if let existing = self.asyncFactories[id] {
+            factory = self.asyncResolution.resolve(old: existing, new: factory)
+        }
+        
+        self.asyncFactories[id] = factory
     }
 }
