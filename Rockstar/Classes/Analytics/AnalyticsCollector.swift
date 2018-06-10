@@ -2,7 +2,7 @@ import Foundation
 
 public final class Analytics {
     let observable = Observable<Measurement>()
-    public var observer: Observer<Measurement>
+    public let observer: Observer<Measurement>
     
     public init() {
         self.observer = observable.observer
