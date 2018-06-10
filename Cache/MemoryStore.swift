@@ -1,5 +1,7 @@
 public protocol MemoryStoreable {
     associatedtype Identifier: Hashable
+    
+    var identifier: Identifier { get }
 }
 
 public protocol MemoryStoreDataSource {
@@ -32,7 +34,13 @@ public final class MemoryStore<Entity: MemoryStoreable> {
             return Observer(result: entity)
         }
         
-        return source.fetchOne(id)
+        return source.fetchOne(id).then { object in
+            self.entities[object.identifier] = object
+        }
+    }
+    
+    public func cleanMemory() {
+        self.entities = [:]
     }
     
     public subscript<S: Sequence>(ids: S) -> Observer<[Entity]> where S.Element == Entity.Identifier {
@@ -51,6 +59,10 @@ public final class MemoryStore<Entity: MemoryStoreable> {
             return Observer(result: cachedEntities)
         } else {
             return source.fetchMany(unresolvedIds).map { newlyFetched in
+                for entity in newlyFetched {
+                    self.entities[entity.identifier] = entity
+                }
+                
                 return cachedEntities + newlyFetched
             }
         }
