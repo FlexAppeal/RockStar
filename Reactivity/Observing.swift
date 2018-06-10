@@ -4,6 +4,14 @@ public indirect enum Observation<T> {
     case failure(Error)
 }
 
+public enum ObserverType {
+    /// A single notification emitted by a Promise
+    case notification
+    
+    /// Many events emitted by an Observable
+    case observation
+}
+
 public struct Observable<T> {
     let promise: Promise<T>
     
@@ -41,7 +49,7 @@ public final class Promise<T> {
     }
     
     private var finalized = false
-    private let singleUse: Bool
+    fileprivate let singleUse: Bool
     
     public init() {
         self.singleUse = true
@@ -102,17 +110,21 @@ public struct Observer<T> {
     }
     
     private let storage: Storage
+    public let type: ObserverType
     
     public init(error: Error) {
         self.storage = .concrete(.failure(error))
+        self.type = .notification
     }
     
     public init(result: T) {
         self.storage = .concrete(.success(result))
+        self.type = .notification
     }
     
     fileprivate init(promise: Promise<T>) {
         self.storage = .promise(promise)
+        self.type = promise.singleUse ? .notification : .observation
     }
     
     public func onCompletion(_ handle: @escaping (Observation<T>) -> ()) {
