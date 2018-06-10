@@ -1,16 +1,11 @@
 import Foundation
 
-public protocol AnalyticsCollector {
-    func logPerformance(_ performance: Performance, atLocation source: SourceLocation)
-}
-
 public final class Analytics {
-    let collector: AnalyticsCollector
+    let observable = Observable<Measurement>()
+    public var observer: Observer<Measurement>
     
-    public static var `default` = Analytics(delegatingTo: DefaultAnalyticsCollector())
-    
-    public init<Collector: AnalyticsCollector>(delegatingTo collector: Collector) {
-        self.collector = collector
+    public init() {
+        self.observer = observable.observer
     }
     
     public func measure<T>(
@@ -24,8 +19,8 @@ public final class Analytics {
         
         defer {
             let end = Date()
-            let perforance = Performance(start: start, end: end, successful: success)
-            collector.logPerformance(ofSource: location)
+            let check = Performance(start: start, end: end, successful: success)
+            observable.next(Measurement(data: .performance(check), location: location))
         }
         
         return try location()
@@ -34,6 +29,17 @@ public final class Analytics {
         return result
         #else
         return try function()
+        #endif
+    }
+    
+    public func assert(
+        location: SourceLocation = SourceLocation(),
+        check: @autoclosure () throws -> Bool
+    ) {
+        #if ANALYZE
+        let success = try? check() == true
+        let check = SanityCheck(isSane: success)
+        observable.next(Measurement(data: .sanity(check), location: location))
         #endif
     }
 }

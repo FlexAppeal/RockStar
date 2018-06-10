@@ -12,6 +12,16 @@ public struct Performance {
     }
 }
 
-public enum Measurement {
-    case performance(Performance, at: SourceLocation)
+public struct SanityCheck {
+    public let isSane: Bool
+}
+
+public struct Measurement {
+    public enum MeasurementData {
+        case performance(Performance)
+        case sanity(SanityCheck)
+    }
+    
+    public let data: MeasurementData
+    public let location: SourceLocation
 }
