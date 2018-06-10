@@ -25,7 +25,6 @@
 		244733DF20CD4E8400B8B943 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733C720CD4E8400B8B943 /* Source.swift */; };
 		244733E020CD4E8400B8B943 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733C820CD4E8400B8B943 /* Environment.swift */; };
 		244733E120CD4E8400B8B943 /* MemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733CA20CD4E8400B8B943 /* MemoryStore.swift */; };
-		244733E220CD4E8400B8B943 /* NSObject+Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733CC20CD4E8400B8B943 /* NSObject+Observing.swift */; };
 		244733E320CD4E8400B8B943 /* Observing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733CD20CD4E8400B8B943 /* Observing.swift */; };
 		244733E420CD4E8400B8B943 /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733CF20CD4E8400B8B943 /* URLSession.swift */; };
 		244733E520CD4E8400B8B943 /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733D020CD4E8400B8B943 /* Content.swift */; };
@@ -80,7 +79,6 @@
 		244733C720CD4E8400B8B943 /* Source.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Source.swift; sourceTree = "<group>"; };
 		244733C820CD4E8400B8B943 /* Environment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		244733CA20CD4E8400B8B943 /* MemoryStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoryStore.swift; sourceTree = "<group>"; };
-		244733CC20CD4E8400B8B943 /* NSObject+Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSObject+Observing.swift"; sourceTree = "<group>"; };
 		244733CD20CD4E8400B8B943 /* Observing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observing.swift; sourceTree = "<group>"; };
 		244733CF20CD4E8400B8B943 /* URLSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
 		244733D020CD4E8400B8B943 /* Content.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Content.swift; sourceTree = "<group>"; };
@@ -258,7 +256,6 @@
 		244733CB20CD4E8400B8B943 /* Reactivity */ = {
 			isa = PBXGroup;
 			children = (
-				244733CC20CD4E8400B8B943 /* NSObject+Observing.swift */,
 				244733CD20CD4E8400B8B943 /* Observing.swift */,
 			);
 			name = Reactivity;
@@ -542,7 +539,6 @@
 				244733DA20CD4E8400B8B943 /* AnalyticsCollector.swift in Sources */,
 				244733DB20CD4E8400B8B943 /* Configuration.swift in Sources */,
 				244733E320CD4E8400B8B943 /* Observing.swift in Sources */,
-				244733E220CD4E8400B8B943 /* NSObject+Observing.swift in Sources */,
 				244733D420CD4E8400B8B943 /* RxSwift.swift in Sources */,
 				244733E020CD4E8400B8B943 /* Environment.swift in Sources */,
 				244733D320CD4E8400B8B943 /* AsyncService.swift in Sources */,
