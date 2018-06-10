@@ -9,16 +9,10 @@
 Pod::Spec.new do |s|
   s.name             = 'Rockstar'
   s.version          = '0.1.0'
-  s.summary          = 'A set of APIs for creating clean apps.'
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
-
+  s.summary          = 'Swifty APIs for creating clean apps'
+  
   s.description      = <<-DESC
-A set of APIs for creating clean apps.
+APIs designed to leverage the existing ecosystems, providing swifty APIs to create faster and more robust apps.
                        DESC
 
   s.swift_version = '4.1'
