@@ -29,8 +29,12 @@ public struct AnyAsyncServiceFactory {
         }
     }
     
-    public func make() throws -> Observer<Any> {
-        return try factoryMethod()
+    public func make() -> Observer<Any> {
+        do {
+            return try factoryMethod()
+        } catch {
+            return Observer<Any>(error: error)
+        }
     }
 }
 

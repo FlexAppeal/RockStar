@@ -69,4 +69,20 @@ struct ServiceNotFound: Error {}
 public struct Services {
     fileprivate var sync: [ObjectIdentifier: AnyServiceFactory]
     fileprivate var async: [ObjectIdentifier: AnyAsyncServiceFactory]
+    
+    public func make<Result>(_ type: Result.Type) throws -> Result {
+        guard let factory = self.sync[ObjectIdentifier(type)] else {
+            throw ServiceNotFound()
+        }
+        
+        return try factory.make() as! Result
+    }
+    
+    public func makeAsync<Result>(_ type: Result.Type) throws -> Observer<Result> {
+        guard let factory = self.async[ObjectIdentifier(type)] else {
+            return Observer(error: ServiceNotFound())
+        }
+        
+        return factory.make().map { $0 as! Result }
+    }
 }
