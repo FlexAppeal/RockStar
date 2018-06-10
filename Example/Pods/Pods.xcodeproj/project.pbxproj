@@ -29,6 +29,12 @@
 		244733E420CD4E8400B8B943 /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733CF20CD4E8400B8B943 /* URLSession.swift */; };
 		244733E520CD4E8400B8B943 /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733D020CD4E8400B8B943 /* Content.swift */; };
 		244733EA20CD4F1100B8B943 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733E920CD4F1100B8B943 /* Base.swift */; };
+		244733EC20CDA9BD00B8B943 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733EB20CDA9BD00B8B943 /* URL.swift */; };
+		244733EE20CDAA1800B8B943 /* HTTPModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733ED20CDAA1800B8B943 /* HTTPModels.swift */; };
+		244733F020CDAA2500B8B943 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733EF20CDAA2500B8B943 /* HTTPClient.swift */; };
+		244733F220CDAF5800B8B943 /* HTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733F120CDAF5800B8B943 /* HTTPHeader.swift */; };
+		244733F420CDB09900B8B943 /* HTTP+Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733F320CDB09900B8B943 /* HTTP+Content.swift */; };
+		244733F620CDB33800B8B943 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733F520CDB33800B8B943 /* Error.swift */; };
 		4FCF04C59BCC37EA0E65D143795D46BF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A16F4CFC63FAC439D7A04994F579A03 /* Foundation.framework */; };
 		5E95AC6A86EB5AD2ADAD7963238A930C /* Pods-Rockstar_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 992C0F3DA3314EAC82A8B8A831A3C4BC /* Pods-Rockstar_Tests-dummy.m */; };
 		78A133AB00D8DE0EE5EAD0C6DD83B391 /* Pods-Rockstar_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4DDAAB0295603E148B4334F067C63986 /* Pods-Rockstar_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -83,6 +89,12 @@
 		244733CF20CD4E8400B8B943 /* URLSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
 		244733D020CD4E8400B8B943 /* Content.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Content.swift; sourceTree = "<group>"; };
 		244733E920CD4F1100B8B943 /* Base.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
+		244733EB20CDA9BD00B8B943 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
+		244733ED20CDAA1800B8B943 /* HTTPModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPModels.swift; sourceTree = "<group>"; };
+		244733EF20CDAA2500B8B943 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		244733F120CDAF5800B8B943 /* HTTPHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPHeader.swift; sourceTree = "<group>"; };
+		244733F320CDB09900B8B943 /* HTTP+Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTP+Content.swift"; sourceTree = "<group>"; };
+		244733F520CDB33800B8B943 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		24D5BCDA247C83B9B0DE8F37B013E235 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		3A83D01161F29C59F1FF25AFEE121020 /* Pods-Rockstar_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Rockstar_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		3BA082275A2589DA26B68D8EA56823A5 /* Pods-Rockstar_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Rockstar_Tests.modulemap"; sourceTree = "<group>"; };
@@ -239,6 +251,8 @@
 			children = (
 				244733C720CD4E8400B8B943 /* Source.swift */,
 				244733C820CD4E8400B8B943 /* Environment.swift */,
+				244733EB20CDA9BD00B8B943 /* URL.swift */,
+				244733F520CDB33800B8B943 /* Error.swift */,
 			);
 			name = Helpers;
 			path = Rockstar/Classes/Helpers;
@@ -267,6 +281,10 @@
 			children = (
 				244733CF20CD4E8400B8B943 /* URLSession.swift */,
 				244733D020CD4E8400B8B943 /* Content.swift */,
+				244733ED20CDAA1800B8B943 /* HTTPModels.swift */,
+				244733EF20CDAA2500B8B943 /* HTTPClient.swift */,
+				244733F120CDAF5800B8B943 /* HTTPHeader.swift */,
+				244733F320CDB09900B8B943 /* HTTP+Content.swift */,
 			);
 			name = API;
 			path = Rockstar/Classes/API;
@@ -525,8 +543,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				244733D520CD4E8400B8B943 /* FabricLogger.swift in Sources */,
+				244733F020CDAA2500B8B943 /* HTTPClient.swift in Sources */,
 				244733E420CD4E8400B8B943 /* URLSession.swift in Sources */,
 				244733DE20CD4E8400B8B943 /* UIKit+Navigation.swift in Sources */,
+				244733F420CDB09900B8B943 /* HTTP+Content.swift in Sources */,
 				244733D920CD4E8400B8B943 /* MeasurementDataTypes.swift in Sources */,
 				244733DD20CD4E8400B8B943 /* PrintLogger.swift in Sources */,
 				244733DC20CD4E8400B8B943 /* Logging.swift in Sources */,
@@ -534,16 +554,20 @@
 				244733D620CD4E8400B8B943 /* NIO.swift in Sources */,
 				244733DF20CD4E8400B8B943 /* Source.swift in Sources */,
 				244733D120CD4E8400B8B943 /* Services.swift in Sources */,
+				244733F620CDB33800B8B943 /* Error.swift in Sources */,
+				244733EC20CDA9BD00B8B943 /* URL.swift in Sources */,
 				244733E120CD4E8400B8B943 /* MemoryStore.swift in Sources */,
 				244733D220CD4E8400B8B943 /* SyncService.swift in Sources */,
 				244733DA20CD4E8400B8B943 /* AnalyticsCollector.swift in Sources */,
 				244733DB20CD4E8400B8B943 /* Configuration.swift in Sources */,
+				244733F220CDAF5800B8B943 /* HTTPHeader.swift in Sources */,
 				244733E320CD4E8400B8B943 /* Observing.swift in Sources */,
 				244733D420CD4E8400B8B943 /* RxSwift.swift in Sources */,
 				244733E020CD4E8400B8B943 /* Environment.swift in Sources */,
 				244733D320CD4E8400B8B943 /* AsyncService.swift in Sources */,
 				244733EA20CD4F1100B8B943 /* Base.swift in Sources */,
 				244733D820CD4E8400B8B943 /* DefaultCollector.swift in Sources */,
+				244733EE20CDAA1800B8B943 /* HTTPModels.swift in Sources */,
 				244733D720CD4E8400B8B943 /* Texture.swift in Sources */,
 				A382DE602F7AEB590BE401169B4D072C /* Rockstar-dummy.m in Sources */,
 			);

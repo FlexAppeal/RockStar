@@ -1,7 +1,7 @@
 public protocol AsyncServiceFactory {
     associatedtype Result: AsyncService
     
-    func make() -> Observer<Result>
+    func make(from services: Services) -> Observer<Result>
 }
 
 public protocol AsyncService {}
@@ -13,25 +13,38 @@ struct AsyncSingleValueFactory<Result: AsyncService>: AsyncServiceFactory {
         self.service = service
     }
     
-    func make() -> Observer<Result> {
+    func make(from services: Services) -> Observer<Result> {
         return service
+    }
+}
+
+struct AnyAsyncClosureFactory<Result: AsyncService>: AsyncServiceFactory {
+    typealias Closure = (Services) -> Observer<Result>
+    let factory: Closure
+    
+    init(factory: @escaping Closure) {
+        self.factory = factory
+    }
+    
+    func make(from services: Services) -> Observer<Result> {
+        return factory(services)
     }
 }
 
 public struct AnyAsyncServiceFactory {
     let identifier: ObjectIdentifier
-    private let factoryMethod: () throws -> Observer<Any>
+    private let factoryMethod: (Services) throws -> Observer<Any>
     
     init<Factory: AsyncServiceFactory>(factory: Factory) {
         self.identifier = ObjectIdentifier(Factory.Result.self)
-        self.factoryMethod = {
-            return factory.make().map { $0 as Any }
+        self.factoryMethod = { services in
+            return factory.make(from: services).map { $0 as Any }
         }
     }
     
-    public func make() -> Observer<Any> {
+    public func make(from services: Services) -> Observer<Any> {
         do {
-            return try factoryMethod()
+            return try factoryMethod(services)
         } catch {
             return Observer<Any>(error: error)
         }
@@ -39,10 +52,21 @@ public struct AnyAsyncServiceFactory {
 }
 
 extension ServiceBuilder {
+    public typealias AsyncClosureFactory<S: AsyncService> = (Services) -> Observer<S>
+    
     public func register<S: AsyncService, Result>(_ service: Observer<S>, substituting type: Result.Type) {
         assert(S.self is Result, "The registered service does not match the resulting type")
         
         self.register(AsyncSingleValueFactory(service: service), substituting: type)
+    }
+    
+    public func register<S: AsyncService, Result>(
+        substitutionFor type: Result.Type,
+        _ factory: @escaping AsyncClosureFactory<S>
+    ) {
+        assert(S.self is Result, "The registered service does not match the resulting type")
+        
+        self.register(AnyAsyncClosureFactory(factory: factory), substituting: type)
     }
     
     public func register<Factory: AsyncServiceFactory, Result>(_ factory: Factory, substituting type: Result.Type) {

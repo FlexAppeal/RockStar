@@ -2,6 +2,15 @@ public enum Environment: RawRepresentable, ExpressibleByStringLiteral, Hashable 
     case development, testing, acceptation, production
     case custom(String)
     
+    /// FIXME: Better environment detection
+    public static func automatic() -> Environment {
+        #if DEBUG
+            return .development
+        #else
+            return .development
+        #endif
+    }
+    
     public init(rawValue: String) {
         switch rawValue {
         case "development":

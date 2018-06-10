@@ -4,6 +4,8 @@ fileprivate extension String {
     static let defaultCollector = "_rockstar_defaultcollector"
 }
 
+/// FIXME: Make a flow chart
+
 final class DefaultAnalyticsThreadCollector: AnalyticsCollector {
     var measurements = [Measurement]()
     

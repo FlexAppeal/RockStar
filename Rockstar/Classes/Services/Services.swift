@@ -67,22 +67,43 @@ public enum ServiceResolution<Value> {
 struct ServiceNotFound: Error {}
 
 public struct Services {
+    public private(set) static var `default`: Services = {
+        let builder = ServiceBuilder(environment: .automatic())
+        
+        var coderRegistery = CoderRegistery()
+        coderRegistery.register(JSONEncoder())
+        coderRegistery.register(JSONDecoder())
+        
+        builder.register(coderRegistery, substituting: CoderRegistery.self)
+        builder.register(URLSessionConfiguration.default, substituting: URLSessionConfiguration.self)
+        
+        builder.register(substitutionFor: URLSession.self) { services in
+            return try URLSession(configuration: services.make())
+        }
+        
+        builder.register(substitutionFor: HTTPClient.self) { services in
+            return try URLSession(configuration: services.make())
+        }
+        
+        return builder.finalize()
+    }()
+    
     fileprivate var sync: [ObjectIdentifier: AnyServiceFactory]
     fileprivate var async: [ObjectIdentifier: AnyAsyncServiceFactory]
     
-    public func make<Result>(_ type: Result.Type) throws -> Result {
+    public func make<Result>(_ type: Result.Type = Result.self) throws -> Result {
         guard let factory = self.sync[ObjectIdentifier(type)] else {
             throw ServiceNotFound()
         }
         
-        return try factory.make() as! Result
+        return try factory.make(from: self) as! Result
     }
     
-    public func makeAsync<Result>(_ type: Result.Type) -> Observer<Result> {
+    public func makeAsync<Result>(_ type: Result.Type = Result.self) -> Observer<Result> {
         guard let factory = self.async[ObjectIdentifier(type)] else {
             return Observer(error: ServiceNotFound())
         }
         
-        return factory.make().map { $0 as! Result }
+        return factory.make(from: self).map { $0 as! Result }
     }
 }

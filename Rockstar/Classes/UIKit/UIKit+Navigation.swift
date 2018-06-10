@@ -1,9 +1,6 @@
 import UIKit
 
 extension UINavigationController: BasicRockstar {
-    public typealias RockstarType = UINavigationController
-    public typealias RockstarMetadata = NavigationSettings
-    
     public static let defaultMetadata = NavigationSettings()
 }
 
