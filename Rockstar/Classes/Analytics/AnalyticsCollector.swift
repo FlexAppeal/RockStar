@@ -4,6 +4,8 @@ public final class Analytics {
     let observable = Observable<Measurement>()
     public let observer: Observer<Measurement>
     
+    public static let `default` = Analytics()
+    
     public init() {
         self.observer = observable.observer
     }
