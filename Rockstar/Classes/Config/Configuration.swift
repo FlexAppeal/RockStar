@@ -1,3 +1,5 @@
+/// FIXME: Dynamic member lookup (Swift 4.2) on config files
+
 public enum ConfigurationOption<O> {
     case literal(O)
     case `default`

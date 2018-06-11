@@ -5,7 +5,11 @@ public protocol TableRow {
 }
 
 public struct TableSettings<Row: TableRow> {
-    internal var rows = [Row]()
+    public let dataSource: UITableViewDataSource
+    
+    public init(dataSource: UITableViewDataSource) {
+        self.dataSource = dataSource
+    }
 }
 
 public protocol TablePresenter {
@@ -15,12 +19,20 @@ public protocol TablePresenter {
     func replace(withContentsOf observer: Observer<Row>) -> Observer<Void>
 }
 
-open class TableController<Row: TableRow>: UINavigationController, AnyRockstar {
+open class TableController<Row: TableRow>: UITableViewController, AnyRockstar {
     public var rockstar: Rockstar<TableController<Row>> {
         return Rockstar(wrapping: self)
     }
     
-    public var rockstarSettings = TableSettings<Row>()
+    open override func viewDidLoad() {
+        guard let rockstarSettings = rockstarSettings else {
+            fatalError("You must override the `rockstarSettings` with an appropriate setting")
+        }
+        
+        self.tableView.dataSource = rockstarSettings.source
+    }
+    
+    public var rockstarSettings: TableSettings<Row>!
 }
 
 extension Rockstar where Base: TablePresenter {
@@ -33,24 +45,21 @@ extension Rockstar where Base: TablePresenter {
     }
 }
 
-public final class StoreDataSource<Entity: TableRow & Storeable>: NSObject, UITableViewDelegate, UITableViewDataSource {
+public final class StoreDataSource<Entity: TableRow & Storeable>: NSObject, UITableViewDataSource {
     let store: MemoryStore<Entity>
     private var entities = [Entity]()
-    private weak var table: UITableView?
+    private let table: UITableView
     
-    public init(store: MemoryStore<Entity>, controller: UITableView) {
+    public init(store: MemoryStore<Entity>, tableView: UITableView) {
         self.store = store
+        self.table = tableView
         super.init()
         
         self.updateEntities()
     }
     
     private func updateEntities() {
-        func reloadData() {
-            self.table?.reloadData()
-        }
-        
-        store.all.write(to: self, atKeyPath: \.entities).finally(reloadData)
+        store.all.write(to: self, atKeyPath: \.entities).switchThread(to: DispatchQueue.main).finally(self.table.reloadData)
     }
     
     public final func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

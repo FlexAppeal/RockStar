@@ -29,7 +29,9 @@ extension Array where Element: ObserverProtocol {
         var values = [Element.FutureValue]()
         var size = self.count
         values.reserveCapacity(size)
-        let promise = Promise<[Element.FutureValue]> {
+        let promise = Promise<[Element.FutureValue]>()
+        
+        promise.onCancel {
             /// TODO: Is this always a good idea?
             for future in self {
                 future.cancel()
@@ -65,5 +67,20 @@ extension Array where Element: ObserverProtocol {
         }
         
         return observable.observer
+    }
+}
+
+extension ObserverProtocol {
+    public func switchThread(to queue: DispatchQueue) -> Observer<FutureValue> {
+        let promise = Promise<FutureValue>()
+        
+        self.onCompletion { result in
+            DispatchQueue.main.async {
+                promise.fulfill(result)
+            }
+        }
+        
+        promise.onCancel(self.cancel)
+        return promise.future
     }
 }

@@ -39,7 +39,7 @@ extension URLSession: HTTPClient {
         return withBody(request.body.storage, on: urlRequest).flatMap { request in
             let promise = Promise<HTTPResponse>()
             
-            self.dataTask(with: request) { data, response, error in
+            let task = self.dataTask(with: request) { data, response, error in
                 guard let response = response as? HTTPURLResponse else {
                     promise.fail(error ?? UnknownError())
                     return
@@ -47,6 +47,9 @@ extension URLSession: HTTPClient {
                 
                 promise.complete(HTTPResponse(response: response, data: data))
             }
+                
+            task.resume()
+            promise.onCancel(task.cancel)
             
             return promise.future
         }

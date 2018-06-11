@@ -60,8 +60,6 @@ extension ServiceBuilder {
         substitutionFor type: Result.Type,
         _ factory: @escaping SyncClosureFactory<S>
     ) {
-        assert(S.self is Result, "The registered service does not match the resulting type")
-        
         self.register(AnySyncClosureFactory(factory: factory), substituting: type)
     }
     

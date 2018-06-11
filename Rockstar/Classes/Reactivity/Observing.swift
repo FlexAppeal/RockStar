@@ -52,15 +52,14 @@ public final class Promise<FutureValue>: PromiseProtocol {
     
     fileprivate var finalized = false
     fileprivate let singleUse: Bool
-    fileprivate let cancelAction: (()->())?
+    fileprivate var cancelAction: (()->())?
     
     public convenience init() {
         self.init(singleUse: true)
     }
     
-    public init(cancel: @escaping ()->()) {
-        self.singleUse = true
-        self.cancelAction = cancel
+    public func onCancel(_ run: @escaping () -> ()) {
+        self.cancelAction = run
     }
     
     internal init(singleUse: Bool) {

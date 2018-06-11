@@ -1,4 +1,4 @@
-import Rockstar
+Simport Rockstar
 
 struct Post: Storeable, Content, TableRow {
     func makeTableCell() -> UITableViewCell {

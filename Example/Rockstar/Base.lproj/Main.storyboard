@@ -12,7 +12,7 @@
         <!--Root View Controller-->
         <scene sceneID="qc3-iD-1dB">
             <objects>
-                <tableViewController id="XW8-Jh-8ab" sceneMemberID="viewController">
+                <tableViewController id="XW8-Jh-8ab" customClass="PostsTable" customModule="Rockstar_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="FAb-gv-Yj2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

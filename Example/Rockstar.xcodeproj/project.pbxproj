@@ -221,10 +221,12 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = 6U5LP2533T;
 						LastSwiftMigration = 0900;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = 6U5LP2533T;
 						LastSwiftMigration = 0900;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
@@ -481,6 +483,7 @@
 			baseConfigurationReference = 698DD6D4C50FA597518EF0FB /* Pods-Rockstar_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 6U5LP2533T;
 				INFOPLIST_FILE = Rockstar/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
@@ -496,6 +499,7 @@
 			baseConfigurationReference = 46E10EBCD77749AC8F0348C1 /* Pods-Rockstar_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 6U5LP2533T;
 				INFOPLIST_FILE = Rockstar/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
@@ -510,6 +514,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 693B371925242B0D902C57AF /* Pods-Rockstar_Tests.debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 6U5LP2533T;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -531,6 +536,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 93154B5481692C074E36A874 /* Pods-Rockstar_Tests.release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 6U5LP2533T;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
