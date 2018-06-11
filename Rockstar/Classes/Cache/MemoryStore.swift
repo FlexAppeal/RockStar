@@ -1,18 +1,18 @@
-public protocol MemoryStoreable {
-    associatedtype Identifier: Hashable
-    
-    var identifier: Identifier { get }
-}
-
 public protocol MemoryStoreDataSource {
-    associatedtype Entity: MemoryStoreable
+    associatedtype Entity: Storeable
     
+    func count() -> Observer<Int>
+    
+    /// Needs to be implemeted using Observable for multiple results
+    func all() -> Observer<[Entity]>
     func fetchOne(byId id: Entity.Identifier) -> Observer<Entity>
+    
+    /// Needs to be implemeted using Observable for multiple results
     func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observer<[Entity]>
 }
 
 extension MemoryStoreDataSource {
-    func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observer<[Entity]> {
+    public func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observer<[Entity]> {
         var entities = [Observer<Entity>]()
         for id in ids {
             let entity = fetchOne(byId: id)
@@ -28,17 +28,21 @@ extension MemoryStoreDataSource {
     }
 }
 
-fileprivate struct AnyMemoryDataSources<E: MemoryStoreable> {
-    var fetchOne: (E.Identifier) -> Observer<E>
-    var fetchMany: (Set<E.Identifier>) -> Observer<[E]>
+fileprivate struct AnyMemoryDataSources<E: Storeable> {
+    let fetchOne: (E.Identifier) -> Observer<E>
+    let fetchMany: (Set<E.Identifier>) -> Observer<[E]>
+    let count: () -> Observer<Int>
+    let all: () -> Observer<[E]>
     
     init<Source: MemoryStoreDataSource>(source: Source) where Source.Entity == E {
         self.fetchOne = source.fetchOne
         self.fetchMany = source.fetchMany
+        self.count = source.count
+        self.all = source.all
     }
 }
 
-public final class MemoryStore<Entity: MemoryStoreable> {
+public final class MemoryStore<Entity: Storeable>: Store {
     private var entities = [Entity.Identifier: Entity]()
     private let source: AnyMemoryDataSources<Entity>
     
@@ -52,6 +56,8 @@ public final class MemoryStore<Entity: MemoryStoreable> {
         }
         
         return source.fetchOne(id).then { object in
+            Analytics.default.assert(check: object.identifier == id)
+            
             self.entities[object.identifier] = object
         }
     }
@@ -59,6 +65,9 @@ public final class MemoryStore<Entity: MemoryStoreable> {
     public func cleanMemory() {
         self.entities = [:]
     }
+    
+    public var count: Observer<Int> { return source.count() }
+    public var all: Observer<[Entity]> { return source.all() }
     
     public subscript<S: Sequence>(ids: S) -> Observer<[Entity]> where S.Element == Entity.Identifier {
         var cachedEntities = [Entity]()

@@ -25,9 +25,15 @@ public struct MediaType: ExpressibleByStringLiteral, Hashable {
 }
 
 public protocol Content: Codable {
-    associatedtype M: Model
-    
     static var defaultContentType: MediaType { get }
+}
+
+extension Content {
+    public static var defaultContentType: MediaType { return .json }
+}
+
+public protocol APIContent: Content {
+    associatedtype M: Model
     
     func makeModel() throws -> M
 }
@@ -35,7 +41,20 @@ public protocol Content: Codable {
 public protocol Model: Codable {}
 
 public struct ContentResponse<C: Content> {
-    public let response: HTTPResponse
+    public let raw: HTTPResponse
+    
+    public func decodeBody() -> Observer<C> {
+        do {
+            let coders = try Services.default.make(CoderRegistery.self)
+            guard let decoder = coders.decoder(for: C.defaultContentType) else {
+                throw ServiceNotFound()
+            }
+            
+            return decoder.decodeContent(C.self, from: raw.body)
+        } catch {
+            return Observer(error: error)
+        }
+    }
 }
 
 public protocol ContentEncoder {
@@ -106,4 +125,8 @@ public struct CoderRegistery: Service {
     public func decoder(for mediaType: MediaType) -> ContentDecoder? {
         return decoders[mediaType]
     }
+}
+
+extension Array: Content where Element: Content {
+    public static var defaultContentType: MediaType { return Element.defaultContentType }
 }

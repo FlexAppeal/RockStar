@@ -6,5 +6,6 @@ final class AppState: ApplicationState, NavigationState {
     
     static var navigatorPath: WritableKeyPath<AppState, NavigationController?> = \.navigator
     
+    let store = MemoryStore<Post>(source: PostSource(using: URLSession(configuration: .default)))
     var navigator: NavigationController?
 }

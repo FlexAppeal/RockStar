@@ -23,13 +23,14 @@ public struct Observable<FutureValue>: ObservationEmitter {
     
     public func fatal(_ error: Error) {
         promise.fail(error)
-        promise.finalize()
+        promise.cancel()
     }
     
     public func emit(_ value: Observation<FutureValue>) {
         switch value {
         case .failure(let error): self.error(error)
         case .success(let value): self.next(value)
+        case .cancelled: self.emit(.cancelled)
         }
     }
     
@@ -51,7 +52,7 @@ public final class Promise<FutureValue>: PromiseProtocol {
     
     fileprivate var finalized = false
     fileprivate let singleUse: Bool
-    fileprivate let cancel: (()->())?
+    fileprivate let cancelAction: (()->())?
     
     public convenience init() {
         self.init(singleUse: true)
@@ -59,12 +60,12 @@ public final class Promise<FutureValue>: PromiseProtocol {
     
     public init(cancel: @escaping ()->()) {
         self.singleUse = true
-        self.cancel = cancel
+        self.cancelAction = cancel
     }
     
     internal init(singleUse: Bool) {
         self.singleUse = singleUse
-        self.cancel = nil
+        self.cancelAction = nil
     }
     
     private var result: Observation<FutureValue>?
@@ -81,6 +82,7 @@ public final class Promise<FutureValue>: PromiseProtocol {
         
         if singleUse {
             self.callbacks = []
+            finalized = true
         }
     }
     
@@ -92,8 +94,12 @@ public final class Promise<FutureValue>: PromiseProtocol {
         self.result = result
     }
     
-    internal func finalize() {
+    public func cancel() {
+        if finalized { return }
+        
         self.finalized = true
+        triggerCallbacks(with: .cancelled)
+        self.cancelAction?()
     }
     
     public func fail(_ error: Error) {
@@ -130,6 +136,15 @@ public struct Observer<FutureValue>: ObserverProtocol {
         self.type = .notification
     }
     
+    private init() {
+        self.storage = .concrete(.cancelled)
+        self.type = .notification
+    }
+    
+    public static var cancelled: Observer<FutureValue> {
+        return .init()
+    }
+    
     fileprivate init(promise: Promise<FutureValue>) {
         self.storage = .promise(promise)
         self.type = promise.singleUse ? .notification : .observation
@@ -137,8 +152,12 @@ public struct Observer<FutureValue>: ObserverProtocol {
     
     public func cancel() {
         if case .promise(let promise) = storage {
-            promise.cancel?()
+            promise.cancel()
         }
+    }
+    
+    public func finally(_ run: @escaping () -> ()) {
+        self.onCompletion { _ in run() }
     }
     
     public func onCompletion(_ handle: @escaping (Observation<FutureValue>) -> ()) {
@@ -198,6 +217,8 @@ public struct Observer<FutureValue>: ObserverProtocol {
                 } catch {
                     return Observer<R>(error: error)
                 }
+            case .cancelled:
+                return Observer<R>.cancelled
             }
         case .promise(let promise):
             let newPromise = Promise<R>()
@@ -208,6 +229,8 @@ public struct Observer<FutureValue>: ObserverProtocol {
                         try newPromise.complete(mapper(value))
                     case .failure(let error):
                         newPromise.fail(error)
+                    case .cancelled:
+                        newPromise.cancel()
                     }
                 } catch {
                     newPromise.fail(error)
@@ -231,6 +254,8 @@ public struct Observer<FutureValue>: ObserverProtocol {
                 } catch {
                     return Observer<R>(error: error)
                 }
+            case .cancelled:
+                return Observer<R>.cancelled
             }
         case .promise(let promise):
             let newPromise = Promise<R>()
@@ -244,5 +269,28 @@ public struct Observer<FutureValue>: ObserverProtocol {
             
             return newPromise.future
         }
+    }
+    
+    public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> Observer<FutureValue> {
+        return self.then { value in
+            var type = type
+            type[keyPath: path] = value
+        }
+    }
+}
+
+extension Observer: ExpressibleByIntegerLiteral where FutureValue == Int {
+    public typealias IntegerLiteralType = Int
+    
+    public init(integerLiteral value: Int) {
+        self.init(result: value)
+    }
+}
+
+extension Observer: ExpressibleByBooleanLiteral where FutureValue == Bool {
+    public typealias BooleanLiteralType = Bool
+    
+    public init(booleanLiteral value: Bool) {
+        self.init(result: value)
     }
 }

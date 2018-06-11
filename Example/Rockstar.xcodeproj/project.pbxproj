@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		244733F820CE427000B8B943 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733F720CE427000B8B943 /* State.swift */; };
 		244733FF20CE496900B8B943 /* APITable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733FE20CE496900B8B943 /* APITable.swift */; };
+		247FBCFB20CEDC0900EF0D6F /* PostSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FBCFA20CEDC0900EF0D6F /* PostSource.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* RootNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* RootNavigator.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -32,6 +33,7 @@
 /* Begin PBXFileReference section */
 		244733F720CE427000B8B943 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		244733FE20CE496900B8B943 /* APITable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITable.swift; sourceTree = "<group>"; };
+		247FBCFA20CEDC0900EF0D6F /* PostSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSource.swift; sourceTree = "<group>"; };
 		29C99320A7F9FD58011034E9 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		46E10EBCD77749AC8F0348C1 /* Pods-Rockstar_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rockstar_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Rockstar_Example/Pods-Rockstar_Example.release.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* Rockstar_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rockstar_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,6 +107,7 @@
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 				244733F720CE427000B8B943 /* State.swift */,
 				244733FE20CE496900B8B943 /* APITable.swift */,
+				247FBCFA20CEDC0900EF0D6F /* PostSource.swift */,
 			);
 			name = "Example for Rockstar";
 			path = Rockstar;
@@ -331,6 +334,7 @@
 				607FACD81AFB9204008FA782 /* RootNavigator.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				244733F820CE427000B8B943 /* State.swift in Sources */,
+				247FBCFB20CEDC0900EF0D6F /* PostSource.swift in Sources */,
 				244733FF20CE496900B8B943 /* APITable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

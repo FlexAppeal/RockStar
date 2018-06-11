@@ -39,6 +39,7 @@
 		247FBCF420CED4F000EF0D6F /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FBCF320CED4F000EF0D6F /* Alamofire.swift */; };
 		247FBCF620CED5D200EF0D6F /* Obseving+Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FBCF520CED5D200EF0D6F /* Obseving+Protocols.swift */; };
 		247FBCF920CED7AE00EF0D6F /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FBCF820CED7AE00EF0D6F /* State.swift */; };
+		247FBCFD20CEE16400EF0D6F /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FBCFC20CEE16400EF0D6F /* Store.swift */; };
 		4FCF04C59BCC37EA0E65D143795D46BF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A16F4CFC63FAC439D7A04994F579A03 /* Foundation.framework */; };
 		5E95AC6A86EB5AD2ADAD7963238A930C /* Pods-Rockstar_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 992C0F3DA3314EAC82A8B8A831A3C4BC /* Pods-Rockstar_Tests-dummy.m */; };
 		78A133AB00D8DE0EE5EAD0C6DD83B391 /* Pods-Rockstar_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4DDAAB0295603E148B4334F067C63986 /* Pods-Rockstar_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -103,6 +104,7 @@
 		247FBCF320CED4F000EF0D6F /* Alamofire.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire.swift; sourceTree = "<group>"; };
 		247FBCF520CED5D200EF0D6F /* Obseving+Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Obseving+Protocols.swift"; sourceTree = "<group>"; };
 		247FBCF820CED7AE00EF0D6F /* State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
+		247FBCFC20CEE16400EF0D6F /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		24D5BCDA247C83B9B0DE8F37B013E235 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		3A83D01161F29C59F1FF25AFEE121020 /* Pods-Rockstar_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Rockstar_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		3BA082275A2589DA26B68D8EA56823A5 /* Pods-Rockstar_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Rockstar_Tests.modulemap"; sourceTree = "<group>"; };
@@ -273,6 +275,7 @@
 			isa = PBXGroup;
 			children = (
 				244733CA20CD4E8400B8B943 /* MemoryStore.swift */,
+				247FBCFC20CEE16400EF0D6F /* Store.swift */,
 			);
 			name = Cache;
 			path = Rockstar/Classes/Cache;
@@ -582,6 +585,7 @@
 				244733E120CD4E8400B8B943 /* MemoryStore.swift in Sources */,
 				244733D220CD4E8400B8B943 /* SyncService.swift in Sources */,
 				244733DA20CD4E8400B8B943 /* AnalyticsCollector.swift in Sources */,
+				247FBCFD20CEE16400EF0D6F /* Store.swift in Sources */,
 				244733DB20CD4E8400B8B943 /* Configuration.swift in Sources */,
 				244733FD20CE437500B8B943 /* Component.swift in Sources */,
 				244733F220CDAF5800B8B943 /* HTTPHeader.swift in Sources */,

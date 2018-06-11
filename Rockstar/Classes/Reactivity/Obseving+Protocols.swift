@@ -2,6 +2,7 @@
 public indirect enum Observation<FutureValue> {
     case success(FutureValue)
     case failure(Error)
+    case cancelled
 }
 
 public protocol PromiseProtocol {
@@ -28,18 +29,21 @@ extension Array where Element: ObserverProtocol {
         var values = [Element.FutureValue]()
         var size = self.count
         values.reserveCapacity(size)
-        let promise = Promise<[Element.FutureValue]>()
+        let promise = Promise<[Element.FutureValue]> {
+            /// TODO: Is this always a good idea?
+            for future in self {
+                future.cancel()
+            }
+        }
         
         for element in self {
             element.onCompletion { value in
                 switch value {
+                case .cancelled:
+                    promise.cancel()
                 case .failure(let error):
                     promise.fail(error)
                 case .success(let value):
-                    /// TODO: Is this always a good idea?
-                    for future in self {
-                        future.cancel()
-                    }
                     values.append(value)
                 }
                 
@@ -51,5 +55,15 @@ extension Array where Element: ObserverProtocol {
         }
         
         return promise.future
+    }
+    
+    public func streamed() -> Observer<Element.FutureValue> {
+        let observable = Observable<Element.FutureValue>()
+        
+        for element in self {
+            element.onCompletion(observable.emit)
+        }
+        
+        return observable.observer
     }
 }
