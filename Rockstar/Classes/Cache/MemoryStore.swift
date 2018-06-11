@@ -11,16 +11,22 @@ public protocol MemoryStoreDataSource {
     func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observer<[Entity]>
 }
 
-//extension MemoryStoreDataSource {
-//    func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observer<[Entity]> {
-//        var observers = [Observer<Entity>]()
-//        for id in ids {
-//            observers.append(fetchOne(byId: id))
-//        }
-//
-//        fatalError()
-//    }
-//}
+extension MemoryStoreDataSource {
+    func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observer<[Entity]> {
+        var entities = [Observer<Entity>]()
+        for id in ids {
+            let entity = fetchOne(byId: id)
+            #if ANALYZE
+            entity.then { entity in
+                Analytics.default.assert(check: entity.identifier == id)
+            }
+            #endif
+            entities.append(entity)
+        }
+        
+        return entities.combined()
+    }
+}
 
 fileprivate struct AnyMemoryDataSources<E: MemoryStoreable> {
     var fetchOne: (E.Identifier) -> Observer<E>

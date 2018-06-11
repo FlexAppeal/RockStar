@@ -1,9 +1,3 @@
-/// Indirect so that futures nested in futures don't crash
-public indirect enum Observation<T> {
-    case success(T)
-    case failure(Error)
-}
-
 public enum ObserverType {
     /// A single notification emitted by a Promise
     case notification
@@ -12,18 +6,18 @@ public enum ObserverType {
     case observation
 }
 
-public struct Observable<T> {
-    let promise: Promise<T>
+public struct Observable<FutureValue>: ObservationEmitter {
+    let promise: Promise<FutureValue>
     
     public init() {
         self.promise = Promise(singleUse: false)
     }
     
-    public func next(_ value: T) {
+    public func next(_ value: FutureValue) {
         promise.complete(value)
     }
     
-    public func fail(_ error: Error) {
+    public func error(_ error: Error) {
         promise.fail(error)
     }
     
@@ -32,15 +26,22 @@ public struct Observable<T> {
         promise.finalize()
     }
     
-    public var observer: Observer<T> {
+    public func emit(_ value: Observation<FutureValue>) {
+        switch value {
+        case .failure(let error): self.error(error)
+        case .success(let value): self.next(value)
+        }
+    }
+    
+    public var observer: Observer<FutureValue> {
         return promise.future
     }
 }
 
-public final class Promise<T> {
-    typealias FutureCallback = (Observation<T>) -> ()
+public final class Promise<FutureValue>: PromiseProtocol {
+    typealias FutureCallback = (Observation<FutureValue>) -> ()
     
-    public var future: Observer<T> {
+    public var future: Observer<FutureValue> {
         return Observer(promise: self)
     }
     
@@ -48,25 +49,32 @@ public final class Promise<T> {
         return finalized
     }
     
-    private var finalized = false
+    fileprivate var finalized = false
     fileprivate let singleUse: Bool
+    fileprivate let cancel: (()->())?
     
-    public init() {
+    public convenience init() {
+        self.init(singleUse: true)
+    }
+    
+    public init(cancel: @escaping ()->()) {
         self.singleUse = true
+        self.cancel = cancel
     }
     
     internal init(singleUse: Bool) {
         self.singleUse = singleUse
+        self.cancel = nil
     }
     
-    private var result: Observation<T>?
+    private var result: Observation<FutureValue>?
     private var callbacks = [FutureCallback]()
     
     internal func registerCallback(_ callback: @escaping FutureCallback) {
         self.callbacks.append(callback)
     }
     
-    private func triggerCallbacks(with result: Observation<T>) {
+    private func triggerCallbacks(with result: Observation<FutureValue>) {
         for callback in callbacks {
             callback(result)
         }
@@ -76,7 +84,7 @@ public final class Promise<T> {
         }
     }
     
-    public func complete(_ value: T) {
+    public func complete(_ value: FutureValue) {
         if finalized { return }
         
         let result = Observation.success(value)
@@ -91,22 +99,22 @@ public final class Promise<T> {
     public func fail(_ error: Error) {
         if finalized { return }
         
-        let result = Observation<T>.failure(error)
+        let result = Observation<FutureValue>.failure(error)
         triggerCallbacks(with: result)
         self.result = result
     }
     
-    public func fulfill(_ result: Observation<T>) {
+    public func fulfill(_ result: Observation<FutureValue>) {
         if finalized { return }
         
         triggerCallbacks(with: result)
     }
 }
 
-public struct Observer<T> {
+public struct Observer<FutureValue>: ObserverProtocol {
     private enum Storage {
-        case concrete(Observation<T>)
-        case promise(Promise<T>)
+        case concrete(Observation<FutureValue>)
+        case promise(Promise<FutureValue>)
     }
     
     private let storage: Storage
@@ -117,17 +125,23 @@ public struct Observer<T> {
         self.type = .notification
     }
     
-    public init(result: T) {
+    public init(result: FutureValue) {
         self.storage = .concrete(.success(result))
         self.type = .notification
     }
     
-    fileprivate init(promise: Promise<T>) {
+    fileprivate init(promise: Promise<FutureValue>) {
         self.storage = .promise(promise)
         self.type = promise.singleUse ? .notification : .observation
     }
     
-    public func onCompletion(_ handle: @escaping (Observation<T>) -> ()) {
+    public func cancel() {
+        if case .promise(let promise) = storage {
+            promise.cancel?()
+        }
+    }
+    
+    public func onCompletion(_ handle: @escaping (Observation<FutureValue>) -> ()) {
         switch storage {
         case .concrete(let result):
             handle(result)
@@ -136,7 +150,7 @@ public struct Observer<T> {
         }
     }
     
-    public func then(_ handle: @escaping (T) -> ()) -> Observer<T> {
+    public func then(_ handle: @escaping (FutureValue) -> ()) -> Observer<FutureValue> {
         switch storage {
         case .concrete(let result):
             if case .success(let value) = result {
@@ -154,7 +168,7 @@ public struct Observer<T> {
     }
     
     @discardableResult
-    public func `catch`(_ handle: @escaping (Error) -> ()) -> Observer<T> {
+    public func `catch`(_ handle: @escaping (Error) -> ()) -> Observer<FutureValue> {
         switch storage {
         case .concrete(let result):
             if case .failure(let error) = result {
@@ -172,7 +186,7 @@ public struct Observer<T> {
     }
     
     @discardableResult
-    public func map<R>(_ mapper: @escaping (T) throws -> (R)) -> Observer<R> {
+    public func map<R>(_ mapper: @escaping (FutureValue) throws -> (R)) -> Observer<R> {
         switch storage {
         case .concrete(let result):
             switch result {
@@ -205,7 +219,7 @@ public struct Observer<T> {
     }
     
     @discardableResult
-    public func flatMap<R>(_ mapper: @escaping (T) throws -> (Observer<R>)) -> Observer<R> {
+    public func flatMap<R>(_ mapper: @escaping (FutureValue) throws -> (Observer<R>)) -> Observer<R> {
         switch storage {
         case .concrete(let result):
             switch result {
@@ -226,7 +240,7 @@ public struct Observer<T> {
                 } catch {
                     newPromise.fail(error)
                 }
-                }.catch(newPromise.fail)
+            }.catch(newPromise.fail)
             
             return newPromise.future
         }

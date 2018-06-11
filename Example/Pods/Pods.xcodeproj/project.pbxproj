@@ -34,9 +34,11 @@
 		244733F220CDAF5800B8B943 /* HTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733F120CDAF5800B8B943 /* HTTPHeader.swift */; };
 		244733F420CDB09900B8B943 /* HTTP+Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733F320CDB09900B8B943 /* HTTP+Content.swift */; };
 		244733F620CDB33800B8B943 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733F520CDB33800B8B943 /* Error.swift */; };
-		244733FB20CE431A00B8B943 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733FA20CE431A00B8B943 /* State.swift */; };
 		244733FD20CE437500B8B943 /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733FC20CE437500B8B943 /* Component.swift */; };
 		2447340120CE497F00B8B943 /* UIKit+Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2447340020CE497F00B8B943 /* UIKit+Table.swift */; };
+		247FBCF420CED4F000EF0D6F /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FBCF320CED4F000EF0D6F /* Alamofire.swift */; };
+		247FBCF620CED5D200EF0D6F /* Obseving+Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FBCF520CED5D200EF0D6F /* Obseving+Protocols.swift */; };
+		247FBCF920CED7AE00EF0D6F /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FBCF820CED7AE00EF0D6F /* State.swift */; };
 		4FCF04C59BCC37EA0E65D143795D46BF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A16F4CFC63FAC439D7A04994F579A03 /* Foundation.framework */; };
 		5E95AC6A86EB5AD2ADAD7963238A930C /* Pods-Rockstar_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 992C0F3DA3314EAC82A8B8A831A3C4BC /* Pods-Rockstar_Tests-dummy.m */; };
 		78A133AB00D8DE0EE5EAD0C6DD83B391 /* Pods-Rockstar_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4DDAAB0295603E148B4334F067C63986 /* Pods-Rockstar_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -96,9 +98,11 @@
 		244733F120CDAF5800B8B943 /* HTTPHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPHeader.swift; sourceTree = "<group>"; };
 		244733F320CDB09900B8B943 /* HTTP+Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HTTP+Content.swift"; sourceTree = "<group>"; };
 		244733F520CDB33800B8B943 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
-		244733FA20CE431A00B8B943 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		244733FC20CE437500B8B943 /* Component.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
 		2447340020CE497F00B8B943 /* UIKit+Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Table.swift"; sourceTree = "<group>"; };
+		247FBCF320CED4F000EF0D6F /* Alamofire.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alamofire.swift; sourceTree = "<group>"; };
+		247FBCF520CED5D200EF0D6F /* Obseving+Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Obseving+Protocols.swift"; sourceTree = "<group>"; };
+		247FBCF820CED7AE00EF0D6F /* State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		24D5BCDA247C83B9B0DE8F37B013E235 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		3A83D01161F29C59F1FF25AFEE121020 /* Pods-Rockstar_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Rockstar_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		3BA082275A2589DA26B68D8EA56823A5 /* Pods-Rockstar_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Rockstar_Tests.modulemap"; sourceTree = "<group>"; };
@@ -161,7 +165,7 @@
 		15C1F1CA86B5B19675BEC09E7B6DD2FA /* Rockstar */ = {
 			isa = PBXGroup;
 			children = (
-				244733F920CE430E00B8B943 /* State */,
+				247FBCF720CED7AE00EF0D6F /* State */,
 				244733E820CD4F1100B8B943 /* Rockstar */,
 				244733BA20CD4E8400B8B943 /* Analytics */,
 				244733CE20CD4E8400B8B943 /* API */,
@@ -199,6 +203,7 @@
 				244733B720CD4E8400B8B943 /* FabricLogger.swift */,
 				244733B820CD4E8400B8B943 /* NIO.swift */,
 				244733B920CD4E8400B8B943 /* Texture.swift */,
+				247FBCF320CED4F000EF0D6F /* Alamofire.swift */,
 			);
 			name = Integrations;
 			path = Rockstar/Classes/Integrations;
@@ -277,6 +282,7 @@
 			isa = PBXGroup;
 			children = (
 				244733CD20CD4E8400B8B943 /* Observing.swift */,
+				247FBCF520CED5D200EF0D6F /* Obseving+Protocols.swift */,
 			);
 			name = Reactivity;
 			path = Rockstar/Classes/Reactivity;
@@ -305,12 +311,13 @@
 			path = Rockstar/Classes/Rockstar;
 			sourceTree = "<group>";
 		};
-		244733F920CE430E00B8B943 /* State */ = {
+		247FBCF720CED7AE00EF0D6F /* State */ = {
 			isa = PBXGroup;
 			children = (
-				244733FA20CE431A00B8B943 /* State.swift */,
+				247FBCF820CED7AE00EF0D6F /* State.swift */,
 			);
-			path = State;
+			name = State;
+			path = Rockstar/Classes/State;
 			sourceTree = "<group>";
 		};
 		288660A2764035CFBC8B57C2F792FB47 /* Support Files */ = {
@@ -564,6 +571,7 @@
 				244733D920CD4E8400B8B943 /* MeasurementDataTypes.swift in Sources */,
 				244733DD20CD4E8400B8B943 /* PrintLogger.swift in Sources */,
 				2447340120CE497F00B8B943 /* UIKit+Table.swift in Sources */,
+				247FBCF920CED7AE00EF0D6F /* State.swift in Sources */,
 				244733DC20CD4E8400B8B943 /* Logging.swift in Sources */,
 				244733E520CD4E8400B8B943 /* Content.swift in Sources */,
 				244733D620CD4E8400B8B943 /* NIO.swift in Sources */,
@@ -577,7 +585,6 @@
 				244733DB20CD4E8400B8B943 /* Configuration.swift in Sources */,
 				244733FD20CE437500B8B943 /* Component.swift in Sources */,
 				244733F220CDAF5800B8B943 /* HTTPHeader.swift in Sources */,
-				244733FB20CE431A00B8B943 /* State.swift in Sources */,
 				244733E320CD4E8400B8B943 /* Observing.swift in Sources */,
 				244733D420CD4E8400B8B943 /* RxSwift.swift in Sources */,
 				244733E020CD4E8400B8B943 /* Environment.swift in Sources */,
@@ -585,6 +592,7 @@
 				244733EA20CD4F1100B8B943 /* Base.swift in Sources */,
 				244733EE20CDAA1800B8B943 /* HTTPModels.swift in Sources */,
 				244733D720CD4E8400B8B943 /* Texture.swift in Sources */,
+				247FBCF620CED5D200EF0D6F /* Obseving+Protocols.swift in Sources */,
 				A382DE602F7AEB590BE401169B4D072C /* Rockstar-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -593,6 +601,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				247FBCF420CED4F000EF0D6F /* Alamofire.swift in Sources */,
 				C618B7101ED0132FB03FE9DDD53A83F0 /* Pods-Rockstar_Example-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
