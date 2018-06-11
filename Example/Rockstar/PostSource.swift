@@ -1,8 +1,11 @@
-Simport Rockstar
+import UIKit
+import Rockstar
 
 struct Post: Storeable, Content, TableRow {
     func makeTableCell() -> UITableViewCell {
-        fatalError()
+        let cell = UITableViewCell(style: .default, reuseIdentifier: "PostCell")
+        cell.textLabel?.text = self.title
+        return cell
     }
     
     var identifier: Int { return id }

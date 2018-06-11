@@ -29,7 +29,7 @@ open class TableController<Row: TableRow>: UITableViewController, AnyRockstar {
             fatalError("You must override the `rockstarSettings` with an appropriate setting")
         }
         
-        self.tableView.dataSource = rockstarSettings.source
+        self.tableView.dataSource = rockstarSettings.dataSource
     }
     
     public var rockstarSettings: TableSettings<Row>!
