@@ -106,4 +106,8 @@ public struct Services {
         
         return factory.make(from: self).map { $0 as! Result }
     }
+    
+    public func makeDefault() {
+        Services.default = self
+    }
 }

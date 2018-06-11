@@ -69,7 +69,7 @@ extension URLSession: HTTPClient {
     }
 }
 
-extension Rockstar where Base: HTTPClient, Metadata == HTTPClientConfig {
+extension Rockstar where Base: HTTPClient {
     public func send(_ body: Observer<HTTPBody>, to url: URLRepresentable, headers: HTTPHeaders, method: HTTPMethod) -> Observer<HTTPResponse> {
         return body.flatMap { body in
             let request = HTTPRequest(
@@ -130,7 +130,7 @@ extension Rockstar where Base: HTTPClient, Metadata == HTTPClientConfig {
     
     private func encode<C: Content>(_ input: C) -> Observer<HTTPBody> {
         do {
-            let registery = try metadata.services().make(CoderRegistery.self)
+            let registery = try Services.default.make(CoderRegistery.self)
             
             guard let encoder = registery.encoder(for: C.defaultContentType) else {
                 return Observer(error: TodoError())

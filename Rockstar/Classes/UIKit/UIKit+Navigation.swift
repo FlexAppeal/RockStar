@@ -1,7 +1,7 @@
 import UIKit
 
-extension UINavigationController: BasicRockstar {
-    public static let defaultMetadata = NavigationSettings()
+open class NavigationController: UINavigationController, BasicRockstar {
+    public var rockstarSettings = NavigationSettings()
 }
 
 public struct NavigationSettings {
@@ -12,29 +12,48 @@ public struct NavigationSettings {
     }
 }
 
-extension Rockstar where Base == UINavigationController, Metadata == NavigationSettings {
+public protocol NavigationState: ApplicationState {
+    static var navigatorPath: WritableKeyPath<Self, NavigationController?> { get }
+}
+
+extension StateComponent where Self: NavigationController, State: NavigationState {
+    public func updateState(_ state: inout State) {
+        state[keyPath: State.navigatorPath] = self as NavigationController
+    }
+}
+
+extension Rockstar where Base == NavigationController {
+    public var settings: NavigationSettings {
+        get {
+            return base.rockstarSettings
+        }
+        set {
+            base.rockstarSettings = newValue
+        }
+    }
+    
     public mutating func withAnimations<T>(_ run: () throws -> T) rethrows -> T {
-        let existingSetting = metadata.animate
-        metadata.animate = true
+        let existingSetting = settings.animate
+        settings.animate = true
         defer {
-            metadata.animate = existingSetting
+            settings.animate = existingSetting
         }
         
         return try run()
     }
     
     public mutating func withoutAnimations<T>(_ run: () throws -> T) rethrows -> T {
-        let existingSetting = metadata.animate
-        metadata.animate = false
+        let existingSetting = settings.animate
+        settings.animate = false
         defer {
-            metadata.animate = existingSetting
+            settings.animate = existingSetting
         }
         
         return try run()
     }
     
     private var animate: Bool {
-        return metadata.animate.value ?? true
+        return settings.animate.value ?? true
     }
     
     public func push(_ controller: UIViewController) {

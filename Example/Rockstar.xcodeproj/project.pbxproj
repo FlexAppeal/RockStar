@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		244733F820CE427000B8B943 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733F720CE427000B8B943 /* State.swift */; };
+		244733FF20CE496900B8B943 /* APITable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733FE20CE496900B8B943 /* APITable.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
-		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
+		607FACD81AFB9204008FA782 /* RootNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* RootNavigator.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
@@ -28,12 +30,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		29C99320A7F9FD58011034E9 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		244733F720CE427000B8B943 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
+		244733FE20CE496900B8B943 /* APITable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITable.swift; sourceTree = "<group>"; };
+		29C99320A7F9FD58011034E9 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		46E10EBCD77749AC8F0348C1 /* Pods-Rockstar_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rockstar_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Rockstar_Example/Pods-Rockstar_Example.release.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* Rockstar_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rockstar_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		607FACD71AFB9204008FA782 /* RootNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigator.swift; sourceTree = "<group>"; };
 		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -43,9 +47,9 @@
 		693B371925242B0D902C57AF /* Pods-Rockstar_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rockstar_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Rockstar_Tests/Pods-Rockstar_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		698DD6D4C50FA597518EF0FB /* Pods-Rockstar_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rockstar_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Rockstar_Example/Pods-Rockstar_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		93154B5481692C074E36A874 /* Pods-Rockstar_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rockstar_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Rockstar_Tests/Pods-Rockstar_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		B2EE1FEC5F2AEB1D16A95165 /* Rockstar.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = Rockstar.podspec; path = ../Rockstar.podspec; sourceTree = "<group>"; };
+		B2EE1FEC5F2AEB1D16A95165 /* Rockstar.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Rockstar.podspec; path = ../Rockstar.podspec; sourceTree = "<group>"; };
 		D46554295DD3791933B156E3 /* Pods_Rockstar_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Rockstar_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D6082B4D9BAC7CF3E8FA5634 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		D6082B4D9BAC7CF3E8FA5634 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		DD39D23EC6CC7FD227B7445E /* Pods_Rockstar_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Rockstar_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -94,11 +98,13 @@
 			isa = PBXGroup;
 			children = (
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				607FACD71AFB9204008FA782 /* ViewController.swift */,
+				607FACD71AFB9204008FA782 /* RootNavigator.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
+				244733F720CE427000B8B943 /* State.swift */,
+				244733FE20CE496900B8B943 /* APITable.swift */,
 			);
 			name = "Example for Rockstar";
 			path = Rockstar;
@@ -322,8 +328,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				607FACD81AFB9204008FA782 /* RootNavigator.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				244733F820CE427000B8B943 /* State.swift in Sources */,
+				244733FF20CE496900B8B943 /* APITable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
