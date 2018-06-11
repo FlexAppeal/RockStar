@@ -11,6 +11,17 @@ public protocol MemoryStoreDataSource {
     func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observer<[Entity]>
 }
 
+//extension MemoryStoreDataSource {
+//    func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observer<[Entity]> {
+//        var observers = [Observer<Entity>]()
+//        for id in ids {
+//            observers.append(fetchOne(byId: id))
+//        }
+//
+//        fatalError()
+//    }
+//}
+
 fileprivate struct AnyMemoryDataSources<E: MemoryStoreable> {
     var fetchOne: (E.Identifier) -> Observer<E>
     var fetchMany: (Set<E.Identifier>) -> Observer<[E]>
