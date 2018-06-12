@@ -25,5 +25,5 @@ APIs designed to leverage the existing ecosystems, providing swifty APIs to crea
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'Rockstar/Classes/**/*'
+  s.source_files = 'Sources/Rockstar/**/*'
 end

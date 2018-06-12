@@ -1,7 +1,11 @@
 import UIKit
 import Rockstar
 
-struct Post: Storeable, Content, TableRow {
+/// FIXME: run vmmap on memgraph
+/// FIXME: run leaks on memgraph
+/// FIXME: run heap  on memgraph
+
+final class Post: Storeable, Content, TableRow {
     func makeTableCell() -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
         cell.textLabel?.text = self.title

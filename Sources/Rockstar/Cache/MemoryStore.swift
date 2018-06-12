@@ -1,5 +1,7 @@
+import Foundation
+
 public protocol MemoryStoreDataSource {
-    associatedtype Entity: Storeable
+    associatedtype Entity: Storeable & AnyObject
     
     func count() -> Observer<Int>
     
@@ -48,8 +50,16 @@ fileprivate struct AnyMemoryDataSources<E: Storeable> {
     }
 }
 
-public final class MemoryStore<Entity: Storeable>: Store {
-    private var entities = [Entity.Identifier: Entity]()
+public final class MemoryStore<Entity: Storeable & AnyObject>: Store {
+    private final class AnyIdentifier {
+        let identifier: Entity.Identifier
+        
+        init(identifier: Entity.Identifier) {
+            self.identifier = identifier
+        }
+    }
+    
+    private var entities = NSCache<AnyIdentifier, Entity>()
     private let source: AnyMemoryDataSources<Entity>
     
     public init<Source: MemoryStoreDataSource>(source: Source) where Source.Entity == Entity {
@@ -57,19 +67,17 @@ public final class MemoryStore<Entity: Storeable>: Store {
     }
     
     public subscript(id: Entity.Identifier) -> Observer<Entity> {
-        if let entity = entities[id] {
+        let identifier = AnyIdentifier(identifier: id)
+        
+        if let entity = entities.object(forKey: identifier) {
             return Observer(result: entity)
         }
         
         return source.fetchOne(id).then { object in
             Analytics.default.assert(check: object.identifier == id)
             
-            self.entities[object.identifier] = object
+            self.entities.setObject(object, forKey: identifier)
         }
-    }
-    
-    public func cleanMemory() {
-        self.entities = [:]
     }
     
     public var count: Observer<Int> { return source.count() }
@@ -80,7 +88,8 @@ public final class MemoryStore<Entity: Storeable>: Store {
         var unresolvedIds = Set<Entity.Identifier>()
         
         for id in ids {
-            if let entity = entities[id] {
+            let identifier = AnyIdentifier(identifier: id)
+            if let entity = entities.object(forKey: identifier) {
                 cachedEntities.append(entity)
             } else {
                 unresolvedIds.insert(id)
@@ -92,7 +101,8 @@ public final class MemoryStore<Entity: Storeable>: Store {
         } else {
             return source.fetchMany(unresolvedIds).map { newlyFetched in
                 for entity in newlyFetched {
-                    self.entities[entity.identifier] = entity
+                    let identifier = AnyIdentifier(identifier: entity.identifier)
+                    self.entities.setObject(entity, forKey: identifier)
                 }
                 
                 return cachedEntities + newlyFetched

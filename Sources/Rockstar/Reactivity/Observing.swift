@@ -6,6 +6,7 @@ public enum ObserverType {
     case observation
 }
 
+// FIXME: Cancellable observables
 public struct Observable<FutureValue>: ObservationEmitter {
     let promise: Promise<FutureValue>
     
