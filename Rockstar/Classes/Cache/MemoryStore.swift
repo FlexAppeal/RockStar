@@ -28,6 +28,12 @@ extension MemoryStoreDataSource {
     }
 }
 
+extension MemoryStoreDataSource {
+    public var memoryStore: MemoryStore<Entity> {
+        return MemoryStore(source: self)
+    }
+}
+
 fileprivate struct AnyMemoryDataSources<E: Storeable> {
     let fetchOne: (E.Identifier) -> Observer<E>
     let fetchMany: (Set<E.Identifier>) -> Observer<[E]>

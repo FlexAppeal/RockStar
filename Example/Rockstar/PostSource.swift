@@ -3,7 +3,7 @@ import Rockstar
 
 struct Post: Storeable, Content, TableRow {
     func makeTableCell() -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "PostCell")
+        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
         cell.textLabel?.text = self.title
         return cell
     }
@@ -20,8 +20,12 @@ final class PostSource: Service, MemoryStoreDataSource {
     
     let client: Rockstar<AnyHTTPClient>
     
-    init<Client: HTTPClient>(using client: Client) {
+    init(using client: HTTPClient) {
         self.client = AnyHTTPClient(client).rockstar
+    }
+    
+    convenience init() throws {
+        try self.init(using: Services.default.make())
     }
     
     func count() -> Observer<Int> {

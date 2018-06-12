@@ -5,7 +5,7 @@ public protocol HTTPClient {
 public struct AnyHTTPClient: HTTPClient, BasicRockstar {
     let requestClosure: (HTTPRequest) -> Observer<HTTPResponse>
     
-    public init<Client: HTTPClient>(_ client: Client) {
+    public init(_ client: HTTPClient) {
         requestClosure = client.request
     }
     

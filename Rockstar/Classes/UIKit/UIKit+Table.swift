@@ -45,21 +45,23 @@ extension Rockstar where Base: TablePresenter {
     }
 }
 
-public final class StoreDataSource<Entity: TableRow & Storeable>: NSObject, UITableViewDataSource {
-    let store: MemoryStore<Entity>
+extension Observer where FutureValue: Sequence, FutureValue.Element: TableRow {
+    public func makeDataSource(for table: UITableView) -> UITableViewDataSource {
+        let data = self.map(Array.init)
+        return ObserverTableDataSource(observer: data, table: table)
+    }
+}
+
+/// FIXME: UITableViewDataPrefetching
+internal final class ObserverTableDataSource<Entity: TableRow>: NSObject, UITableViewDataSource {
     private var entities = [Entity]()
     private let table: UITableView
     
-    public init(store: MemoryStore<Entity>, tableView: UITableView) {
-        self.store = store
-        self.table = tableView
+    public init(observer: Observer<[Entity]>, table: UITableView) {
+        self.table = table
         super.init()
         
-        self.updateEntities()
-    }
-    
-    private func updateEntities() {
-        store.all.write(to: self, atKeyPath: \.entities).switchThread(to: DispatchQueue.main).finally(self.table.reloadData)
+        observer.write(to: self, atKeyPath: \.entities).switchThread(to: DispatchQueue.main).finally(self.table.reloadData)
     }
     
     public final func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

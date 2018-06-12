@@ -3,7 +3,8 @@ import UIKit
 
 final class PostsTable: TableController<Post> {
     override func viewDidLoad() {
-        self.rockstarSettings = TableSettings(dataSource: StoreDataSource(store: AppState.default.postStore, tableView: self.tableView))
+        let source = AppState.default.postStore.all.makeDataSource(for: self.tableView)
+        self.rockstarSettings = TableSettings(dataSource: source)
         super.viewDidLoad()
     }
 }
