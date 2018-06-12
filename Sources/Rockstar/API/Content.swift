@@ -1,3 +1,5 @@
+import Foundation
+
 public struct MediaType: ExpressibleByStringLiteral, Hashable {
     public let type: String
     public let subType: String

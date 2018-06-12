@@ -27,6 +27,10 @@ public struct Observable<FutureValue>: ObservationEmitter {
         promise.cancel()
     }
     
+    public func cancel() {
+        promise.cancel()
+    }
+    
     public func emit(_ value: Observation<FutureValue>) {
         switch value {
         case .failure(let error): self.error(error)

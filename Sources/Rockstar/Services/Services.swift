@@ -1,3 +1,5 @@
+import Foundation
+
 fileprivate extension String {
     static let defaultCrashMessage = "No resolution was specified for conflicting services"
 }

@@ -1,3 +1,5 @@
+import Foundation
+
 /// Indirect so that futures nested in futures don't crash
 public indirect enum Observation<FutureValue> {
     case success(FutureValue)
@@ -72,7 +74,7 @@ extension Array where Element: ObserverProtocol {
 }
 
 extension ObserverProtocol {
-    public func switchDispatchQueue(to queue: DispatchQueue) -> Observer<FutureValue> {
+    public func switchingDispatchQueue(to queue: DispatchQueue) -> Observer<FutureValue> {
         let promise = Promise<FutureValue>()
         
         self.onCompletion { result in

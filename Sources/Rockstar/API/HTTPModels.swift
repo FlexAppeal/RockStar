@@ -1,3 +1,5 @@
+import Foundation
+
 public struct HTTPMethod: ExpressibleByStringLiteral, RawRepresentable {
     public let rawValue: String
     

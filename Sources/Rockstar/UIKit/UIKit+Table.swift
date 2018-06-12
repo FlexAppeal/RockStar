@@ -83,7 +83,7 @@ fileprivate final class ObserverTableDataSource<Entity: TableRow>: NSObject, RST
         self.reload = reload
         super.init()
         
-        observer.write(to: self, atKeyPath: \.entities).switchDispatchQueue(to: .main).finally(self.table.reloadData)
+        observer.write(to: self, atKeyPath: \.entities).switchingDispatchQueue(to: .main).finally(self.table.reloadData)
     }
     
     @discardableResult
