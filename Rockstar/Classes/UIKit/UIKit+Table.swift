@@ -5,9 +5,9 @@ public protocol TableRow {
 }
 
 public struct TableSettings<Row: TableRow> {
-    public let dataSource: UITableViewDataSource
+    public let dataSource: RSTableViewDataSource
     
-    public init(dataSource: UITableViewDataSource) {
+    public init(dataSource: RSTableViewDataSource) {
         self.dataSource = dataSource
     }
 }
@@ -17,6 +17,11 @@ public protocol TablePresenter {
     
     func append(contentsOf observer: Observer<Row>) -> Observer<Void>
     func replace(withContentsOf observer: Observer<Row>) -> Observer<Void>
+}
+
+public protocol RSTableViewDataSource: UITableViewDataSource {
+    @discardableResult
+    func reloadData() -> Observer<Void>
 }
 
 open class TableController<Row: TableRow>: UITableViewController, AnyRockstar {
@@ -45,23 +50,45 @@ extension Rockstar where Base: TablePresenter {
     }
 }
 
+extension MemoryStore where Entity: TableRow {
+    public func makeDataSource(for table: UITableView) -> RSTableViewDataSource {
+        let emitter = Observable<[Entity]>()
+        
+        func reloadData() -> Observer<Void> {
+            return self.all.onCompletion(emitter.emit).map { _ in }
+        }
+        
+        return ObserverTableDataSource(observer: emitter.observer, table: table, reload: reloadData)
+    }
+}
+
 extension Observer where FutureValue: Sequence, FutureValue.Element: TableRow {
-    public func makeDataSource(for table: UITableView) -> UITableViewDataSource {
+    public func makeDataSource(for table: UITableView) -> RSTableViewDataSource {
         let data = self.map(Array.init)
-        return ObserverTableDataSource(observer: data, table: table)
+        
+        return ObserverTableDataSource(observer: data, table: table) {
+            return .done
+        }
     }
 }
 
 /// FIXME: UITableViewDataPrefetching
-internal final class ObserverTableDataSource<Entity: TableRow>: NSObject, UITableViewDataSource {
+fileprivate final class ObserverTableDataSource<Entity: TableRow>: NSObject, RSTableViewDataSource {
     private var entities = [Entity]()
     private let table: UITableView
+    let reload: () -> Observer<Void>
     
-    public init(observer: Observer<[Entity]>, table: UITableView) {
+    public init(observer: Observer<[Entity]>, table: UITableView, reload: @escaping () -> Observer<Void>) {
         self.table = table
+        self.reload = reload
         super.init()
         
-        observer.write(to: self, atKeyPath: \.entities).switchThread(to: DispatchQueue.main).finally(self.table.reloadData)
+        observer.write(to: self, atKeyPath: \.entities).switchDispatchQueue(to: .main).finally(self.table.reloadData)
+    }
+    
+    @discardableResult
+    func reloadData() -> Observer<Void> {
+        return reload()
     }
     
     public final func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

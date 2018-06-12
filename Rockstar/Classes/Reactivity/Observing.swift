@@ -159,13 +159,16 @@ public struct Observer<FutureValue>: ObserverProtocol {
         self.onCompletion { _ in run() }
     }
     
-    public func onCompletion(_ handle: @escaping (Observation<FutureValue>) -> ()) {
+    @discardableResult
+    public func onCompletion(_ handle: @escaping (Observation<FutureValue>) -> ()) -> Observer<FutureValue> {
         switch storage {
         case .concrete(let result):
             handle(result)
         case .promise(let promise):
             promise.registerCallback(handle)
         }
+        
+        return self
     }
     
     public func then(_ handle: @escaping (FutureValue) -> ()) -> Observer<FutureValue> {
@@ -291,5 +294,11 @@ extension Observer: ExpressibleByBooleanLiteral where FutureValue == Bool {
     
     public init(booleanLiteral value: Bool) {
         self.init(result: value)
+    }
+}
+
+extension Observer where FutureValue == Void {
+    public static var done: Observer<Void> {
+        return Observer(result: ())
     }
 }

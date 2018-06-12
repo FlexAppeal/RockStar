@@ -20,7 +20,8 @@ public protocol ObservationEmitter {
 public protocol ObserverProtocol {
     associatedtype FutureValue
     
-    func onCompletion(_ run: @escaping (Observation<FutureValue>) -> ())
+    @discardableResult
+    func onCompletion(_ run: @escaping (Observation<FutureValue>) -> ()) -> Self
     func cancel()
 }
 
@@ -71,7 +72,7 @@ extension Array where Element: ObserverProtocol {
 }
 
 extension ObserverProtocol {
-    public func switchThread(to queue: DispatchQueue) -> Observer<FutureValue> {
+    public func switchDispatchQueue(to queue: DispatchQueue) -> Observer<FutureValue> {
         let promise = Promise<FutureValue>()
         
         self.onCompletion { result in
