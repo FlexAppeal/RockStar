@@ -15,13 +15,13 @@ public struct TableSettings<Row: TableRow> {
 public protocol TablePresenter {
     associatedtype Row: TableRow
     
-    func append(contentsOf observer: Observer<Row>) -> Observer<Void>
-    func replace(withContentsOf observer: Observer<Row>) -> Observer<Void>
+    func append(contentsOf observable: Observable<Row>) -> Observable<Void>
+    func replace(withContentsOf observable: Observable<Row>) -> Observable<Void>
 }
 
 public protocol RSTableViewDataSource: UITableViewDataSource {
     @discardableResult
-    func reloadData() -> Observer<Void>
+    func reloadData() -> Observable<Void>
 }
 
 open class TableController<Row: TableRow>: UITableViewController, AnyRockstar {
@@ -41,53 +41,53 @@ open class TableController<Row: TableRow>: UITableViewController, AnyRockstar {
 }
 
 extension Rockstar where Base: TablePresenter {
-    func append(contentsOf observer: Observer<Base.Row>) -> Observer<Void> {
-        return base.append(contentsOf: observer)
+    func append(contentsOf Observable: Observable<Base.Row>) -> Observable<Void> {
+        return base.append(contentsOf: Observable)
     }
     
-    func replace(withContentsOf observer: Observer<Base.Row>) -> Observer<Void> {
-        return base.append(contentsOf: observer)
+    func replace(withContentsOf Observable: Observable<Base.Row>) -> Observable<Void> {
+        return base.append(contentsOf: Observable)
     }
 }
 
-extension MemoryStore where Entity: TableRow {
+extension DataManager where Entity: TableRow {
     public func makeDataSource(for table: UITableView) -> RSTableViewDataSource {
-        let emitter = Observable<[Entity]>()
+        let emitter = Observer<[Entity]>()
         
-        func reloadData() -> Observer<Void> {
+        func reloadData() -> Observable<Void> {
             return self.all.onCompletion(emitter.emit).map { _ in }
         }
         
-        return ObserverTableDataSource(observer: emitter.observer, table: table, reload: reloadData)
+        return ObservableTableDataSource(Observable: emitter.observable, table: table, reload: reloadData)
     }
 }
 
-extension Observer where FutureValue: Sequence, FutureValue.Element: TableRow {
+extension Observable where FutureValue: Sequence, FutureValue.Element: TableRow {
     public func makeDataSource(for table: UITableView) -> RSTableViewDataSource {
         let data = self.map(Array.init)
         
-        return ObserverTableDataSource(observer: data, table: table) {
+        return ObservableTableDataSource(Observable: data, table: table) {
             return .done
         }
     }
 }
 
 /// FIXME: UITableViewDataPrefetching
-fileprivate final class ObserverTableDataSource<Entity: TableRow>: NSObject, RSTableViewDataSource {
+fileprivate final class ObservableTableDataSource<Entity: TableRow>: NSObject, RSTableViewDataSource {
     private var entities = [Entity]()
     private let table: UITableView
-    let reload: () -> Observer<Void>
+    let reload: () -> Observable<Void>
     
-    public init(observer: Observer<[Entity]>, table: UITableView, reload: @escaping () -> Observer<Void>) {
+    public init(Observable: Observable<[Entity]>, table: UITableView, reload: @escaping () -> Observable<Void>) {
         self.table = table
         self.reload = reload
         super.init()
         
-        observer.write(to: self, atKeyPath: \.entities).switchDispatchQueue(to: .main).finally(self.table.reloadData)
+        Observable.write(to: self, atKeyPath: \.entities).switchThread(to: .dispatchQueue(.main)).finally(self.table.reloadData)
     }
     
     @discardableResult
-    func reloadData() -> Observer<Void> {
+    func reloadData() -> Observable<Void> {
         return reload()
     }
     

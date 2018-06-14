@@ -3,6 +3,7 @@ import Foundation
 public struct HTTPClientConfig {
     public static var `default` = HTTPClientConfig()
     
+    public var timeout: RSTimeout?
     public var services: () -> (Services) = { return .default }
 }
 
@@ -29,11 +30,11 @@ extension URLSession: Service {}
 extension URLSessionConfiguration: Service {}
 
 extension URLSession: BasicRockstar {
-    public static let defaultMetadata = HTTPClientConfig.default
+    public static var settings: HTTPClientConfig { return .default }
 }
 
 extension URLSession: HTTPClient {
-    public func request(_ request: HTTPRequest) -> Observer<HTTPResponse> {
+    public func request(_ request: HTTPRequest) -> Observable<HTTPResponse> {
         let urlRequest = request.makeURLRequest()
         
         return withBody(request.body.storage, on: urlRequest).flatMap { request in
@@ -51,29 +52,33 @@ extension URLSession: HTTPClient {
             task.resume()
             promise.onCancel(task.cancel)
             
-            return promise.future
+            if let timeout = URLSession.settings.timeout {
+                return promise.timeout(timeout).future
+            } else {
+                return promise.future
+            }
         }
     }
     
-    private func withBody(_ storage: HTTPBody.Storage, on request: URLRequest) -> Observer<URLRequest> {
+    private func withBody(_ storage: HTTPBody.Storage, on request: URLRequest) -> Observable<URLRequest> {
         var request = request
         
         switch storage {
         case .data(let data):
             request.httpBody = data
-            return Observer(result: request)
+            return Observable(result: request)
         case .async(let body):
             return body.flatMap { storage in
                 return self.withBody(storage, on: request)
             }
         case .none:
-            return Observer(result: request)
+            return Observable(result: request)
         }
     }
 }
 
 extension Rockstar where Base: HTTPClient {
-    public func send(_ body: Observer<HTTPBody>, to url: URLRepresentable, headers: HTTPHeaders, method: HTTPMethod) -> Observer<HTTPResponse> {
+    public func send(_ body: Observable<HTTPBody>, to url: URLRepresentable, headers: HTTPHeaders, method: HTTPMethod) -> Observable<HTTPResponse> {
         return body.flatMap { body in
             let request = HTTPRequest(
                 method: method,
@@ -90,8 +95,8 @@ extension Rockstar where Base: HTTPClient {
         _ type: C.Type,
         from url: URLRepresentable,
         headers: HTTPHeaders
-    ) -> Observer<ContentResponse<C>> {
-        let body = Observer(result: HTTPBody())
+    ) -> Observable<ContentResponse<C>> {
+        let body = Observable(result: HTTPBody())
         return wrap(self.send(body, to: url, headers: headers, method: .get))
     }
     
@@ -100,7 +105,7 @@ extension Rockstar where Base: HTTPClient {
         to url: URLRepresentable,
         headers: HTTPHeaders,
         expecting response: Output.Type
-    ) -> Observer<ContentResponse<Output>> {
+    ) -> Observable<ContentResponse<Output>> {
         return wrap(self.send(encode(input), to: url, headers: headers, method: .put))
     }
     
@@ -109,7 +114,7 @@ extension Rockstar where Base: HTTPClient {
         to url: URLRepresentable,
         headers: HTTPHeaders,
         expecting response: Output.Type
-    ) -> Observer<ContentResponse<Output>> {
+    ) -> Observable<ContentResponse<Output>> {
         return wrap(self.send(encode(input), to: url, headers: headers, method: .post))
     }
     
@@ -118,7 +123,7 @@ extension Rockstar where Base: HTTPClient {
         to url: URLRepresentable,
         headers: HTTPHeaders,
         expecting response: Output.Type
-    ) -> Observer<ContentResponse<Output>> {
+    ) -> Observable<ContentResponse<Output>> {
         return wrap(self.send(encode(input), to: url, headers: headers, method: .patch))
     }
     
@@ -126,29 +131,29 @@ extension Rockstar where Base: HTTPClient {
         _ type: C.Type,
         from url: URLRepresentable,
         headers: HTTPHeaders
-        ) -> Observer<ContentResponse<C>> {
-        let body = Observer(result: HTTPBody())
+        ) -> Observable<ContentResponse<C>> {
+        let body = Observable(result: HTTPBody())
         return wrap(self.send(body, to: url, headers: headers, method: .delete))
     }
     
-    private func encode<C: Content>(_ input: C) -> Observer<HTTPBody> {
+    private func encode<C: Content>(_ input: C) -> Observable<HTTPBody> {
         do {
             let registery = try Services.default.make(CoderRegistery.self)
             
             guard let encoder = registery.encoder(for: C.defaultContentType) else {
-                return Observer(error: TodoError())
+                return Observable(error: TodoError())
             }
             
             return encoder.encodeContent(input)
         } catch {
-            return Observer(error: error)
+            return Observable(error: error)
         }
     }
     
     private func wrap<C: Content>(
-        _ response: Observer<HTTPResponse>,
+        _ response: Observable<HTTPResponse>,
         for content: C.Type = C.self
-    ) -> Observer<ContentResponse<C>> {
+    ) -> Observable<ContentResponse<C>> {
         return response.map(ContentResponse<C>.init)
     }
 }

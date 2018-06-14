@@ -56,7 +56,7 @@ public struct HTTPResponse {
 public struct HTTPBody {
     public indirect enum Storage {
         case data(Data)
-        case async(Observer<Storage>)
+        case async(Observable<Storage>)
         case none
     }
     
@@ -70,7 +70,7 @@ public struct HTTPBody {
         self.storage = .data(data)
     }
     
-    public init(data: Observer<Data>) {
+    public init(data: Observable<Data>) {
         self.storage = .async(data.map {
             Storage.data($0)
         })

@@ -11,6 +11,7 @@
 		1D82537DB08C81A5DE94D6A69EA6F675 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDBC0E0C433561E1EBC93B0E28FDB84D /* Base.swift */; };
 		1FA0A2DBBE259BB72002FD9229B0BE54 /* XCGLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CB24EAAB7C737C551214F438551E328 /* XCGLogger.swift */; };
 		235EF9BDF53BF22E90EA989D827769BE /* UIKit+Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA4BB352B458657DA8821ED52DECC6C /* UIKit+Table.swift */; };
+		2477FF6620D0F0B00054272A /* UIKit+Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2477FF6520D0F0B00054272A /* UIKit+Button.swift */; };
 		2BFBD50A1DED427E82DF7BF3CF0DA5F9 /* HTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ECC378F7D7A6A261A43F83425F2CFB /* HTTPHeader.swift */; };
 		35E612BB081A7B2F44507FB8E6B1B876 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59E87B494B43A5B60F2847C185947F5 /* Environment.swift */; };
 		36818DE70DDE8BE433B6E8DA05A5A2D7 /* RxSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9FF7BF6252640BCD8F4B250435813A5 /* RxSwift.swift */; };
@@ -78,6 +79,7 @@
 		1EF12C3A91852A991E1C554B2C5E07AC /* Logging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		2176951D5A9B2CB9FEA82BD6D901501D /* Texture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Texture.swift; sourceTree = "<group>"; };
 		2284FDA85CF0D95E89D7395FCCCC4056 /* Pods-Rockstar_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Rockstar_Example-resources.sh"; sourceTree = "<group>"; };
+		2477FF6520D0F0B00054272A /* UIKit+Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Button.swift"; sourceTree = "<group>"; };
 		2A260F8FDC8F735CDD7B872B660025CC /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2D20CECD3D8E253144E97249DE94F3A8 /* MeasurementDataTypes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MeasurementDataTypes.swift; sourceTree = "<group>"; };
 		34E0DF63BB149FB5978DF50B8CDAD9A3 /* Component.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
@@ -438,6 +440,7 @@
 			children = (
 				3EC62147286B17F7FA99457F7F2AE4A0 /* UIKit+Navigation.swift */,
 				3BA4BB352B458657DA8821ED52DECC6C /* UIKit+Table.swift */,
+				2477FF6520D0F0B00054272A /* UIKit+Button.swift */,
 			);
 			name = UIKit;
 			path = Sources/Rockstar/UIKit;
@@ -593,6 +596,7 @@
 				9A5C1478CF03E621F786E2A36A33C272 /* MeasurementDataTypes.swift in Sources */,
 				8FC6B658363EC53502A5D406798AD7E1 /* MemoryStore.swift in Sources */,
 				57A04E7DEE0263359711DDEE3EE465BA /* NIO.swift in Sources */,
+				2477FF6620D0F0B00054272A /* UIKit+Button.swift in Sources */,
 				C3860FCA7843838BD756C7D8601EF1F2 /* Observing.swift in Sources */,
 				40DF488FAD1C1893CD90ED296A532123 /* Obseving+Protocols.swift in Sources */,
 				E2D83CD056ABEF94239C2F199E0019B3 /* PrintLogger.swift in Sources */,

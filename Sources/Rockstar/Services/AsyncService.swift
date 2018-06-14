@@ -1,39 +1,39 @@
 public protocol AsyncServiceFactory {
     associatedtype Result: AsyncService
     
-    func make(from services: Services) -> Observer<Result>
+    func make(from services: Services) -> Observable<Result>
 }
 
 public protocol AsyncService {}
 
 struct AsyncSingleValueFactory<Result: AsyncService>: AsyncServiceFactory {
-    let service: Observer<Result>
+    let service: Observable<Result>
     
-    init(service: Observer<Result>) {
+    init(service: Observable<Result>) {
         self.service = service
     }
     
-    func make(from services: Services) -> Observer<Result> {
+    func make(from services: Services) -> Observable<Result> {
         return service
     }
 }
 
 struct AnyAsyncClosureFactory<Result: AsyncService>: AsyncServiceFactory {
-    typealias Closure = (Services) -> Observer<Result>
+    typealias Closure = (Services) -> Observable<Result>
     let factory: Closure
     
     init(factory: @escaping Closure) {
         self.factory = factory
     }
     
-    func make(from services: Services) -> Observer<Result> {
+    func make(from services: Services) -> Observable<Result> {
         return factory(services)
     }
 }
 
 public struct AnyAsyncServiceFactory {
     let identifier: ObjectIdentifier
-    private let factoryMethod: (Services) throws -> Observer<Any>
+    private let factoryMethod: (Services) throws -> Observable<Any>
     
     init<Factory: AsyncServiceFactory>(factory: Factory) {
         self.identifier = ObjectIdentifier(Factory.Result.self)
@@ -42,19 +42,19 @@ public struct AnyAsyncServiceFactory {
         }
     }
     
-    public func make(from services: Services) -> Observer<Any> {
+    public func make(from services: Services) -> Observable<Any> {
         do {
             return try factoryMethod(services)
         } catch {
-            return Observer<Any>(error: error)
+            return Observable<Any>(error: error)
         }
     }
 }
 
 extension ServiceBuilder {
-    public typealias AsyncClosureFactory<S: AsyncService> = (Services) -> Observer<S>
+    public typealias AsyncClosureFactory<S: AsyncService> = (Services) -> Observable<S>
     
-    public func register<S: AsyncService, Result>(_ service: Observer<S>, substituting type: Result.Type) {
+    public func register<S: AsyncService, Result>(_ service: Observable<S>, substituting type: Result.Type) {
         assert(S.self is Result, "The registered service does not match the resulting type")
         
         self.register(AsyncSingleValueFactory(service: service), substituting: type)

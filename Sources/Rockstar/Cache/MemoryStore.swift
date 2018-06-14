@@ -1,21 +1,34 @@
 import Foundation
 
-public protocol MemoryStoreDataSource {
-    associatedtype Entity: Storeable & AnyObject
+public struct PaginatedResults<Result> {
+    public var results: [Result]
+    public let startIndex: Int
+    public let endIndex: Int
     
-    func count() -> Observer<Int>
-    
-    /// Needs to be implemeted using Observable for multiple results
-    func all() -> Observer<[Entity]>
-    func fetchOne(byId id: Entity.Identifier) -> Observer<Entity>
-    
-    /// Needs to be implemeted using Observable for multiple results
-    func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observer<[Entity]>
+    public init(results: [Result], from start: Int, to end: Int) {
+        self.results = results
+        self.startIndex = start
+        self.endIndex = end
+    }
 }
 
-extension MemoryStoreDataSource {
-    public func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observer<[Entity]> {
-        var entities = [Observer<Entity>]()
+public protocol DataManagerSource {
+    associatedtype Entity: Storeable & AnyObject
+    
+    func count() -> Observable<Int>
+    
+    /// Needs to be implemeted using Observable for multiple results
+    func all() -> Observable<[Entity]>
+    func paginate(from: Int, to: Int) -> Observable<PaginatedResults<Entity>>
+    func fetchOne(byId id: Entity.Identifier) -> Observable<Entity>
+    
+    /// Needs to be implemeted using Observable for multiple results
+    func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observable<[Entity]>
+}
+
+extension DataManagerSource {
+    public func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observable<[Entity]> {
+        var entities = [Observable<Entity>]()
         for id in ids {
             let entity = fetchOne(byId: id)
             #if ANALYZE
@@ -30,27 +43,29 @@ extension MemoryStoreDataSource {
     }
 }
 
-extension MemoryStoreDataSource {
-    public var memoryStore: MemoryStore<Entity> {
-        return MemoryStore(source: self)
+extension DataManagerSource {
+    public var dataManager: DataManager<Entity> {
+        return DataManager(source: self)
     }
 }
 
 fileprivate struct AnyMemoryDataSources<E: Storeable> {
-    let fetchOne: (E.Identifier) -> Observer<E>
-    let fetchMany: (Set<E.Identifier>) -> Observer<[E]>
-    let count: () -> Observer<Int>
-    let all: () -> Observer<[E]>
+    let fetchOne: (E.Identifier) -> Observable<E>
+    let fetchMany: (Set<E.Identifier>) -> Observable<[E]>
+    let count: () -> Observable<Int>
+    let all: () -> Observable<[E]>
+    let paginate: (Int, Int) -> Observable<PaginatedResults<E>>
     
-    init<Source: MemoryStoreDataSource>(source: Source) where Source.Entity == E {
+    init<Source: DataManagerSource>(source: Source) where Source.Entity == E {
         self.fetchOne = source.fetchOne
         self.fetchMany = source.fetchMany
         self.count = source.count
         self.all = source.all
+        self.paginate = source.paginate
     }
 }
 
-public final class MemoryStore<Entity: Storeable & AnyObject>: Store {
+public final class DataManager<Entity: Storeable & AnyObject>: Store {
     private final class AnyIdentifier {
         let identifier: Entity.Identifier
         
@@ -62,15 +77,15 @@ public final class MemoryStore<Entity: Storeable & AnyObject>: Store {
     private var entities = NSCache<AnyIdentifier, Entity>()
     private let source: AnyMemoryDataSources<Entity>
     
-    public init<Source: MemoryStoreDataSource>(source: Source) where Source.Entity == Entity {
+    public init<Source: DataManagerSource>(source: Source) where Source.Entity == Entity {
         self.source = .init(source: source)
     }
     
-    public subscript(id: Entity.Identifier) -> Observer<Entity> {
+    public subscript(id: Entity.Identifier) -> Observable<Entity> {
         let identifier = AnyIdentifier(identifier: id)
         
         if let entity = entities.object(forKey: identifier) {
-            return Observer(result: entity)
+            return Observable(result: entity)
         }
         
         return source.fetchOne(id).then { object in
@@ -80,10 +95,14 @@ public final class MemoryStore<Entity: Storeable & AnyObject>: Store {
         }
     }
     
-    public var count: Observer<Int> { return source.count() }
-    public var all: Observer<[Entity]> { return source.all() }
+    public func invalidateCache() {
+        entities.removeAllObjects()
+    }
     
-    public subscript<S: Sequence>(ids: S) -> Observer<[Entity]> where S.Element == Entity.Identifier {
+    public var count: Observable<Int> { return source.count() }
+    public var all: Observable<[Entity]> { return source.all() }
+    
+    public subscript<S: Sequence>(ids: S) -> Observable<[Entity]> where S.Element == Entity.Identifier {
         var cachedEntities = [Entity]()
         var unresolvedIds = Set<Entity.Identifier>()
         
@@ -97,7 +116,7 @@ public final class MemoryStore<Entity: Storeable & AnyObject>: Store {
         }
         
         if unresolvedIds.isEmpty {
-            return Observer(result: cachedEntities)
+            return Observable(result: cachedEntities)
         } else {
             return source.fetchMany(unresolvedIds).map { newlyFetched in
                 for entity in newlyFetched {

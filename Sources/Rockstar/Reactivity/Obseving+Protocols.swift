@@ -17,71 +17,10 @@ public protocol ObservationEmitter {
     func emit(_ value: Observation<FutureValue>)
 }
 
-public protocol ObserverProtocol {
+public protocol ObservableProtocol {
     associatedtype FutureValue
     
     @discardableResult
     func onCompletion(_ run: @escaping (Observation<FutureValue>) -> ()) -> Self
     func cancel()
-}
-
-extension Array where Element: ObserverProtocol {
-    public func combined() -> Observer<[Element.FutureValue]> {
-        var values = [Element.FutureValue]()
-        var size = self.count
-        values.reserveCapacity(size)
-        let promise = Promise<[Element.FutureValue]>()
-        
-        promise.onCancel {
-            /// TODO: Is this always a good idea?
-            for future in self {
-                future.cancel()
-            }
-        }
-        
-        for element in self {
-            element.onCompletion { value in
-                switch value {
-                case .cancelled:
-                    promise.cancel()
-                case .failure(let error):
-                    promise.fail(error)
-                case .success(let value):
-                    values.append(value)
-                }
-                
-                size = size &- 1
-                if size == 0 {
-                    promise.complete(values)
-                }
-            }
-        }
-        
-        return promise.future
-    }
-    
-    public func streamed() -> Observer<Element.FutureValue> {
-        let observable = Observable<Element.FutureValue>()
-        
-        for element in self {
-            element.onCompletion(observable.emit)
-        }
-        
-        return observable.observer
-    }
-}
-
-extension ObserverProtocol {
-    public func switchDispatchQueue(to queue: DispatchQueue) -> Observer<FutureValue> {
-        let promise = Promise<FutureValue>()
-        
-        self.onCompletion { result in
-            DispatchQueue.main.async {
-                promise.fulfill(result)
-            }
-        }
-        
-        promise.onCancel(self.cancel)
-        return promise.future
-    }
 }

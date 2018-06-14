@@ -3,7 +3,7 @@
 #if canImport(RxSwift)
 import RxSwift
 
-extension RxSwift.Observable: ObserverProtocol {
+extension RxSwift.Observable: ObservableProtocol {
     
 }
 #endif

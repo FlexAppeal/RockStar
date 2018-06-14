@@ -1,4 +1,4 @@
-public enum ObserverType {
+public enum ObservableType {
     /// A single notification emitted by a Promise
     case notification
     
@@ -7,7 +7,7 @@ public enum ObserverType {
 }
 
 // FIXME: Cancellable observables
-public struct Observable<FutureValue>: ObservationEmitter {
+public struct Observer<FutureValue>: ObservationEmitter {
     let promise: Promise<FutureValue>
     
     public init() {
@@ -35,7 +35,7 @@ public struct Observable<FutureValue>: ObservationEmitter {
         }
     }
     
-    public var observer: Observer<FutureValue> {
+    public var observable: Observable<FutureValue> {
         return promise.future
     }
 }
@@ -43,15 +43,19 @@ public struct Observable<FutureValue>: ObservationEmitter {
 public final class Promise<FutureValue>: PromiseProtocol {
     typealias FutureCallback = (Observation<FutureValue>) -> ()
     
-    public var future: Observer<FutureValue> {
-        return Observer(promise: self)
+    public var future: Observable<FutureValue> {
+        return Observable(promise: self)
     }
     
     public var isCompleted: Bool {
         return finalized
     }
     
-    fileprivate var finalized = false
+    fileprivate var finalized = false {
+        didSet {
+            self.callbacks = []
+        }
+    }
     fileprivate let singleUse: Bool
     fileprivate var cancelAction: (()->())?
     
@@ -81,7 +85,8 @@ public final class Promise<FutureValue>: PromiseProtocol {
         }
         
         if singleUse {
-            self.callbacks = []
+            finalized = true
+        } else if case .cancelled = result {
             finalized = true
         }
     }
@@ -97,7 +102,6 @@ public final class Promise<FutureValue>: PromiseProtocol {
     public func cancel() {
         if finalized { return }
         
-        self.finalized = true
         triggerCallbacks(with: .cancelled)
         self.cancelAction?()
     }
@@ -117,14 +121,14 @@ public final class Promise<FutureValue>: PromiseProtocol {
     }
 }
 
-public struct Observer<FutureValue>: ObserverProtocol {
+public struct Observable<FutureValue>: ObservableProtocol {
     private enum Storage {
         case concrete(Observation<FutureValue>)
         case promise(Promise<FutureValue>)
     }
     
     private let storage: Storage
-    public let type: ObserverType
+    public let type: ObservableType
     
     public init(error: Error) {
         self.storage = .concrete(.failure(error))
@@ -141,7 +145,7 @@ public struct Observer<FutureValue>: ObserverProtocol {
         self.type = .notification
     }
     
-    public static var cancelled: Observer<FutureValue> {
+    public static var cancelled: Observable<FutureValue> {
         return .init()
     }
     
@@ -161,7 +165,7 @@ public struct Observer<FutureValue>: ObserverProtocol {
     }
     
     @discardableResult
-    public func onCompletion(_ handle: @escaping (Observation<FutureValue>) -> ()) -> Observer<FutureValue> {
+    public func onCompletion(_ handle: @escaping (Observation<FutureValue>) -> ()) -> Observable<FutureValue> {
         switch storage {
         case .concrete(let result):
             handle(result)
@@ -172,7 +176,7 @@ public struct Observer<FutureValue>: ObserverProtocol {
         return self
     }
     
-    public func then(_ handle: @escaping (FutureValue) -> ()) -> Observer<FutureValue> {
+    public func then(_ handle: @escaping (FutureValue) -> ()) -> Observable<FutureValue> {
         switch storage {
         case .concrete(let result):
             if case .success(let value) = result {
@@ -190,7 +194,7 @@ public struct Observer<FutureValue>: ObserverProtocol {
     }
     
     @discardableResult
-    public func `catch`(_ handle: @escaping (Error) -> ()) -> Observer<FutureValue> {
+    public func `catch`(_ handle: @escaping (Error) -> ()) -> Observable<FutureValue> {
         switch storage {
         case .concrete(let result):
             if case .failure(let error) = result {
@@ -208,20 +212,20 @@ public struct Observer<FutureValue>: ObserverProtocol {
     }
     
     @discardableResult
-    public func map<R>(_ mapper: @escaping (FutureValue) throws -> (R)) -> Observer<R> {
+    public func map<R>(_ mapper: @escaping (FutureValue) throws -> (R)) -> Observable<R> {
         switch storage {
         case .concrete(let result):
             switch result {
             case .failure(let error):
-                return Observer<R>(error: error)
+                return Observable<R>(error: error)
             case .success(let value):
                 do {
-                    return Observer<R>(result: try mapper(value))
+                    return Observable<R>(result: try mapper(value))
                 } catch {
-                    return Observer<R>(error: error)
+                    return Observable<R>(error: error)
                 }
             case .cancelled:
-                return Observer<R>.cancelled
+                return Observable<R>.cancelled
             }
         case .promise(let promise):
             let newPromise = Promise<R>()
@@ -245,20 +249,20 @@ public struct Observer<FutureValue>: ObserverProtocol {
     }
     
     @discardableResult
-    public func flatMap<R>(_ mapper: @escaping (FutureValue) throws -> (Observer<R>)) -> Observer<R> {
+    public func flatMap<R>(_ mapper: @escaping (FutureValue) throws -> (Observable<R>)) -> Observable<R> {
         switch storage {
         case .concrete(let result):
             switch result {
             case .failure(let error):
-                return Observer<R>(error: error)
+                return Observable<R>(error: error)
             case .success(let value):
                 do {
                     return try mapper(value)
                 } catch {
-                    return Observer<R>(error: error)
+                    return Observable<R>(error: error)
                 }
             case .cancelled:
-                return Observer<R>.cancelled
+                return Observable<R>.cancelled
             }
         case .promise(let promise):
             let newPromise = Promise<R>()
@@ -274,7 +278,7 @@ public struct Observer<FutureValue>: ObserverProtocol {
         }
     }
     
-    public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> Observer<FutureValue> {
+    public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> Observable<FutureValue> {
         return self.then { value in
             var type = type
             type[keyPath: path] = value
@@ -282,7 +286,7 @@ public struct Observer<FutureValue>: ObserverProtocol {
     }
 }
 
-extension Observer: ExpressibleByIntegerLiteral where FutureValue == Int {
+extension Observable: ExpressibleByIntegerLiteral where FutureValue == Int {
     public typealias IntegerLiteralType = Int
     
     public init(integerLiteral value: Int) {
@@ -290,7 +294,7 @@ extension Observer: ExpressibleByIntegerLiteral where FutureValue == Int {
     }
 }
 
-extension Observer: ExpressibleByBooleanLiteral where FutureValue == Bool {
+extension Observable: ExpressibleByBooleanLiteral where FutureValue == Bool {
     public typealias BooleanLiteralType = Bool
     
     public init(booleanLiteral value: Bool) {
@@ -298,8 +302,8 @@ extension Observer: ExpressibleByBooleanLiteral where FutureValue == Bool {
     }
 }
 
-extension Observer where FutureValue == Void {
-    public static var done: Observer<Void> {
-        return Observer(result: ())
+extension Observable where FutureValue == Void {
+    public static var done: Observable<Void> {
+        return Observable(result: ())
     }
 }

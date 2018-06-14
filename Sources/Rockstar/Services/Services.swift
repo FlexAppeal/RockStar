@@ -99,9 +99,9 @@ public struct Services {
         return try factory.make(from: self) as! Result
     }
     
-    public func makeAsync<Result>(_ type: Result.Type = Result.self) -> Observer<Result> {
+    public func makeAsync<Result>(_ type: Result.Type = Result.self) -> Observable<Result> {
         guard let factory = self.async[ObjectIdentifier(type)] else {
-            return Observer(error: ServiceNotFound())
+            return Observable(error: ServiceNotFound())
         }
         
         return factory.make(from: self).map { $0 as! Result }

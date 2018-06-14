@@ -24,9 +24,22 @@ extension ConfigurationOption : ExpressibleByBooleanLiteral where O == Bool {
 
 public protocol Configuration {}
 
+struct ValueNotFound<Base, Value>: Error {
+    var type: Any.Type
+    var keyPath: KeyPath<Base, Value>
+}
+
 public extension Configuration {
     func readValue<Value>(at path: KeyPath<Self, Value>) -> Value {
         return self[keyPath: path]
+    }
+    
+    func assertValue<Value>(at path: KeyPath<Self, Value?>) throws -> Value {
+        guard let value = self[keyPath: path] else {
+            throw ValueNotFound(type: Value.self, keyPath: path)
+        }
+        
+        return value
     }
     
     func readValue<Value>(_ path: WritableKeyPath<Self, Value>) -> Value {

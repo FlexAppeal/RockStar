@@ -1,15 +1,15 @@
 public protocol HTTPClient {
-    func request(_ request: HTTPRequest) -> Observer<HTTPResponse>
+    func request(_ request: HTTPRequest) -> Observable<HTTPResponse>
 }
 
 public struct AnyHTTPClient: HTTPClient, BasicRockstar {
-    let requestClosure: (HTTPRequest) -> Observer<HTTPResponse>
+    let requestClosure: (HTTPRequest) -> Observable<HTTPResponse>
     
     public init(_ client: HTTPClient) {
         requestClosure = client.request
     }
     
-    public func request(_ request: HTTPRequest) -> Observer<HTTPResponse> {
+    public func request(_ request: HTTPRequest) -> Observable<HTTPResponse> {
         return self.requestClosure(request)
     }
 }

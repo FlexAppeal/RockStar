@@ -65,7 +65,7 @@ extension Rockstar where Base == NavigationController {
     }
     
     @discardableResult
-    public func push(_ controller: Observer<UIViewController>) -> Observer<Void> {
+    public func push(_ controller: Observable<UIViewController>) -> Observable<Void> {
         let animate = self.animate
         
         return controller.map { controller in
