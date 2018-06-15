@@ -57,7 +57,30 @@ public struct HTTPHeaders: ExpressibleByDictionaryLiteral {
     }
     
     public mutating func add(_ key: String, value: String) {
-        storage.append((key, value))
+        if let index = self.storage.index(where: { $0.0 == key }) {
+            storage[index].1 = value
+        } else {
+            storage.append((key, value))
+        }
     }
 }
 
+public func +(lhs: HTTPHeaders, rhs: HTTPHeaders) -> HTTPHeaders {
+    var headers = HTTPHeaders()
+    
+    for (key, value) in lhs.storage {
+        headers.add(key, value: value)
+    }
+    
+    for (key, value) in rhs.storage {
+        headers.add(key, value: value)
+    }
+    
+    return headers
+}
+
+public func +=(lhs: inout HTTPHeaders, rhs: HTTPHeaders) {
+    for (key, value) in rhs.storage {
+        lhs.add(key, value: value)
+    }
+}

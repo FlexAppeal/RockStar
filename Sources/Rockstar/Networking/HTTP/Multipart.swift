@@ -5,6 +5,47 @@ public protocol FormPart {
     var data: Data { get }
 }
 
+public struct File {
+    public let name: String
+    public let type: MediaType
+    public let data: Data
+    
+    public static func jpeg(_ image: UIImage, named name: String, quality: CGFloat) -> File? {
+        let filename: String
+        let lowercasedName = name.lowercased()
+        
+        if lowercasedName.hasSuffix(".jpeg") || lowercasedName.hasSuffix(".jpg") {
+            filename = name
+        } else {
+            filename = name + ".jpeg"
+        }
+        
+        guard let data = UIImageJPEGRepresentation(image, quality) else { return nil }
+        
+        return File(
+            name: filename,
+            type: .jpeg,
+            data: data
+        )
+    }
+}
+
+public struct MultipartFile: FormPart {
+    public let name: String
+    public let filename: String?
+    public var headers: HTTPHeaders
+    public let data: Data
+    
+    public init(named name: String, file: File) {
+        self.name = name
+        self.filename = file.name
+        self.data = file.data
+        self.headers = [
+            "Content-Type": file.type.headerValue
+        ]
+    }
+}
+
 public struct MultipartForm {
     public let data: Data
     public let boundary: String
@@ -14,7 +55,7 @@ public struct MultipartForm {
         self.boundary = boundary
     }
     
-    public var baseHeaders: [String: String] {
+    public var baseHeaders: HTTPHeaders {
         return [
             "Content-Type": "multipart/form-data; boundary=\(self.boundary)"
         ]

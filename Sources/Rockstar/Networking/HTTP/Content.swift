@@ -22,6 +22,7 @@ public struct MediaType: ExpressibleByStringLiteral, Hashable {
     public private(set) static var registery = [String: MediaType]()
     
     public static let json: MediaType = "application/json"
+    public static let jpeg: MediaType = "image/jpeg"
 }
 
 public protocol Content: Codable {
