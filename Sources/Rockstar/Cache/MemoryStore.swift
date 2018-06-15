@@ -20,7 +20,7 @@ public protocol DataManagerSource {
     /// Needs to be implemeted using Observable for multiple results
     func all() -> Observable<[Entity]>
     func paginate(from: Int, to: Int) -> Observable<PaginatedResults<Entity>>
-    func fetchOne(byId id: Entity.Identifier) -> Observable<Entity>
+    func fetchOne(byId id: Entity.Identifier) -> Observable<Entity?>
     
     /// Needs to be implemeted using Observable for multiple results
     func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observable<[Entity]>
@@ -30,7 +30,8 @@ extension DataManagerSource {
     public func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observable<[Entity]> {
         var entities = [Observable<Entity>]()
         for id in ids {
-            let entity = fetchOne(byId: id)
+            let entity = fetchOne(byId: id).assert(or: EntityNotFound())
+            
             #if ANALYZE
             entity.then { entity in
                 Analytics.default.assert(check: entity.identifier == id)
@@ -39,7 +40,7 @@ extension DataManagerSource {
             entities.append(entity)
         }
         
-        return entities.combined()
+        return entities.joined()
     }
 }
 
@@ -50,7 +51,7 @@ extension DataManagerSource {
 }
 
 fileprivate struct AnyMemoryDataSources<E: Storeable> {
-    let fetchOne: (E.Identifier) -> Observable<E>
+    let fetchOne: (E.Identifier) -> Observable<E?>
     let fetchMany: (Set<E.Identifier>) -> Observable<[E]>
     let count: () -> Observable<Int>
     let all: () -> Observable<[E]>
@@ -65,7 +66,10 @@ fileprivate struct AnyMemoryDataSources<E: Storeable> {
     }
 }
 
-public final class DataManager<Entity: Storeable & AnyObject>: Store {
+fileprivate struct NoDataSource: Error {}
+fileprivate struct EntityNotFound: Error {}
+
+public final class DataManager<Entity: Storeable> {
     private final class AnyIdentifier {
         let identifier: Entity.Identifier
         
@@ -74,24 +78,47 @@ public final class DataManager<Entity: Storeable & AnyObject>: Store {
         }
     }
     
-    private var entities = NSCache<AnyIdentifier, Entity>()
-    private let source: AnyMemoryDataSources<Entity>
+    private final class AnyInstance {
+        let instance: Entity
+        
+        init(instance: Entity) {
+            self.instance = instance
+        }
+    }
+    
+    private var entities = NSCache<AnyIdentifier, AnyInstance>()
+    private var source: AnyMemoryDataSources<Entity>?
+    
+    public func fetchData<Source: DataManagerSource>(fromSource source: Source) where Source.Entity == Entity {
+        self.source = .init(source: source)
+    }
+    
+    public init() {
+        self.source = nil
+    }
     
     public init<Source: DataManagerSource>(source: Source) where Source.Entity == Entity {
         self.source = .init(source: source)
     }
     
-    public subscript(id: Entity.Identifier) -> Observable<Entity> {
+    public subscript(id: Entity.Identifier) -> Observable<Entity?> {
         let identifier = AnyIdentifier(identifier: id)
         
         if let entity = entities.object(forKey: identifier) {
-            return Observable(result: entity)
+            return Observable(result: entity.instance)
+        }
+        
+        guard let source = source else {
+            return nil
         }
         
         return source.fetchOne(id).then { object in
-            Analytics.default.assert(check: object.identifier == id)
-            
-            self.entities.setObject(object, forKey: identifier)
+            if let object = object {
+                let instance = AnyInstance(instance: object)
+                Analytics.default.assert(check: object.identifier == id)
+                
+                self.entities.setObject(instance, forKey: identifier)
+            }
         }
     }
     
@@ -99,8 +126,8 @@ public final class DataManager<Entity: Storeable & AnyObject>: Store {
         entities.removeAllObjects()
     }
     
-    public var count: Observable<Int> { return source.count() }
-    public var all: Observable<[Entity]> { return source.all() }
+    public var count: Observable<Int> { return source?.count() ?? 0 }
+    public var all: Observable<[Entity]> { return source?.all() ?? [] }
     
     public subscript<S: Sequence>(ids: S) -> Observable<[Entity]> where S.Element == Entity.Identifier {
         var cachedEntities = [Entity]()
@@ -109,7 +136,7 @@ public final class DataManager<Entity: Storeable & AnyObject>: Store {
         for id in ids {
             let identifier = AnyIdentifier(identifier: id)
             if let entity = entities.object(forKey: identifier) {
-                cachedEntities.append(entity)
+                cachedEntities.append(entity.instance)
             } else {
                 unresolvedIds.insert(id)
             }
@@ -118,10 +145,16 @@ public final class DataManager<Entity: Storeable & AnyObject>: Store {
         if unresolvedIds.isEmpty {
             return Observable(result: cachedEntities)
         } else {
+            guard let source = source else {
+                return Observable(error: NoDataSource())
+            }
+            
             return source.fetchMany(unresolvedIds).map { newlyFetched in
                 for entity in newlyFetched {
                     let identifier = AnyIdentifier(identifier: entity.identifier)
-                    self.entities.setObject(entity, forKey: identifier)
+                    let instance = AnyInstance(instance: entity)
+                    
+                    self.entities.setObject(instance, forKey: identifier)
                 }
                 
                 return cachedEntities + newlyFetched

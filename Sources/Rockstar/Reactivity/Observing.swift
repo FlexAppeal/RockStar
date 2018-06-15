@@ -307,3 +307,29 @@ extension Observable where FutureValue == Void {
         return Observable(result: ())
     }
 }
+
+extension Observable: ExpressibleByArrayLiteral where FutureValue: ArrayInitializable {
+    public typealias ArrayLiteralElement = FutureValue.Element
+    
+    public init(arrayLiteral elements: ArrayLiteralElement ...) {
+        self.init(result: FutureValue(array: elements))
+    }
+}
+
+extension Observable: ExpressibleByNilLiteral where FutureValue: ExpressibleByNilLiteral {
+    public init(nilLiteral: ()) {
+        self.init(result: nil)
+    }
+}
+
+extension Observable {
+    public func assert<T>(or error: Error) -> Observable<T> where FutureValue == T? {
+        return self.map { value in
+            guard let value = value else {
+                throw error
+            }
+            
+            return value
+        }
+    }
+}

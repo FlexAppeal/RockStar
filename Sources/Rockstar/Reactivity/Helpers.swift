@@ -1,7 +1,7 @@
 import Dispatch
 
 extension Array where Element: ObservableProtocol {
-    public func combined() -> Observable<[Element.FutureValue]> {
+    public func joined() -> Observable<[Element.FutureValue]> {
         var values = [Element.FutureValue]()
         var size = self.count
         values.reserveCapacity(size)

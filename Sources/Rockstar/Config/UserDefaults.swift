@@ -1,7 +1,7 @@
-public struct UserDefaultsConfig {
+public struct UserDefaultsConfig: Configuration {
     let defaults: UserDefaults
     
     init(_ defaults: UserDefaults) {
-        fatalError()
+        self.defaults = defaults
     }
 }
