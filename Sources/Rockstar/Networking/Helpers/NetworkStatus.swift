@@ -2,7 +2,7 @@ import SystemConfiguration
 
 struct UnknownReachabilityError: Error {}
 
-public final class ReachabilityNotifier {
+public final class ReachabilityListener {
     private let observer = Observer<NetworkStatus>()
     
     public var notifications: Observable<NetworkStatus> {
@@ -10,7 +10,6 @@ public final class ReachabilityNotifier {
     }
     
     private let reachability: SCNetworkReachability
-    private var context: SCNetworkReachabilityContext!
     
     public init(forHost host: String) throws {
         guard let currentReachability = SCNetworkReachabilityCreateWithName(nil, host) else {
@@ -27,26 +26,40 @@ public final class ReachabilityNotifier {
         )
         
         guard SCNetworkReachabilitySetCallback(reachability, { reachability, flags, info in
-            let notifier = Unmanaged<ReachabilityNotifier>.fromOpaque(info!).takeUnretainedValue()
+            let notifier = Unmanaged<ReachabilityListener>.fromOpaque(info!).takeUnretainedValue()
             notifier.observer.next(NetworkStatus(reachability: reachability, flags: flags))
         }, &context) else {
             throw UnknownReachabilityError()
         }
-        
-        self.context = context
-        
-        try self.startEmitting()
-    }
-    
-    private func startEmitting() throws {
     }
     
     private func callback(status: SCNetworkReachability, flags: SCNetworkReachabilityFlags, metadata: UnsafeMutableRawPointer?) {
         observer.next(NetworkStatus(reachability: status, flags: flags))
+    }
+    
+    deinit {
+        SCNetworkReachabilitySetCallback(reachability, nil, nil)
+        SCNetworkReachabilitySetDispatchQueue(reachability, nil)
     }
 }
 
 public struct NetworkStatus {
     public let reachability: SCNetworkReachability
     public let flags: SCNetworkReachabilityFlags
+    
+    public var requiresUserInteraction: Bool {
+        return flags.contains(.interventionRequired)
+    }
+    
+    public var canConnectAutomatically: Bool {
+        return flags.contains(.connectionOnDemand) || flags.contains(.connectionOnTraffic)
+    }
+    
+    public var isReachable: Bool {
+        return flags.contains(.reachable) && (!flags.contains(.connectionRequired) || canConnectAutomatically && !requiresUserInteraction)
+    }
+}
+
+extension SCNetworkReachabilityFlags {
+    static let reachableFlags: SCNetworkReachabilityFlags = [.reachable, .connectionRequired]
 }

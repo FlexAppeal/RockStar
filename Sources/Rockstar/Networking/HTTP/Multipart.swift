@@ -1,0 +1,64 @@
+public protocol FormPart {
+    var name: String { get }
+    var filename: String? { get }
+    var headers: HTTPHeaders { get }
+    var data: Data { get }
+}
+
+public struct MultipartForm {
+    public let data: Data
+    public let boundary: String
+    
+    init(data: Data, boundary: String) {
+        self.data = data
+        self.boundary = boundary
+    }
+    
+    public var baseHeaders: [String: String] {
+        return [
+            "Content-Type": "multipart/form-data; boundary=\(self.boundary)"
+        ]
+    }
+}
+
+extension Array where Element == FormPart {
+    public func makeFormData() -> MultipartForm {
+        let boundary = NSUUID().uuidString
+        
+        var body = Data()
+        let bytes = self.reduce(0) { bytes, part in
+            return bytes &+ 256 &+ part.data.count
+        }
+        
+        body.reserveCapacity(bytes)
+        
+        let boundaryMark = "--\(boundary)\r\n".utf8
+        let boundaryEnd = "--\(boundary)--\r\n".utf8
+        
+        for part in self {
+            body.append(contentsOf: boundaryMark)
+            
+            var mainHeader = "Content-Disposition: form-data; name=\(part.name)"
+            
+            if let filename = part.filename {
+                mainHeader += "; filename=\(filename)"
+            }
+            
+            body.append(contentsOf: mainHeader.utf8)
+            body.append(.carriageReturn)
+            body.append(.newLine)
+            
+            body.append(part.headers.data)
+            
+            // End of headers
+            body.append(contentsOf: "\r\n".utf8)
+            
+            body.append(part.data)
+            body.append(contentsOf: "\r\n".utf8)
+        }
+        
+        body.append(contentsOf: boundaryEnd)
+        
+        return MultipartForm(data: body, boundary: boundary)
+    }
+}

@@ -26,21 +26,38 @@ extension MediaType: HTTPHeaderValue {
 
 public struct HTTPHeaders: ExpressibleByDictionaryLiteral {
     internal var storage = [(String, String)]()
+    internal var data: Data {
+        var data = Data()
+        
+        for (key, value) in storage {
+            data.append(key, count: key.utf8.count)
+            data.append(.colon)
+            data.append(.space)
+            data.append(value, count: value.utf8.count)
+            data.append(.carriageReturn)
+            data.append(.newLine)
+        }
+        
+        return data
+    }
     
     public init() {}
     
     public init(dictionaryLiteral elements: (String, String)...) {
-        self.storage = elements
+        for (key, value) in elements {
+            self.add(key, value: value)
+        }
     }
     
     public mutating func add<Value: HTTPHeaderValue>(
         _ key: HTTPHeaderKey<Value>,
         value: Value
     ) {
-        storage.append((key.headerKey, value.headerValue))
+        self.add(key.headerKey, value: value.headerValue)
     }
     
     public mutating func add(_ key: String, value: String) {
         storage.append((key, value))
     }
 }
+
