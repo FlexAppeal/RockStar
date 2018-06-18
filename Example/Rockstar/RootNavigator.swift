@@ -9,12 +9,10 @@
 import UIKit
 import Rockstar
 
-final class RootNavigator: NavigationController, StateComponent {
-    typealias State = AppState
-    
+final class RootNavigator: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.updateState(&AppState.default)
+        UIKitAppState.default.currentNavigator = self
     }
 }
 

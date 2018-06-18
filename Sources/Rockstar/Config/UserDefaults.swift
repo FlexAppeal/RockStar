@@ -1,3 +1,5 @@
+import Foundation
+
 public struct UserDefaultsConfig: Configuration {
     let defaults: UserDefaults
     

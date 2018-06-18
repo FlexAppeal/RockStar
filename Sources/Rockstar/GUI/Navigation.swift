@@ -1,11 +1,8 @@
 public protocol Navigator: class {
-    associatedtype Controller: ViewController
-    associatedtype View: GUIElement
+    associatedtype Element: GUIElementRepresentable
     
-    var navigationSettings: NavigationConfig { get set }
-    
-    func navigateForward(to controller: Controller)
-    func navigateBackwards()
+    func forward(to element: Element)
+    func backwards()
 }
 
 public struct NavigationConfig: Configuration {

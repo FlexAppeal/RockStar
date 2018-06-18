@@ -29,7 +29,6 @@ public struct PaginatedResults<Result> {
 public protocol DataManagerSource {
     associatedtype Entity: Storeable & AnyObject
     
-    func save(_ entity: Entity) -> Future<Void>
     func count() -> Future<Int>
     
     /// Needs to be implemeted using OutputStream for multiple results

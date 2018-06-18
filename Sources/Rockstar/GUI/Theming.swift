@@ -12,18 +12,10 @@ public protocol GUIElement {
     var background: Background { get set }
 }
 
-public protocol ViewController {
-    associatedtype View: GUIElement
+public protocol GUIElementRepresentable {
+    associatedtype Element: GUIElement
     
-    var element: View { get }
-}
-
-extension UIViewController: ViewController {
-    public typealias View = UIView
-    
-    public var element: UIView {
-        return self.view
-    }
+    var guiElement: Element { get }
 }
 
 public protocol ColorRepresentable {

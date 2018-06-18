@@ -1,3 +1,5 @@
+import Foundation
+
 /// Indirect so that futures nested in futures don't crash
 public indirect enum Observation<FutureValue> {
     case success(FutureValue)

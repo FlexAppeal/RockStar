@@ -5,7 +5,7 @@ import Rockstar
 /// FIXME: run leaks on memgraph
 /// FIXME: run heap  on memgraph
 
-final class Post: Storeable, Content {
+final class Post: Storeable, Content, UITableViewCellRepresentable {
     func makeTableCell() -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
         cell.textLabel?.text = self.title
@@ -22,10 +22,10 @@ final class Post: Storeable, Content {
 final class PostSource: Service, DataManagerSource {
     typealias Entity = Post
     
-    let client: Rockstar<AnyHTTPClient>
+    let client: AnyHTTPClient
     
     init(using client: HTTPClient) {
-        self.client = AnyHTTPClient(client).rockstar
+        self.client = AnyHTTPClient(client)
     }
     
     convenience init() throws {
@@ -47,4 +47,12 @@ final class PostSource: Service, DataManagerSource {
             return response.decodeBody().map { $0 }
         }
     }
+    
+    func paginate(from: Int, to: Int) -> Future<PaginatedResults<Post>> {
+        return Future(error: Unsupported(reason: "Pagination"))
+    }
+}
+
+struct Unsupported: Error {
+    var reason: String
 }

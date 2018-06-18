@@ -1,11 +1,11 @@
 import Rockstar
 
-final class AppState: ApplicationState, NavigationState {
-    static var `default` = AppState()
+final class UIKitAppState: ApplicationState {
+    typealias Platform = UIKitPlatform
+    
+    static var `default` = UIKitAppState()
     private init() {}
     
-    static var navigatorPath: WritableKeyPath<AppState, NavigationController?> = \.navigator
-    
-    let postStore = try! PostSource().memoryStore
-    var navigator: NavigationController?
+//    let postStore = try! PostSource().memoryStore
+    var currentNavigator: UIKitPlatform.NavigatorType?
 }

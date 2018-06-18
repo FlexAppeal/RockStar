@@ -1,10 +1,10 @@
 import Rockstar
 import UIKit
 
-final class PostsTable: TableController<Post> {
+final class PostsTable: UITableViewController {
     override func viewDidLoad() {
-        let source = AppState.default.postStore.all.makeDataSource(for: self.tableView)
-        self.rockstarSettings = TableSettings(dataSource: source)
+        try! DataManager<Post>(source: PostSource()).makeDataSource(for: self.tableView)
+        
         super.viewDidLoad()
     }
 }

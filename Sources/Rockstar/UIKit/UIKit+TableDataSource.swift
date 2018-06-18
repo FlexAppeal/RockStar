@@ -1,24 +1,28 @@
 import UIKit
 
 extension DataManager where Entity: UITableViewCellRepresentable {
-    public func makeDataSource(for table: UITableView) -> UITableViewDataSource {
+    public func makeDataSource(for table: UITableView) {
         let inputStream = InputStream<[Entity]>()
         
         func reloadData() -> Future<Void> {
             return self.all.onCompletion(inputStream.write).map { _ in }
         }
         
-        return OutputStreamTableDataSource(observable: inputStream.listener, table: table, reload: reloadData)
+        let source = OutputStreamTableDataSource(observable: inputStream.listener, table: table, reload: reloadData)
+        
+        table.dataSource = source
     }
 }
 
 extension OutputStream where FutureValue: Sequence, FutureValue.Element: UITableViewCellRepresentable {
-    public func makeDataSource(for table: UITableView) -> UITableViewDataSource {
+    public func makeDataSource(for table: UITableView) {
         let data = self.map(Array.init)
         
-        return OutputStreamTableDataSource(observable: data, table: table) {
+        let source = OutputStreamTableDataSource(observable: data, table: table) {
             return .done
         }
+        
+        table.dataSource = source
     }
 }
 
