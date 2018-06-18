@@ -5,7 +5,7 @@ import Rockstar
 /// FIXME: run leaks on memgraph
 /// FIXME: run heap  on memgraph
 
-final class Post: Storeable, Content, TableRow {
+final class Post: Storeable, Content {
     func makeTableCell() -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
         cell.textLabel?.text = self.title
@@ -32,17 +32,17 @@ final class PostSource: Service, DataManagerSource {
         try self.init(using: Services.default.make())
     }
     
-    func count() -> Observable<Int> {
+    func count() -> Future<Int> {
         return 100
     }
     
-    func all() -> Observable<[Post]> {
+    func all() -> Future<[Post]> {
         return client.get([Post].self, from: "https://jsonplaceholder.typicode.com/posts/", headers: [:]).flatMap { response in
             return response.decodeBody()
         }
     }
     
-    func fetchOne(byId id: Int) -> Observable<Post?> {
+    func fetchOne(byId id: Int) -> Future<Post?> {
         return client.get(Post.self, from: "https://jsonplaceholder.typicode.com/posts/\(id)", headers: [:]).flatMap { response in
             return response.decodeBody().map { $0 }
         }
