@@ -82,4 +82,18 @@ public struct Observable<FutureValue> {
         
         return self
     }
+    
+    @discardableResult
+    public func `catch`<E: Error>(
+        _ errorType: E.Type,
+        _ handle: @escaping (E) -> ()
+    ) -> Observable<FutureValue> {
+        self.catch { error in
+            if let error = error as? E {
+                handle(error)
+            }
+        }
+        
+        return self
+    }
 }

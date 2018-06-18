@@ -77,7 +77,7 @@ extension URLSession: HTTPClient {
     }
 }
 
-extension Rockstar where Base: HTTPClient {
+extension HTTPClient {
     public func send(_ body: Future<HTTPBody>, to url: URLRepresentable, headers: HTTPHeaders, method: HTTPMethod) -> Future<HTTPResponse> {
         return body.flatMap { body in
             let request = HTTPRequest(
@@ -87,7 +87,7 @@ extension Rockstar where Base: HTTPClient {
                 body: body
             )
             
-            return self.base.request(request)
+            return self.request(request)
         }
     }
     

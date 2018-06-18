@@ -105,8 +105,10 @@ public struct Future<FutureValue> {
         }
     }
     
-    public func always(_ run: @escaping () -> ()) {
+    @discardableResult
+    public func always(_ run: @escaping () -> ()) -> Future<FutureValue> {
         self.onCompletion { _ in run() }
+        return self
     }
     
     @discardableResult
@@ -150,6 +152,20 @@ public struct Future<FutureValue> {
                 if case .failure(let error) = result {
                     handle(error)
                 }
+            }
+        }
+        
+        return self
+    }
+    
+    @discardableResult
+    public func `catch`<E: Error>(
+        _ errorType: E.Type,
+        _ handle: @escaping (E) -> ()
+    ) -> Future<FutureValue> {
+        self.catch { error in
+            if let error = error as? E {
+                handle(error)
             }
         }
         

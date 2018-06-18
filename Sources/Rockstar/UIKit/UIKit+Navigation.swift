@@ -26,44 +26,38 @@ extension StateComponent where Self: NavigationController, State: NavigationStat
     }
 }
 
-extension Rockstar: Navigator where Base: Navigator {
-    public typealias Controller = Base.Controller
-    public typealias View = Base.View
-    
+extension Navigator {
     public var navigationSettings: NavigationConfig {
         get {
-            return base.navigationSettings
+            return navigationSettings
         }
         set {
-            base.navigationSettings = newValue
+            navigationSettings = newValue
         }
     }
     
-    public func withAnimations<T>(_ run: () throws -> T) rethrows -> T {
-        let existingSetting = base.navigationSettings.animate
-        base.navigationSettings.animate = true
+    public func withAnimations<T>(
+        setTo animate: ConfigurationOption<Bool>,
+        _ run: () throws -> T
+    ) rethrows -> T {
+        let existingSetting = navigationSettings.animate
+        navigationSettings.animate = animate
         defer {
-            base.navigationSettings.animate = existingSetting
+            navigationSettings.animate = existingSetting
         }
         
         return try run()
     }
     
-    public func withoutAnimations<T>(_ run: () throws -> T) rethrows -> T {
-        let existingSetting = base.navigationSettings.animate
-        base.navigationSettings.animate = false
-        defer {
-            base.navigationSettings.animate = existingSetting
-        }
+    public func withAnimationsAsync<T>(
+        setTo animate: ConfigurationOption<Bool>,
+        _ run: () throws -> Future<T>
+    ) rethrows -> Future<T> {
+        let existingSetting = navigationSettings.animate
+        navigationSettings.animate = animate
         
-        return try run()
-    }
-    
-    public func navigateForward(to controller: Base.Controller) {
-        self.base.navigateForward(to: controller)
-    }
-    
-    public func navigateBackwards() {
-        self.base.navigateBackwards()
+        return try run().always {
+            self.navigationSettings.animate = existingSetting
+        }
     }
 }
