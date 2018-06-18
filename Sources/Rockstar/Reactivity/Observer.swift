@@ -1,6 +1,6 @@
-public final class Observer<FutureValue> {
-    public var observable: Observable<FutureValue> {
-        return Observable(observer: self)
+public final class InputStream<FutureValue> {
+    public var listener: OutputStream<FutureValue> {
+        return OutputStream(inputStream: self)
     }
     
     public var isCompleted: Bool {
@@ -44,11 +44,11 @@ public final class Observer<FutureValue> {
         triggerCallbacks(with: .cancelled)
     }
     
-    public func emit(_ value: Observation<FutureValue>) {
+    public func write(_ value: Observation<FutureValue>) {
         switch value {
         case .failure(let error): self.error(error)
         case .success(let value): self.next(value)
-        case .cancelled: self.emit(.cancelled)
+        case .cancelled: self.write(.cancelled)
         }
     }
     

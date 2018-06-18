@@ -32,12 +32,12 @@ public protocol DataManagerSource {
     func save(_ entity: Entity) -> Future<Void>
     func count() -> Future<Int>
     
-    /// Needs to be implemeted using Observable for multiple results
+    /// Needs to be implemeted using OutputStream for multiple results
     func all() -> Future<[Entity]>
     func paginate(from: Int, to: Int) -> Future<PaginatedResults<Entity>>
     func fetchOne(byId id: Entity.Identifier) -> Future<Entity?>
     
-    /// Needs to be implemeted using Observable for multiple results
+    /// Needs to be implemeted using OutputStream for multiple results
     func fetchMany(byIds ids: Set<Entity.Identifier>) -> Future<[Entity]>
 }
 

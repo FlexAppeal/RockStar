@@ -1,46 +1,46 @@
-public struct Observable<FutureValue> {
-    let observer: Observer<FutureValue>
+public struct OutputStream<FutureValue> {
+    let inputStream: InputStream<FutureValue>
     
-    init(observer: Observer<FutureValue>) {
-        self.observer = observer
+    init(inputStream: InputStream<FutureValue>) {
+        self.inputStream = inputStream
     }
     
     @discardableResult
-    public func map<R>(_ mapper: @escaping (FutureValue) throws -> (R)) -> Observable<R> {
-        let newObserver = Observer<R>()
-        self.observer.registerCallback { result in
+    public func map<R>(_ mapper: @escaping (FutureValue) throws -> (R)) -> OutputStream<R> {
+        let newInputStream = InputStream<R>()
+        self.inputStream.registerCallback { result in
             do {
                 switch result {
                 case .success(let value):
-                    try newObserver.next(mapper(value))
+                    try newInputStream.next(mapper(value))
                 case .failure(let error):
-                    newObserver.error(error)
+                    newInputStream.error(error)
                 case .cancelled:
-                    newObserver.cancel()
+                    newInputStream.cancel()
                 }
             } catch {
-                newObserver.error(error)
+                newInputStream.error(error)
             }
         }
         
-        return newObserver.observable
+        return newInputStream.listener
     }
     
     @discardableResult
-    public func flatMap<R>(_ mapper: @escaping (FutureValue) throws -> (Observable<R>)) -> Observable<R> {
-        let newObserver = Observer<R>()
+    public func flatMap<R>(_ mapper: @escaping (FutureValue) throws -> (OutputStream<R>)) -> OutputStream<R> {
+        let newInputStream = InputStream<R>()
         self.then { value in
             do {
-                try mapper(value).onCompletion(newObserver.emit)
+                try mapper(value).onCompletion(newInputStream.write)
             } catch {
-                newObserver.error(error)
+                newInputStream.error(error)
             }
-        }.catch(newObserver.error)
+        }.catch(newInputStream.error)
         
-        return newObserver.observable
+        return newInputStream.listener
     }
     
-    public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> Observable<FutureValue> {
+    public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> OutputStream<FutureValue> {
         return self.then { value in
             var type = type
             type[keyPath: path] = value
@@ -48,7 +48,7 @@ public struct Observable<FutureValue> {
     }
     
     public func cancel() {
-        self.observer.cancel()
+        self.inputStream.cancel()
     }
     
     public func always(_ run: @escaping () -> ()) {
@@ -56,14 +56,14 @@ public struct Observable<FutureValue> {
     }
     
     @discardableResult
-    public func onCompletion(_ handle: @escaping (Observation<FutureValue>) -> ()) -> Observable<FutureValue> {
-        self.observer.registerCallback(handle)
+    public func onCompletion(_ handle: @escaping (Observation<FutureValue>) -> ()) -> OutputStream<FutureValue> {
+        self.inputStream.registerCallback(handle)
         
         return self
     }
     
-    public func then(_ handle: @escaping (FutureValue) -> ()) -> Observable<FutureValue> {
-        self.observer.registerCallback { result in
+    public func then(_ handle: @escaping (FutureValue) -> ()) -> OutputStream<FutureValue> {
+        self.inputStream.registerCallback { result in
             if case .success(let value) = result {
                 handle(value)
             }
@@ -73,8 +73,8 @@ public struct Observable<FutureValue> {
     }
     
     @discardableResult
-    public func `catch`(_ handle: @escaping (Error) -> ()) -> Observable<FutureValue> {
-        self.observer.registerCallback { result in
+    public func `catch`(_ handle: @escaping (Error) -> ()) -> OutputStream<FutureValue> {
+        self.inputStream.registerCallback { result in
             if case .failure(let error) = result {
                 handle(error)
             }
@@ -87,7 +87,7 @@ public struct Observable<FutureValue> {
     public func `catch`<E: Error>(
         _ errorType: E.Type,
         _ handle: @escaping (E) -> ()
-    ) -> Observable<FutureValue> {
+    ) -> OutputStream<FutureValue> {
         self.catch { error in
             if let error = error as? E {
                 handle(error)

@@ -1,10 +1,10 @@
-public final class ValueObserver<Value> {
+public final class ValueInputStream<Value> {
     public var currentValue: Value
     private var observation: NSKeyValueObservation!
-    private let observer = Observer<Value>()
+    private let inputStream = InputStream<Value>()
     
-    public var observable: Observable<Value> {
-        return observer.observable
+    public var observable: OutputStream<Value> {
+        return inputStream.listener
     }
     
     public init<Base: NSObject>(keyPath: KeyPath<Base, Value>, in base: Base) {
@@ -15,7 +15,7 @@ public final class ValueObserver<Value> {
     private func update<Base: NSObject>(object: Base, change: NSKeyValueObservedChange<Value>) {
         if let newValue = change.newValue {
             self.currentValue = newValue
-            observer.next(newValue)
+            inputStream.next(newValue)
         }
     }
 }

@@ -1,13 +1,13 @@
 import Foundation
 
 public final class Analytics {
-    let observer = Observer<Measurement>()
-    public let observable: Observable<Measurement>
+    let inputStream = InputStream<Measurement>()
+    public let observable: OutputStream<Measurement>
     
     public static let `default` = Analytics()
     
     public init() {
-        self.observable = observer.observable
+        self.observable = inputStream.listener
     }
     
     public func measure<T>(

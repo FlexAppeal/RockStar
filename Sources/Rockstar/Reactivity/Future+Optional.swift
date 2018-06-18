@@ -10,8 +10,8 @@ extension Future {
     }
 }
 
-extension Observable {
-    public func assert<T>(or error: Error) -> Observable<T> where FutureValue == T? {
+extension OutputStream {
+    public func assert<T>(or error: Error) -> OutputStream<T> where FutureValue == T? {
         return self.map { value in
             guard let value = value else {
                 throw error

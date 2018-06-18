@@ -15,8 +15,8 @@ public struct TableSettings<Row: TableRow> {
 public protocol TablePresenter {
     associatedtype Row: TableRow
     
-    func append(contentsOf observable: Observable<Row>) -> Observable<Void>
-    func replace(withContentsOf observable: Observable<Row>) -> Observable<Void>
+    func append(contentsOf observable: OutputStream<Row>) -> OutputStream<Void>
+    func replace(withContentsOf observable: OutputStream<Row>) -> OutputStream<Void>
 }
 
 public protocol RSTableViewDataSource: UITableViewDataSource {
@@ -41,44 +41,44 @@ open class TableController<Row: TableRow>: UITableViewController, AnyRockstar {
 }
 
 extension Rockstar where Base: TablePresenter {
-    func append(contentsOf Observable: Observable<Base.Row>) -> Observable<Void> {
-        return base.append(contentsOf: Observable)
+    func append(contentsOf OutputStream: OutputStream<Base.Row>) -> OutputStream<Void> {
+        return base.append(contentsOf: OutputStream)
     }
     
-    func replace(withContentsOf Observable: Observable<Base.Row>) -> Observable<Void> {
-        return base.append(contentsOf: Observable)
+    func replace(withContentsOf OutputStream: OutputStream<Base.Row>) -> OutputStream<Void> {
+        return base.append(contentsOf: OutputStream)
     }
 }
 
 extension DataManager where Entity: TableRow {
     public func makeDataSource(for table: UITableView) -> RSTableViewDataSource {
-        let emitter = Observer<[Entity]>()
+        let inputStream = InputStream<[Entity]>()
         
         func reloadData() -> Future<Void> {
-            return self.all.onCompletion(emitter.emit).map { _ in }
+            return self.all.onCompletion(inputStream.write).map { _ in }
         }
         
-        return ObservableTableDataSource(observable: emitter.observable, table: table, reload: reloadData)
+        return OutputStreamTableDataSource(observable: inputStream.listener, table: table, reload: reloadData)
     }
 }
 
-extension Observable where FutureValue: Sequence, FutureValue.Element: TableRow {
+extension OutputStream where FutureValue: Sequence, FutureValue.Element: TableRow {
     public func makeDataSource(for table: UITableView) -> RSTableViewDataSource {
         let data = self.map(Array.init)
         
-        return ObservableTableDataSource(observable: data, table: table) {
+        return OutputStreamTableDataSource(observable: data, table: table) {
             return .done
         }
     }
 }
 
 /// FIXME: UITableViewDataPrefetching
-fileprivate final class ObservableTableDataSource<Entity: TableRow>: NSObject, RSTableViewDataSource {
+fileprivate final class OutputStreamTableDataSource<Entity: TableRow>: NSObject, RSTableViewDataSource {
     private var entities = [Entity]()
     private let table: UITableView
     let reload: () -> Future<Void>
     
-    public init(observable: Observable<[Entity]>, table: UITableView, reload: @escaping () -> Future<Void>) {
+    public init(observable: OutputStream<[Entity]>, table: UITableView, reload: @escaping () -> Future<Void>) {
         self.table = table
         self.reload = reload
         super.init()

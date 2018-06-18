@@ -35,8 +35,8 @@ extension Array {
         return promise.future
     }
     
-    public func streamed<T>(sequentially: Bool) -> Observable<T> where Element == Future<T> {
-        let observer = Observer<T>()
+    public func streamed<T>(sequentially: Bool) -> OutputStream<T> where Element == Future<T> {
+        let inputStream = InputStream<T>()
         
         if sequentially {
             var iterator = self.makeIterator()
@@ -46,24 +46,24 @@ extension Array {
                     return
                 }
                 
-                future.onCompletion(observer.emit).always(next)
+                future.onCompletion(inputStream.write).always(next)
             }
             
             next()
         } else {
             for element in self {
-                element.onCompletion(observer.emit)
+                element.onCompletion(inputStream.write)
             }
         }
         
-        return observer.observable
+        return inputStream.listener
     }
 }
 
-extension Observable where FutureValue: Sequence {
+extension OutputStream where FutureValue: Sequence {
     public func mapContents<NewValue>(
         _ transform: @escaping (FutureValue.Element) throws -> NewValue
-    ) -> Observable<[NewValue]> {
+    ) -> OutputStream<[NewValue]> {
         return self.map { sequence in
             return try sequence.map(transform)
         }
