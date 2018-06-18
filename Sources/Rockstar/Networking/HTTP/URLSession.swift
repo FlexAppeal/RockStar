@@ -34,7 +34,7 @@ extension URLSession: BasicRockstar {
 }
 
 extension URLSession: HTTPClient {
-    public func request(_ request: HTTPRequest) -> Observable<HTTPResponse> {
+    public func request(_ request: HTTPRequest) -> Future<HTTPResponse> {
         let urlRequest = request.makeURLRequest()
         
         return withBody(request.body.storage, on: urlRequest).flatMap { request in
@@ -60,25 +60,25 @@ extension URLSession: HTTPClient {
         }
     }
     
-    private func withBody(_ storage: HTTPBody.Storage, on request: URLRequest) -> Observable<URLRequest> {
+    private func withBody(_ storage: HTTPBody.Storage, on request: URLRequest) -> Future<URLRequest> {
         var request = request
         
         switch storage {
         case .data(let data):
             request.httpBody = data
-            return Observable(result: request)
+            return Future(result: request)
         case .async(let body):
             return body.flatMap { storage in
                 return self.withBody(storage, on: request)
             }
         case .none:
-            return Observable(result: request)
+            return Future(result: request)
         }
     }
 }
 
 extension Rockstar where Base: HTTPClient {
-    public func send(_ body: Observable<HTTPBody>, to url: URLRepresentable, headers: HTTPHeaders, method: HTTPMethod) -> Observable<HTTPResponse> {
+    public func send(_ body: Future<HTTPBody>, to url: URLRepresentable, headers: HTTPHeaders, method: HTTPMethod) -> Future<HTTPResponse> {
         return body.flatMap { body in
             let request = HTTPRequest(
                 method: method,
@@ -95,8 +95,8 @@ extension Rockstar where Base: HTTPClient {
         _ type: C.Type,
         from url: URLRepresentable,
         headers: HTTPHeaders
-    ) -> Observable<ContentResponse<C>> {
-        let body = Observable(result: HTTPBody())
+    ) -> Future<ContentResponse<C>> {
+        let body = Future(result: HTTPBody())
         return wrap(self.send(body, to: url, headers: headers, method: .get))
     }
     
@@ -105,7 +105,7 @@ extension Rockstar where Base: HTTPClient {
         to url: URLRepresentable,
         headers: HTTPHeaders,
         expecting response: Output.Type
-    ) -> Observable<ContentResponse<Output>> {
+    ) -> Future<ContentResponse<Output>> {
         return wrap(self.send(encode(input), to: url, headers: headers, method: .put))
     }
     
@@ -114,7 +114,7 @@ extension Rockstar where Base: HTTPClient {
         to url: URLRepresentable,
         headers: HTTPHeaders,
         expecting response: Output.Type
-    ) -> Observable<ContentResponse<Output>> {
+    ) -> Future<ContentResponse<Output>> {
         return wrap(self.send(encode(input), to: url, headers: headers, method: .post))
     }
     
@@ -123,7 +123,7 @@ extension Rockstar where Base: HTTPClient {
         to url: URLRepresentable,
         headers: HTTPHeaders,
         expecting response: Output.Type
-    ) -> Observable<ContentResponse<Output>> {
+    ) -> Future<ContentResponse<Output>> {
         return wrap(self.send(encode(input), to: url, headers: headers, method: .patch))
     }
     
@@ -131,29 +131,29 @@ extension Rockstar where Base: HTTPClient {
         _ type: C.Type,
         from url: URLRepresentable,
         headers: HTTPHeaders
-        ) -> Observable<ContentResponse<C>> {
-        let body = Observable(result: HTTPBody())
+    ) -> Future<ContentResponse<C>> {
+        let body = Future(result: HTTPBody())
         return wrap(self.send(body, to: url, headers: headers, method: .delete))
     }
     
-    private func encode<C: Content>(_ input: C) -> Observable<HTTPBody> {
+    private func encode<C: Content>(_ input: C) -> Future<HTTPBody> {
         do {
             let registery = try Services.default.make(CoderRegistery.self)
             
             guard let encoder = registery.encoder(for: C.defaultContentType) else {
-                return Observable(error: TodoError())
+                return Future(error: TodoError())
             }
             
             return encoder.encodeContent(input)
         } catch {
-            return Observable(error: error)
+            return Future(error: error)
         }
     }
     
     private func wrap<C: Content>(
-        _ response: Observable<HTTPResponse>,
+        _ response: Future<HTTPResponse>,
         for content: C.Type = C.self
-    ) -> Observable<ContentResponse<C>> {
+    ) -> Future<ContentResponse<C>> {
         return response.map(ContentResponse<C>.init)
     }
 }

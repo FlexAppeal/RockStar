@@ -21,7 +21,7 @@ public protocol TablePresenter {
 
 public protocol RSTableViewDataSource: UITableViewDataSource {
     @discardableResult
-    func reloadData() -> Observable<Void>
+    func reloadData() -> Future<Void>
 }
 
 open class TableController<Row: TableRow>: UITableViewController, AnyRockstar {
@@ -54,11 +54,11 @@ extension DataManager where Entity: TableRow {
     public func makeDataSource(for table: UITableView) -> RSTableViewDataSource {
         let emitter = Observer<[Entity]>()
         
-        func reloadData() -> Observable<Void> {
+        func reloadData() -> Future<Void> {
             return self.all.onCompletion(emitter.emit).map { _ in }
         }
         
-        return ObservableTableDataSource(Observable: emitter.observable, table: table, reload: reloadData)
+        return ObservableTableDataSource(observable: emitter.observable, table: table, reload: reloadData)
     }
 }
 
@@ -66,7 +66,7 @@ extension Observable where FutureValue: Sequence, FutureValue.Element: TableRow 
     public func makeDataSource(for table: UITableView) -> RSTableViewDataSource {
         let data = self.map(Array.init)
         
-        return ObservableTableDataSource(Observable: data, table: table) {
+        return ObservableTableDataSource(observable: data, table: table) {
             return .done
         }
     }
@@ -76,18 +76,21 @@ extension Observable where FutureValue: Sequence, FutureValue.Element: TableRow 
 fileprivate final class ObservableTableDataSource<Entity: TableRow>: NSObject, RSTableViewDataSource {
     private var entities = [Entity]()
     private let table: UITableView
-    let reload: () -> Observable<Void>
+    let reload: () -> Future<Void>
     
-    public init(Observable: Observable<[Entity]>, table: UITableView, reload: @escaping () -> Observable<Void>) {
+    public init(observable: Observable<[Entity]>, table: UITableView, reload: @escaping () -> Future<Void>) {
         self.table = table
         self.reload = reload
         super.init()
         
-        Observable.write(to: self, atKeyPath: \.entities).switchThread(to: .dispatchQueue(.main)).finally(self.table.reloadData)
+        observable.write(
+            to: self,
+            atKeyPath: \.entities
+        ).switchThread(to: .dispatchQueue(.main)).always(self.table.reloadData)
     }
     
     @discardableResult
-    func reloadData() -> Observable<Void> {
+    func reloadData() -> Future<Void> {
         return reload()
     }
     

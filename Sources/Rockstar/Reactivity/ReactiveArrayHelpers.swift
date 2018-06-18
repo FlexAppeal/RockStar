@@ -1,11 +1,11 @@
 import Dispatch
 
-extension Array where Element: ObservableProtocol {
-    public func joined() -> Observable<[Element.FutureValue]> {
-        var values = [Element.FutureValue]()
+extension Array {
+    public func joined<T>() -> Future<[T]> where Element == Future<T> {
+        var values = [T]()
         var size = self.count
         values.reserveCapacity(size)
-        let promise = Promise<[Element.FutureValue]>()
+        let promise = Promise<[T]>()
         
         promise.onCancel {
             /// TODO: Is this always a good idea?
@@ -35,11 +35,25 @@ extension Array where Element: ObservableProtocol {
         return promise.future
     }
     
-    public func streamed() -> Observable<Element.FutureValue> {
-        let observer = Observer<Element.FutureValue>()
+    public func streamed<T>(sequentially: Bool) -> Observable<T> where Element == Future<T> {
+        let observer = Observer<T>()
         
-        for element in self {
-            element.onCompletion(observer.emit)
+        if sequentially {
+            var iterator = self.makeIterator()
+            
+            func next() {
+                guard let future = iterator.next() else {
+                    return
+                }
+                
+                future.onCompletion(observer.emit).always(next)
+            }
+            
+            next()
+        } else {
+            for element in self {
+                element.onCompletion(observer.emit)
+            }
         }
         
         return observer.observable
@@ -81,52 +95,5 @@ public struct AnyThread {
     
     public static func dispatchQueue(_ queue: DispatchQueue) -> AnyThread {
         return AnyThread(thread: .dispatch(queue))
-    }
-}
-
-public struct PromiseTimeout: Error {
-    public init() {}
-}
-
-extension ObservableProtocol {
-    public func switchThread(to thread: AnyThread) -> Observable<FutureValue> {
-        let promise = Promise<FutureValue>()
-        
-        self.onCompletion { result in
-            DispatchQueue.main.async {
-                promise.fulfill(result)
-            }
-        }
-        
-        promise.onCancel(self.cancel)
-        return promise.future
-    }
-    
-    public func timeout(
-        _ timeout: RSTimeout,
-        throwing error: Error = PromiseTimeout()
-    ) -> Observable<FutureValue> {
-        let promise = Promise<FutureValue>()
-        self.onCompletion(promise.fulfill)
-        
-        timeout.execute {
-            promise.fail(error)
-        }
-        
-        return promise.future
-    }
-}
-
-extension Promise {
-    @discardableResult
-    public func timeout(
-        _ timeout: RSTimeout,
-        throwing error: Error = PromiseTimeout()
-    ) -> Promise<FutureValue> {
-        timeout.execute {
-            self.fail(error)
-        }
-        
-        return self
     }
 }

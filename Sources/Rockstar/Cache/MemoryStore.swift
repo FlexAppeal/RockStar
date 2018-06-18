@@ -15,20 +15,20 @@ public struct PaginatedResults<Result> {
 public protocol DataManagerSource {
     associatedtype Entity: Storeable & AnyObject
     
-    func count() -> Observable<Int>
+    func count() -> Future<Int>
     
     /// Needs to be implemeted using Observable for multiple results
-    func all() -> Observable<[Entity]>
-    func paginate(from: Int, to: Int) -> Observable<PaginatedResults<Entity>>
-    func fetchOne(byId id: Entity.Identifier) -> Observable<Entity?>
+    func all() -> Future<[Entity]>
+    func paginate(from: Int, to: Int) -> Future<PaginatedResults<Entity>>
+    func fetchOne(byId id: Entity.Identifier) -> Future<Entity?>
     
     /// Needs to be implemeted using Observable for multiple results
-    func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observable<[Entity]>
+    func fetchMany(byIds ids: Set<Entity.Identifier>) -> Future<[Entity]>
 }
 
 extension DataManagerSource {
-    public func fetchMany(byIds ids: Set<Entity.Identifier>) -> Observable<[Entity]> {
-        var entities = [Observable<Entity>]()
+    public func fetchMany(byIds ids: Set<Entity.Identifier>) -> Future<[Entity]> {
+        var entities = [Future<Entity>]()
         for id in ids {
             let entity = fetchOne(byId: id).assert(or: EntityNotFound())
             
@@ -51,11 +51,11 @@ extension DataManagerSource {
 }
 
 fileprivate struct AnyMemoryDataSources<E: Storeable> {
-    let fetchOne: (E.Identifier) -> Observable<E?>
-    let fetchMany: (Set<E.Identifier>) -> Observable<[E]>
-    let count: () -> Observable<Int>
-    let all: () -> Observable<[E]>
-    let paginate: (Int, Int) -> Observable<PaginatedResults<E>>
+    let fetchOne: (E.Identifier) -> Future<E?>
+    let fetchMany: (Set<E.Identifier>) -> Future<[E]>
+    let count: () -> Future<Int>
+    let all: () -> Future<[E]>
+    let paginate: (Int, Int) -> Future<PaginatedResults<E>>
     
     init<Source: DataManagerSource>(source: Source) where Source.Entity == E {
         self.fetchOne = source.fetchOne
@@ -101,11 +101,11 @@ public final class DataManager<Entity: Storeable> {
         self.source = .init(source: source)
     }
     
-    public subscript(id: Entity.Identifier) -> Observable<Entity?> {
+    public subscript(id: Entity.Identifier) -> Future<Entity?> {
         let identifier = AnyIdentifier(identifier: id)
         
         if let entity = entities.object(forKey: identifier) {
-            return Observable(result: entity.instance)
+            return Future(result: entity.instance)
         }
         
         guard let source = source else {
@@ -126,10 +126,10 @@ public final class DataManager<Entity: Storeable> {
         entities.removeAllObjects()
     }
     
-    public var count: Observable<Int> { return source?.count() ?? 0 }
-    public var all: Observable<[Entity]> { return source?.all() ?? [] }
+    public var count: Future<Int> { return source?.count() ?? 0 }
+    public var all: Future<[Entity]> { return source?.all() ?? [] }
     
-    public subscript<S: Sequence>(ids: S) -> Observable<[Entity]> where S.Element == Entity.Identifier {
+    public subscript<S: Sequence>(ids: S) -> Future<[Entity]> where S.Element == Entity.Identifier {
         var cachedEntities = [Entity]()
         var unresolvedIds = Set<Entity.Identifier>()
         
@@ -143,10 +143,10 @@ public final class DataManager<Entity: Storeable> {
         }
         
         if unresolvedIds.isEmpty {
-            return Observable(result: cachedEntities)
+            return Future(result: cachedEntities)
         } else {
             guard let source = source else {
-                return Observable(error: NoDataSource())
+                return Future(error: NoDataSource())
             }
             
             return source.fetchMany(unresolvedIds).map { newlyFetched in

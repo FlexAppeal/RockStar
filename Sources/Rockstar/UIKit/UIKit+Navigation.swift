@@ -1,14 +1,21 @@
 import UIKit
 
-open class NavigationController: UINavigationController, BasicRockstar {
-    public var rockstarSettings = NavigationSettings()
-}
-
-public struct NavigationSettings {
-    public var animate: ConfigurationOption<Bool>
+open class NavigationController: UINavigationController, Navigator, BasicRockstar {
+    public typealias Controller = UIViewController
+    public typealias View = UIView
     
-    init() {
-        self.animate = true
+    public var navigationSettings = NavigationConfig()
+    
+    public func navigateBackwards() {
+        self.popViewController(animated: animate)
+    }
+    
+    private var animate: Bool {
+        return navigationSettings.animate.value ?? true
+    }
+    
+    public func navigateForward(to controller: UIViewController) {
+        self.pushViewController(controller, animated: animate)
     }
 }
 
@@ -22,54 +29,44 @@ extension StateComponent where Self: NavigationController, State: NavigationStat
     }
 }
 
-extension Rockstar where Base == NavigationController {
-    public var settings: NavigationSettings {
+extension Rockstar: Navigator where Base: Navigator {
+    public typealias Controller = Base.Controller
+    public typealias View = Base.View
+    
+    public var navigationSettings: NavigationConfig {
         get {
-            return base.rockstarSettings
+            return base.navigationSettings
         }
         set {
-            base.rockstarSettings = newValue
+            base.navigationSettings = newValue
         }
     }
     
-    public mutating func withAnimations<T>(_ run: () throws -> T) rethrows -> T {
-        let existingSetting = settings.animate
-        settings.animate = true
+    public func withAnimations<T>(_ run: () throws -> T) rethrows -> T {
+        let existingSetting = base.navigationSettings.animate
+        base.navigationSettings.animate = true
         defer {
-            settings.animate = existingSetting
+            base.navigationSettings.animate = existingSetting
         }
         
         return try run()
     }
     
-    public mutating func withoutAnimations<T>(_ run: () throws -> T) rethrows -> T {
-        let existingSetting = settings.animate
-        settings.animate = false
+    public func withoutAnimations<T>(_ run: () throws -> T) rethrows -> T {
+        let existingSetting = base.navigationSettings.animate
+        base.navigationSettings.animate = false
         defer {
-            settings.animate = existingSetting
+            base.navigationSettings.animate = existingSetting
         }
         
         return try run()
     }
     
-    private var animate: Bool {
-        return settings.animate.value ?? true
+    public func navigateForward(to controller: Base.Controller) {
+        self.base.navigateForward(to: controller)
     }
     
-    public func push(_ controller: UIViewController) {
-        self.base.pushViewController(controller, animated: animate)
-    }
-    
-    public func pop() -> UIViewController? {
-        return self.base.popViewController(animated: animate)
-    }
-    
-    @discardableResult
-    public func push(_ controller: Observable<UIViewController>) -> Observable<Void> {
-        let animate = self.animate
-        
-        return controller.map { controller in
-            self.base.pushViewController(controller, animated: animate)
-        }
+    public func navigateBackwards() {
+        self.base.navigateBackwards()
     }
 }

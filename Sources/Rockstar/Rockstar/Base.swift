@@ -12,8 +12,8 @@ public extension BasicRockstar {
     }
 }
 
-public struct Rockstar<Base> {
-    public var base: Base
+public final class Rockstar<Base> {
+    public let base: Base
     
     public init(wrapping wrapped: Base) {
         self.base = wrapped

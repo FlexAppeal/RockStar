@@ -1,4 +1,4 @@
-enum Reference<S: Store> where S.Entity: Decodable, S.Entity.Identifier: Decodable {
+public enum Reference<S: Store> where S.Entity: Decodable, S.Entity.Identifier: Decodable {
     case reference(S.Entity.Identifier)
     case concrete(S.Entity)
     
@@ -10,12 +10,12 @@ enum Reference<S: Store> where S.Entity: Decodable, S.Entity.Identifier: Decodab
         }
     }
     
-    func resolve() -> Observable<S.Entity?> {
+    func resolve() -> Future<S.Entity?> {
         switch self {
         case .reference(let identifier):
             return S.default[identifier]
         case .concrete(let model):
-            return Observable(result: model)
+            return Future(result: model)
         }
     }
 }

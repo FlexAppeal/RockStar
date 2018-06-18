@@ -44,7 +44,7 @@ public protocol Model: Codable {}
 public struct ContentResponse<C: Content> {
     public let raw: HTTPResponse
     
-    public func decodeBody() -> Observable<C> {
+    public func decodeBody() -> Future<C> {
         do {
             let coders = try Services.default.make(CoderRegistery.self)
             guard let decoder = coders.decoder(for: C.defaultContentType) else {
@@ -53,7 +53,7 @@ public struct ContentResponse<C: Content> {
             
             return decoder.decodeContent(C.self, from: raw.body)
         } catch {
-            return Observable(error: error)
+            return Future(error: error)
         }
     }
 }
@@ -61,23 +61,23 @@ public struct ContentResponse<C: Content> {
 public protocol ContentEncoder {
     static var mediaType: MediaType { get }
     
-    func encodeContent<E: Encodable>(_ input: E) -> Observable<HTTPBody>
+    func encodeContent<E: Encodable>(_ input: E) -> Future<HTTPBody>
 }
 
 public protocol ContentDecoder {
     static var mediaType: MediaType { get }
     
-    func decodeContent<D: Decodable>(_ type: D.Type, from body: HTTPBody) -> Observable<D>
+    func decodeContent<D: Decodable>(_ type: D.Type, from body: HTTPBody) -> Future<D>
 }
 
 extension JSONEncoder: ContentEncoder {
     public static let mediaType = MediaType.json
     
-    public func encodeContent<E>(_ input: E) -> Observable<HTTPBody> where E : Encodable {
+    public func encodeContent<E>(_ input: E) -> Future<HTTPBody> where E : Encodable {
         do {
-            return try Observable(result: HTTPBody(data: self.encode(input)))
+            return try Future(result: HTTPBody(data: self.encode(input)))
         } catch {
-            return Observable(error: error)
+            return Future(error: error)
         }
     }
 }
@@ -85,19 +85,19 @@ extension JSONEncoder: ContentEncoder {
 extension JSONDecoder: ContentDecoder {
     public static let mediaType = MediaType.json
     
-    public func decodeContent<D>(_ type: D.Type, from body: HTTPBody) -> Observable<D> where D : Decodable {
-        func decode(_ storage: HTTPBody.Storage) -> Observable<D> {
+    public func decodeContent<D>(_ type: D.Type, from body: HTTPBody) -> Future<D> where D : Decodable {
+        func decode(_ storage: HTTPBody.Storage) -> Future<D> {
             do {
                 switch storage {
                 case .none:
-                    return Observable(result: try self.decode(D.self, from: Data()))
+                    return Future(result: try self.decode(D.self, from: Data()))
                 case .data(let data):
-                    return Observable(result: try self.decode(D.self, from: data))
+                    return Future(result: try self.decode(D.self, from: data))
                 case .async(let future):
                     return future.flatMap(decode)
                 }
             } catch {
-                return Observable(error: error)
+                return Future(error: error)
             }
         }
         

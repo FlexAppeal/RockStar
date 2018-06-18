@@ -19,7 +19,7 @@ final class Post: Storeable, Content, TableRow {
     let body: String
 }
 
-final class PostSource: Service, MemoryStoreDataSource {
+final class PostSource: Service, DataManagerSource {
     typealias Entity = Post
     
     let client: Rockstar<AnyHTTPClient>
@@ -32,19 +32,19 @@ final class PostSource: Service, MemoryStoreDataSource {
         try self.init(using: Services.default.make())
     }
     
-    func count() -> Observer<Int> {
+    func count() -> Observable<Int> {
         return 100
     }
     
-    func all() -> Observer<[Post]> {
+    func all() -> Observable<[Post]> {
         return client.get([Post].self, from: "https://jsonplaceholder.typicode.com/posts/", headers: [:]).flatMap { response in
             return response.decodeBody()
         }
     }
     
-    func fetchOne(byId id: Int) -> Observer<Post> {
+    func fetchOne(byId id: Int) -> Observable<Post?> {
         return client.get(Post.self, from: "https://jsonplaceholder.typicode.com/posts/\(id)", headers: [:]).flatMap { response in
-            return response.decodeBody()
+            return response.decodeBody().map { $0 }
         }
     }
 }
