@@ -1,3 +1,1 @@
-public protocol Button: GUIElement {
-    var title: Label? { get }
-}
+public protocol Button: GUIElement {}

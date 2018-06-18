@@ -1,12 +1,12 @@
 import UIKit
 
 extension UILabel: Label {
-    public var color: UIColor? {
+    public var color: Color? {
         get {
-            return self.textColor
+            return self.textColor.makeColor()
         }
         set {
-            self.textColor = newValue
+            self.textColor = newValue?.uiColor
         }
     }
 }
