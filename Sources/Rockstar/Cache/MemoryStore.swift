@@ -1,55 +1,5 @@
 import Foundation
 
-public struct PaginatedResults<Result> {
-    public var results: [Result]
-    public let startIndex: Int
-    public let endIndex: Int
-    
-    public init(results: [Result], from start: Int, to end: Int) {
-        self.results = results
-        self.startIndex = start
-        self.endIndex = end
-    }
-}
-
-public protocol DataManagerSource {
-    associatedtype Entity: Storeable & AnyObject
-    
-    func count() -> Future<Int>
-    
-    /// Needs to be implemeted using Observable for multiple results
-    func all() -> Future<[Entity]>
-    func paginate(from: Int, to: Int) -> Future<PaginatedResults<Entity>>
-    func fetchOne(byId id: Entity.Identifier) -> Future<Entity?>
-    
-    /// Needs to be implemeted using Observable for multiple results
-    func fetchMany(byIds ids: Set<Entity.Identifier>) -> Future<[Entity]>
-}
-
-extension DataManagerSource {
-    public func fetchMany(byIds ids: Set<Entity.Identifier>) -> Future<[Entity]> {
-        var entities = [Future<Entity>]()
-        for id in ids {
-            let entity = fetchOne(byId: id).assert(or: EntityNotFound())
-            
-            #if ANALYZE
-            entity.then { entity in
-                Analytics.default.assert(check: entity.identifier == id)
-            }
-            #endif
-            entities.append(entity)
-        }
-        
-        return entities.joined()
-    }
-}
-
-extension DataManagerSource {
-    public var dataManager: DataManager<Entity> {
-        return DataManager(source: self)
-    }
-}
-
 fileprivate struct AnyMemoryDataSources<E: Storeable> {
     let fetchOne: (E.Identifier) -> Future<E?>
     let fetchMany: (Set<E.Identifier>) -> Future<[E]>
@@ -66,8 +16,9 @@ fileprivate struct AnyMemoryDataSources<E: Storeable> {
     }
 }
 
-fileprivate struct NoDataSource: Error {}
-fileprivate struct EntityNotFound: Error {}
+fileprivate struct NoDataSource: RockstarError {
+    let location = SourceLocation()
+}
 
 public final class DataManager<Entity: Storeable> {
     private final class AnyIdentifier {

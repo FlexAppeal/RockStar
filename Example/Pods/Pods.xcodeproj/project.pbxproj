@@ -17,6 +17,7 @@
 		240B98B620D42A2C00290B0B /* Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240B98B420D42A2400290B0B /* Reference.swift */; };
 		240B98D420D42D7800290B0B /* Byte.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240B98D320D42D7800290B0B /* Byte.swift */; };
 		2477FF6620D0F0B00054272A /* UIKit+Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2477FF6520D0F0B00054272A /* UIKit+Button.swift */; };
+		248A79BD20D7800200113C2B /* RockstarError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248A79BC20D7800200113C2B /* RockstarError.swift */; };
 		24C3316320D686580076DA80 /* UIKit+Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3316120D686540076DA80 /* UIKit+Label.swift */; };
 		24C3317120D686680076DA80 /* HTTP+Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3316620D686680076DA80 /* HTTP+Content.swift */; };
 		24C3317220D686680076DA80 /* HTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3316820D686680076DA80 /* HTTPHeader.swift */; };
@@ -106,6 +107,7 @@
 		240B98B420D42A2400290B0B /* Reference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reference.swift; sourceTree = "<group>"; };
 		240B98D320D42D7800290B0B /* Byte.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Byte.swift; sourceTree = "<group>"; };
 		2477FF6520D0F0B00054272A /* UIKit+Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Button.swift"; sourceTree = "<group>"; };
+		248A79BC20D7800200113C2B /* RockstarError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RockstarError.swift; sourceTree = "<group>"; };
 		24C3316120D686540076DA80 /* UIKit+Label.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIKit+Label.swift"; sourceTree = "<group>"; };
 		24C3316620D686680076DA80 /* HTTP+Content.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HTTP+Content.swift"; sourceTree = "<group>"; };
 		24C3316820D686680076DA80 /* HTTPHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPHeader.swift; sourceTree = "<group>"; };
@@ -249,6 +251,15 @@
 				A6A02B73F1D94B327E92F51B17E0413C /* Rockstar */,
 			);
 			name = "Development Pods";
+			sourceTree = "<group>";
+		};
+		248A79BB20D77FF700113C2B /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				248A79BC20D7800200113C2B /* RockstarError.swift */,
+			);
+			name = Errors;
+			path = Sources/Rockstar/Errors;
 			sourceTree = "<group>";
 		};
 		24C3316420D686680076DA80 /* Networking */ = {
@@ -403,6 +414,7 @@
 		A6A02B73F1D94B327E92F51B17E0413C /* Rockstar */ = {
 			isa = PBXGroup;
 			children = (
+				248A79BB20D77FF700113C2B /* Errors */,
 				24C3317920D686890076DA80 /* GUI */,
 				24C3316420D686680076DA80 /* Networking */,
 				8AD39107C23ED17C1809CAAC52B55C9A /* Analytics */,
@@ -714,6 +726,7 @@
 				24C3319720D6A30B0076DA80 /* Future+Optional.swift in Sources */,
 				24C3318120D686890076DA80 /* Button.swift in Sources */,
 				8FC6B658363EC53502A5D406798AD7E1 /* MemoryStore.swift in Sources */,
+				248A79BD20D7800200113C2B /* RockstarError.swift in Sources */,
 				57A04E7DEE0263359711DDEE3EE465BA /* NIO.swift in Sources */,
 				24C3317120D686680076DA80 /* HTTP+Content.swift in Sources */,
 				2477FF6620D0F0B00054272A /* UIKit+Button.swift in Sources */,

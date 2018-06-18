@@ -1,9 +1,6 @@
 import UIKit
 
 open class NavigationController: UINavigationController, Navigator, BasicRockstar {
-    public typealias Controller = UIViewController
-    public typealias View = UIView
-    
     public var navigationSettings = NavigationConfig()
     
     public func navigateBackwards() {

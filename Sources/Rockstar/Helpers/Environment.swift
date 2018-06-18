@@ -1,9 +1,9 @@
-public enum Environment: RawRepresentable, ExpressibleByStringLiteral, Hashable {
+public enum ApplicationEnvironment: RawRepresentable, ExpressibleByStringLiteral, Hashable {
     case development, testing, acceptation, production
     case custom(String)
     
     /// FIXME: Better environment detection
-    public static func automatic() -> Environment {
+    public static func automatic() -> ApplicationEnvironment {
         #if DEBUG
             return .development
         #else

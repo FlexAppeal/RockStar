@@ -3,23 +3,23 @@ fileprivate extension String {
 }
 
 public final class ServiceBuilder {
-    public let environment: Environment
+    public let environment: ApplicationEnvironment
     var syncFactories = [ObjectIdentifier: AnyServiceFactory]()
     var asyncFactories = [ObjectIdentifier: AnyAsyncServiceFactory]()
     public var syncResolution = ServiceResolution<AnyServiceFactory>.crash(.defaultCrashMessage)
     public var asyncResolution = ServiceResolution<AnyAsyncServiceFactory>.crash(.defaultCrashMessage)
     
-    public init(environment: Environment) {
+    public init(environment: ApplicationEnvironment) {
         self.environment = environment
     }
     
-    public func forEnvironment(_ environment: Environment, run: () throws -> ()) rethrows {
+    public func forEnvironment(_ environment: ApplicationEnvironment, run: () throws -> ()) rethrows {
         if self.environment == environment {
             try run()
         }
     }
     
-    public func forEnvironments(_ environments: Environment..., run: () throws -> ()) rethrows {
+    public func forEnvironments(_ environments: ApplicationEnvironment..., run: () throws -> ()) rethrows {
         for environment in environments {
             if self.environment == environment {
                 try run()
@@ -28,7 +28,7 @@ public final class ServiceBuilder {
         }
     }
     
-    public func forEnvironments(_ environments: Set<Environment>, run: () throws -> ()) rethrows {
+    public func forEnvironments(_ environments: Set<ApplicationEnvironment>, run: () throws -> ()) rethrows {
         for environment in environments {
             if self.environment == environment {
                 try run()
