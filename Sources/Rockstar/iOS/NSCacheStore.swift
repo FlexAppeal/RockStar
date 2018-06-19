@@ -16,11 +16,27 @@ fileprivate struct NSCacheStoreDataSource<E: Storeable> {
     }
 }
 
+fileprivate struct AnyNSCacheDataSource<E: Storeable> {
+    let fetchOne: (E.Identifier) -> Future<E?>
+    let fetchMany: (Set<E.Identifier>) -> Future<[E]>
+    let count: () -> Future<Int>
+    let all: () -> Future<[E]>
+    let paginate: (Int, Int) -> Future<PaginatedResults<E>>
+    
+    init<Source: DataManagerSource>(source: Source) where Source.Entity == E {
+        self.fetchOne = source.fetchOne
+        self.fetchMany = source.fetchMany
+        self.count = source.count
+        self.all = source.all
+        self.paginate = source.paginate
+    }
+}
+
 fileprivate struct NoDataSource: RockstarError {
     let location = SourceLocation()
 }
 
-public final class NSCacheStore<Entity: Storeable> {
+public final class NSCacheStore<Entity: Storeable>: Store {
     private final class AnyIdentifier {
         let identifier: Entity.Identifier
         
@@ -38,7 +54,7 @@ public final class NSCacheStore<Entity: Storeable> {
     }
     
     private var entities = NSCache<AnyIdentifier, AnyInstance>()
-    private var source: AnyMemoryDataSources<Entity>?
+    private var source: AnyNSCacheDataSource<Entity>?
     
     public func fetchData<Source: DataManagerSource>(fromSource source: Source) where Source.Entity == Entity {
         self.source = .init(source: source)

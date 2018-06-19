@@ -1,6 +1,6 @@
 import UIKit
 
-extension DataManager where Entity: UITableViewCellRepresentable {
+extension Store where Entity: UITableViewCellRepresentable {
     public func makeDataSource(for table: UITableView) {
         let inputStream = InputStream<[Entity]>()
         

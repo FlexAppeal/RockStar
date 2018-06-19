@@ -10,10 +10,10 @@ public enum Reference<S: Store> where S.Entity: Decodable, S.Entity.Identifier: 
         }
     }
     
-    func resolve() -> Future<S.Entity?> {
+    func resolve(from store: S) -> Future<S.Entity?> {
         switch self {
         case .reference(let identifier):
-            return S.default[identifier]
+            return store[identifier]
         case .concrete(let model):
             return Future(result: model)
         }

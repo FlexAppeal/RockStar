@@ -5,7 +5,6 @@ public protocol Storeable {
 }
 
 public protocol Store {
-    static var `default`: Self { get }
     associatedtype Entity: Storeable
     
     var count: Future<Int> { get }
@@ -59,11 +58,5 @@ extension DataManagerSource {
         }
         
         return entities.joined()
-    }
-}
-
-extension DataManagerSource {
-    public var dataManager: DataManager<Entity> {
-        return DataManager(source: self)
     }
 }
