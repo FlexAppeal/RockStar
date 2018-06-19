@@ -62,7 +62,7 @@
 		6F93433979F5858AB13AD981537EA0AE /* AnalyticsCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6A21BC3A1FD28AAA272136EE577848E /* AnalyticsCollector.swift */; };
 		78A133AB00D8DE0EE5EAD0C6DD83B391 /* Pods-Rockstar_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4DDAAB0295603E148B4334F067C63986 /* Pods-Rockstar_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8EF70DB2A8EE7BB044FDADFC5541BF81 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = C84FC3C31D0AF1B4F97D1103B40CA3DA /* State.swift */; };
-		8FC6B658363EC53502A5D406798AD7E1 /* MemoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B256B36A8F64E7FBD1731EE8A096236F /* MemoryStore.swift */; };
+		8FC6B658363EC53502A5D406798AD7E1 /* NSCacheStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B256B36A8F64E7FBD1731EE8A096236F /* NSCacheStore.swift */; };
 		921F2D880B2BFFC91F8092C2A8F44339 /* Source.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86BA9EE60D7F44542A44090E5BF76858 /* Source.swift */; };
 		9A5C1478CF03E621F786E2A36A33C272 /* MeasurementDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D20CECD3D8E253144E97249DE94F3A8 /* MeasurementDataTypes.swift */; };
 		ACEA3B902419A9F424126D53715C9039 /* Alamofire.swift in Sources */ = {isa = PBXBuildFile; fileRef = D132B9CBCC66DC352E17265390A86413 /* Alamofire.swift */; };
@@ -184,7 +184,7 @@
 		A59E87B494B43A5B60F2847C185947F5 /* Environment.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		A8293289014C6EEA9AEC82E14CF2F4F5 /* Pods-Rockstar_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Rockstar_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		AF6E50F940E5F72B144602E1381C5855 /* PrintLogger.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PrintLogger.swift; sourceTree = "<group>"; };
-		B256B36A8F64E7FBD1731EE8A096236F /* MemoryStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MemoryStore.swift; sourceTree = "<group>"; };
+		B256B36A8F64E7FBD1731EE8A096236F /* NSCacheStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NSCacheStore.swift; sourceTree = "<group>"; };
 		B7F3E4813C5B0079546D4FA4708B83B6 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B9E8656DF74FE13E983C39BE0693639E /* Rockstar.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; path = Rockstar.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		BB5A1DD68D6B36E9BFF49387DDF1986A /* Pods-Rockstar_Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Rockstar_Tests-resources.sh"; sourceTree = "<group>"; };
@@ -232,7 +232,6 @@
 			isa = PBXGroup;
 			children = (
 				240B98B420D42A2400290B0B /* Reference.swift */,
-				B256B36A8F64E7FBD1731EE8A096236F /* MemoryStore.swift */,
 				F2BBCED7B82390F158C5CCA138D991D0 /* Store.swift */,
 			);
 			name = Cache;
@@ -446,7 +445,7 @@
 				BF07D547A9DC7C61EEC56F9DC59006B0 /* Services */,
 				E98D4E31B1D17D4BE5412F1F0A50D890 /* State */,
 				5C3DFC5BFAB441FD90629F3EF41E5302 /* Support Files */,
-				F36D8C395A5A7AD930BC3E3ED26A3009 /* UIKit */,
+				F36D8C395A5A7AD930BC3E3ED26A3009 /* iOS */,
 			);
 			name = Rockstar;
 			path = ../..;
@@ -566,9 +565,10 @@
 			path = Sources/Rockstar/Logging;
 			sourceTree = "<group>";
 		};
-		F36D8C395A5A7AD930BC3E3ED26A3009 /* UIKit */ = {
+		F36D8C395A5A7AD930BC3E3ED26A3009 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				B256B36A8F64E7FBD1731EE8A096236F /* NSCacheStore.swift */,
 				24C3316120D686540076DA80 /* UIKit+Label.swift */,
 				3EC62147286B17F7FA99457F7F2AE4A0 /* UIKit+Navigation.swift */,
 				3BA4BB352B458657DA8821ED52DECC6C /* UIKit+Table.swift */,
@@ -579,8 +579,8 @@
 				248A79D720D806BE00113C2B /* UIKit+Color.swift */,
 				248A79D920D8089500113C2B /* UIKit+GUIElement.swift */,
 			);
-			name = UIKit;
-			path = Sources/Rockstar/UIKit;
+			name = iOS;
+			path = Sources/Rockstar/iOS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -748,7 +748,7 @@
 				24C3318020D686890076DA80 /* Theming.swift in Sources */,
 				24C3319720D6A30B0076DA80 /* Future+Optional.swift in Sources */,
 				24C3318120D686890076DA80 /* Button.swift in Sources */,
-				8FC6B658363EC53502A5D406798AD7E1 /* MemoryStore.swift in Sources */,
+				8FC6B658363EC53502A5D406798AD7E1 /* NSCacheStore.swift in Sources */,
 				248A79BD20D7800200113C2B /* RockstarError.swift in Sources */,
 				57A04E7DEE0263359711DDEE3EE465BA /* NIO.swift in Sources */,
 				24C3317120D686680076DA80 /* HTTP+Content.swift in Sources */,

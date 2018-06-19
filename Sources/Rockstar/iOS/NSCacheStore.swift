@@ -1,6 +1,6 @@
 import Foundation
 
-fileprivate struct AnyMemoryDataSources<E: Storeable> {
+fileprivate struct NSCacheStoreDataSource<E: Storeable> {
     let fetchOne: (E.Identifier) -> Future<E?>
     let fetchMany: (Set<E.Identifier>) -> Future<[E]>
     let count: () -> Future<Int>
@@ -20,7 +20,7 @@ fileprivate struct NoDataSource: RockstarError {
     let location = SourceLocation()
 }
 
-public final class DataManager<Entity: Storeable> {
+public final class NSCacheStore<Entity: Storeable> {
     private final class AnyIdentifier {
         let identifier: Entity.Identifier
         
