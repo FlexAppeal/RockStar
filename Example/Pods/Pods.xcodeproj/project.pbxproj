@@ -18,6 +18,8 @@
 		240B98D420D42D7800290B0B /* Byte.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240B98D320D42D7800290B0B /* Byte.swift */; };
 		243B5A3120D9A5A600B57412 /* AttributedString+RichText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B5A2F20D9A5A100B57412 /* AttributedString+RichText.swift */; };
 		243B5A3320DA1E0400B57412 /* UserDefaultsConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B5A3220DA1E0400B57412 /* UserDefaultsConfig.swift */; };
+		243B5A3520DA203200B57412 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B5A3420DA203200B57412 /* Image.swift */; };
+		243B5A3720DA213300B57412 /* UIKit+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243B5A3620DA213300B57412 /* UIKit+Image.swift */; };
 		2477FF6620D0F0B00054272A /* UIKit+Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2477FF6520D0F0B00054272A /* UIKit+Button.swift */; };
 		248A79BD20D7800200113C2B /* RockstarError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248A79BC20D7800200113C2B /* RockstarError.swift */; };
 		248A79D020D802BF00113C2B /* UIKit+TableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248A79CF20D802BF00113C2B /* UIKit+TableCell.swift */; };
@@ -114,6 +116,8 @@
 		240B98D320D42D7800290B0B /* Byte.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Byte.swift; sourceTree = "<group>"; };
 		243B5A2F20D9A5A100B57412 /* AttributedString+RichText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributedString+RichText.swift"; sourceTree = "<group>"; };
 		243B5A3220DA1E0400B57412 /* UserDefaultsConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsConfig.swift; sourceTree = "<group>"; };
+		243B5A3420DA203200B57412 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		243B5A3620DA213300B57412 /* UIKit+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Image.swift"; sourceTree = "<group>"; };
 		2477FF6520D0F0B00054272A /* UIKit+Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Button.swift"; sourceTree = "<group>"; };
 		248A79BC20D7800200113C2B /* RockstarError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RockstarError.swift; sourceTree = "<group>"; };
 		248A79CF20D802BF00113C2B /* UIKit+TableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+TableCell.swift"; sourceTree = "<group>"; };
@@ -327,6 +331,7 @@
 				24C3317C20D686890076DA80 /* Theming.swift */,
 				24C3317D20D686890076DA80 /* RichText.swift */,
 				248A79D320D8053400113C2B /* Platform.swift */,
+				243B5A3420DA203200B57412 /* Image.swift */,
 			);
 			name = GUI;
 			path = Sources/Rockstar/GUI;
@@ -575,6 +580,7 @@
 				248A79D920D8089500113C2B /* UIKit+GUIElement.swift */,
 				243B5A2F20D9A5A100B57412 /* AttributedString+RichText.swift */,
 				243B5A3220DA1E0400B57412 /* UserDefaultsConfig.swift */,
+				243B5A3620DA213300B57412 /* UIKit+Image.swift */,
 			);
 			name = iOS;
 			path = Sources/Rockstar/iOS;
@@ -736,6 +742,7 @@
 				35E612BB081A7B2F44507FB8E6B1B876 /* Environment.swift in Sources */,
 				FDA6E42C705CE55A151E99817ECB0E82 /* Error.swift in Sources */,
 				B52D507AF73296DC377263C768B34452 /* FabricLogger.swift in Sources */,
+				243B5A3520DA203200B57412 /* Image.swift in Sources */,
 				24C3318520D696CD0076DA80 /* Observing+LastValue.swift in Sources */,
 				6EB15E28EFD1D4505F8BB3880C84D530 /* Logging.swift in Sources */,
 				24C3319520D6A2F70076DA80 /* Future+Literals.swift in Sources */,
@@ -756,6 +763,7 @@
 				248A79D020D802BF00113C2B /* UIKit+TableCell.swift in Sources */,
 				248A79D620D8059C00113C2B /* UIKit+Platform.swift in Sources */,
 				40DF488FAD1C1893CD90ED296A532123 /* Observation.swift in Sources */,
+				243B5A3720DA213300B57412 /* UIKit+Image.swift in Sources */,
 				E2D83CD056ABEF94239C2F199E0019B3 /* PrintLogger.swift in Sources */,
 				240B98AE20D41F9200290B0B /* Generics.swift in Sources */,
 				243B5A3120D9A5A600B57412 /* AttributedString+RichText.swift in Sources */,

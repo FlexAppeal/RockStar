@@ -8,6 +8,10 @@ public protocol Table: GUIElement {}
 public protocol TableCell: GUIElement {}
 public protocol TableRow: GUIElement {}
 
+public protocol Image: GUIElement {
+    var imageFile: ImageFile? { get set }
+}
+
 public protocol Navigator: class, GUIElement {
     associatedtype Element: GUIElementRepresentable
     
