@@ -1,7 +1,7 @@
 import UIKit
 
 extension UILabel: Label {
-    public var text: RichText? {
+    public var richText: RichText? {
         get {
             return self.attributedText?.richText
         }
