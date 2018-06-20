@@ -10,4 +10,13 @@ extension UINavigationController: Navigator {
     public func forward(to controller: Element) {
         self.pushViewController(controller, animated: true)
     }
+    
+    public var background: Background {
+        get {
+            return view.background
+        }
+        set {
+            view.background = newValue
+        }
+    }
 }
