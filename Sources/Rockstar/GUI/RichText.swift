@@ -106,8 +106,12 @@ public struct RichText: ExpressibleByStringLiteral {
         self._string = value
     }
     
-    public init(string: String) {
+    public init(string: String, attributes: [RichTextAttribute]) {
         self._string = string
+        
+        for attribute in attributes {
+            self.apply(attribute: attribute, inRange: 0..<string.count)
+        }
     }
     
     public func attributes(at index: Int) -> RichCharacter {
@@ -139,14 +143,18 @@ public struct RichText: ExpressibleByStringLiteral {
         _string += string
     }
     
-    public mutating func apply(font: TextFont, inRange range: Range<Int>) {
+    public mutating func apply(attribute: RichTextAttribute, inRange range: Range<Int>) {
         assert(range.lowerBound >= 0, "The range starts at a negative offset")
         assert(range.upperBound < _string.count, "Range exceeds the RichText characters count")
         
         self.attributes.append(RangedRichTextAttributes(
-            attribute: .font(font),
+            attribute: attribute,
             from: range.lowerBound,
             to: range.upperBound
         ))
+    }
+    
+    public mutating func apply(font: TextFont, inRange range: Range<Int>) {
+        self.apply(attribute: .font(font), inRange: range)
     }
 }

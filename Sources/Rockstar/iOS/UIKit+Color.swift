@@ -1,6 +1,11 @@
 extension Color {
     var uiColor: UIColor {
-        return UIColor(red: CGFloat(red), green: CGFloat(green), blue: CGFloat(blue), alpha: CGFloat(alpha))
+        return UIColor(
+            red: CGFloat(floatView.red),
+            green: CGFloat(floatView.green),
+            blue: CGFloat(floatView.blue),
+            alpha: CGFloat(floatView.alpha)
+        )
     }
 }
 
@@ -13,7 +18,7 @@ extension UIColor: ColorRepresentable {
         
         self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
         
-        return Color(
+        return Color.fromFloats(
             red: Float(red),
             green: Float(green),
             blue: Float(blue),

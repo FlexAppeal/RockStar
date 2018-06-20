@@ -1,5 +1,5 @@
 public protocol TextualElement: GUIElement {
-    var richText: RichText? { get set }
+    var richText: RichText { get set }
 }
 
 public protocol Label: TextualElement {}

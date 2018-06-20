@@ -93,12 +93,14 @@ public struct Future<FutureValue> {
         }
     }
     
+    @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> Future<FutureValue> {
         return self.then { value in
             var type = type
             type[keyPath: path] = value
         }
     }
+    
     public func cancel() {
         if case .promise(let promise) = storage {
             promise.cancel()

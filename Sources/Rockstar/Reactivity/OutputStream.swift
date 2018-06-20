@@ -40,6 +40,7 @@ public struct OutputStream<FutureValue> {
         return newInputStream.listener
     }
     
+    @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> OutputStream<FutureValue> {
         return self.then { value in
             var type = type
