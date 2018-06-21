@@ -5,7 +5,7 @@ import Rockstar
 /// FIXME: run leaks on memgraph
 /// FIXME: run heap  on memgraph
 
-final class Post: Storeable, Content, UITableViewCellRepresentable {
+struct Post: Storeable, Codable, Content, UITableViewCellRepresentable {
     func makeTableCell() -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
         cell.textLabel?.text = self.title
@@ -19,7 +19,7 @@ final class Post: Storeable, Content, UITableViewCellRepresentable {
     let body: String
 }
 
-final class PostSource: Service, DataManagerSource {
+final class PostSource: Service, DataStoreSource {
     typealias Entity = Post
     
     let client: AnyHTTPClient

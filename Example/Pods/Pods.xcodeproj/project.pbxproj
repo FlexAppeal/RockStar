@@ -30,6 +30,7 @@
 		248A79D620D8059C00113C2B /* UIKit+Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248A79D520D8059C00113C2B /* UIKit+Platform.swift */; };
 		248A79D820D806BE00113C2B /* UIKit+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248A79D720D806BE00113C2B /* UIKit+Color.swift */; };
 		248A79DA20D8089500113C2B /* UIKit+GUIElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248A79D920D8089500113C2B /* UIKit+GUIElement.swift */; };
+		248AC89E20DB7A5B0081574D /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 248AC89D20DB7A5B0081574D /* Label.swift */; };
 		24C3316320D686580076DA80 /* UIKit+Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3316120D686540076DA80 /* UIKit+Label.swift */; };
 		24C3317120D686680076DA80 /* HTTP+Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3316620D686680076DA80 /* HTTP+Content.swift */; };
 		24C3317220D686680076DA80 /* HTTPHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3316820D686680076DA80 /* HTTPHeader.swift */; };
@@ -43,7 +44,6 @@
 		24C3318020D686890076DA80 /* Theming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3317C20D686890076DA80 /* Theming.swift */; };
 		24C3318120D686890076DA80 /* RichText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3317D20D686890076DA80 /* RichText.swift */; };
 		24C3318320D6908B0076DA80 /* Value+OutputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3318220D6908B0076DA80 /* Value+OutputStream.swift */; };
-		24C3318520D696CD0076DA80 /* Observing+LastValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3318420D696CD0076DA80 /* Observing+LastValue.swift */; };
 		24C3318720D6978A0076DA80 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3318620D6978A0076DA80 /* Promise.swift */; };
 		24C3318B20D69C050076DA80 /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3318A20D69C050076DA80 /* Future.swift */; };
 		24C3318D20D69DD10076DA80 /* FutureResult+Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C3318C20D69DD00076DA80 /* FutureResult+Thread.swift */; };
@@ -130,6 +130,7 @@
 		248A79D520D8059C00113C2B /* UIKit+Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Platform.swift"; sourceTree = "<group>"; };
 		248A79D720D806BE00113C2B /* UIKit+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Color.swift"; sourceTree = "<group>"; };
 		248A79D920D8089500113C2B /* UIKit+GUIElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+GUIElement.swift"; sourceTree = "<group>"; };
+		248AC89D20DB7A5B0081574D /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Label.swift; path = ../Sources/Rockstar/RockstarUI/Label.swift; sourceTree = "<group>"; };
 		24C3316120D686540076DA80 /* UIKit+Label.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIKit+Label.swift"; sourceTree = "<group>"; };
 		24C3316620D686680076DA80 /* HTTP+Content.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "HTTP+Content.swift"; sourceTree = "<group>"; };
 		24C3316820D686680076DA80 /* HTTPHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPHeader.swift; sourceTree = "<group>"; };
@@ -143,7 +144,6 @@
 		24C3317C20D686890076DA80 /* Theming.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theming.swift; sourceTree = "<group>"; };
 		24C3317D20D686890076DA80 /* RichText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RichText.swift; sourceTree = "<group>"; };
 		24C3318220D6908B0076DA80 /* Value+OutputStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Value+OutputStream.swift"; sourceTree = "<group>"; };
-		24C3318420D696CD0076DA80 /* Observing+LastValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Observing+LastValue.swift"; sourceTree = "<group>"; };
 		24C3318620D6978A0076DA80 /* Promise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		24C3318A20D69C050076DA80 /* Future.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Future.swift; sourceTree = "<group>"; };
 		24C3318C20D69DD00076DA80 /* FutureResult+Thread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FutureResult+Thread.swift"; sourceTree = "<group>"; };
@@ -278,6 +278,14 @@
 			);
 			name = Errors;
 			path = Sources/Rockstar/Errors;
+			sourceTree = "<group>";
+		};
+		248AC89C20DB7A240081574D /* RockstarUI */ = {
+			isa = PBXGroup;
+			children = (
+				248AC89D20DB7A5B0081574D /* Label.swift */,
+			);
+			path = RockstarUI;
 			sourceTree = "<group>";
 		};
 		24C3316420D686680076DA80 /* Networking */ = {
@@ -434,6 +442,7 @@
 		A6A02B73F1D94B327E92F51B17E0413C /* Rockstar */ = {
 			isa = PBXGroup;
 			children = (
+				248AC89C20DB7A240081574D /* RockstarUI */,
 				248A79BB20D77FF700113C2B /* Errors */,
 				24C3317920D686890076DA80 /* GUI */,
 				24C3316420D686680076DA80 /* Networking */,
@@ -520,7 +529,6 @@
 				240B98B020D41FA700290B0B /* Reactive+Array.swift */,
 				3C2FDA072452C17110468678C78DCE96 /* InputStream.swift */,
 				DA65AB1D9D8FE5F66A7F2005F93AE9CF /* Observation.swift */,
-				24C3318420D696CD0076DA80 /* Observing+LastValue.swift */,
 				24C3318620D6978A0076DA80 /* Promise.swift */,
 				24C3318A20D69C050076DA80 /* Future.swift */,
 				24C3318C20D69DD00076DA80 /* FutureResult+Thread.swift */,
@@ -743,6 +751,7 @@
 				DA09D7F634E11A995E32F7E9F00219F8 /* Configuration.swift in Sources */,
 				240B98AF20D41F9200290B0B /* Time.swift in Sources */,
 				248A79D820D806BE00113C2B /* UIKit+Color.swift in Sources */,
+				248AC89E20DB7A5B0081574D /* Label.swift in Sources */,
 				24C3318B20D69C050076DA80 /* Future.swift in Sources */,
 				243B5A3920DA25DD00B57412 /* Text+Helpers.swift in Sources */,
 				24C3318720D6978A0076DA80 /* Promise.swift in Sources */,
@@ -750,7 +759,6 @@
 				FDA6E42C705CE55A151E99817ECB0E82 /* Error.swift in Sources */,
 				B52D507AF73296DC377263C768B34452 /* FabricLogger.swift in Sources */,
 				243B5A3520DA203200B57412 /* Image.swift in Sources */,
-				24C3318520D696CD0076DA80 /* Observing+LastValue.swift in Sources */,
 				6EB15E28EFD1D4505F8BB3880C84D530 /* Logging.swift in Sources */,
 				24C3319520D6A2F70076DA80 /* Future+Literals.swift in Sources */,
 				9A5C1478CF03E621F786E2A36A33C272 /* MeasurementDataTypes.swift in Sources */,

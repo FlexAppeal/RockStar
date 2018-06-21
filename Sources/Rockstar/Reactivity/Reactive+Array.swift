@@ -70,6 +70,16 @@ extension OutputStream where FutureValue: Sequence {
     }
 }
 
+extension Future where FutureValue: Sequence {
+    public func mapContents<NewValue>(
+        _ transform: @escaping (FutureValue.Element) throws -> NewValue
+        ) -> Future<[NewValue]> {
+        return self.map { sequence in
+            return try sequence.map(transform)
+        }
+    }
+}
+
 public struct AnyThread {
     enum ThreadType {
         case dispatch(DispatchQueue)

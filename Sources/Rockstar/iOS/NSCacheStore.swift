@@ -1,21 +1,5 @@
 import Foundation
 
-fileprivate struct NSCacheStoreDataSource<E: Storeable> {
-    let fetchOne: (E.Identifier) -> Future<E?>
-    let fetchMany: (Set<E.Identifier>) -> Future<[E]>
-    let count: () -> Future<Int>
-    let all: () -> Future<[E]>
-    let paginate: (Int, Int) -> Future<PaginatedResults<E>>
-    
-    init<Source: DataManagerSource>(source: Source) where Source.Entity == E {
-        self.fetchOne = source.fetchOne
-        self.fetchMany = source.fetchMany
-        self.count = source.count
-        self.all = source.all
-        self.paginate = source.paginate
-    }
-}
-
 fileprivate struct AnyNSCacheDataSource<E: Storeable> {
     let fetchOne: (E.Identifier) -> Future<E?>
     let fetchMany: (Set<E.Identifier>) -> Future<[E]>
@@ -23,7 +7,7 @@ fileprivate struct AnyNSCacheDataSource<E: Storeable> {
     let all: () -> Future<[E]>
     let paginate: (Int, Int) -> Future<PaginatedResults<E>>
     
-    init<Source: DataManagerSource>(source: Source) where Source.Entity == E {
+    init<Source: DataStoreSource>(source: Source) where Source.Entity == E {
         self.fetchOne = source.fetchOne
         self.fetchMany = source.fetchMany
         self.count = source.count
@@ -56,7 +40,7 @@ public final class NSCacheStore<Entity: Storeable>: Store {
     private var entities = NSCache<AnyIdentifier, AnyInstance>()
     private var source: AnyNSCacheDataSource<Entity>?
     
-    public func fetchData<Source: DataManagerSource>(fromSource source: Source) where Source.Entity == Entity {
+    public func fetchData<Source: DataStoreSource>(fromSource source: Source) where Source.Entity == Entity {
         self.source = .init(source: source)
     }
     
@@ -64,7 +48,7 @@ public final class NSCacheStore<Entity: Storeable>: Store {
         self.source = nil
     }
     
-    public init<Source: DataManagerSource>(source: Source) where Source.Entity == Entity {
+    public init<Source: DataStoreSource>(source: Source) where Source.Entity == Entity {
         self.source = .init(source: source)
     }
     

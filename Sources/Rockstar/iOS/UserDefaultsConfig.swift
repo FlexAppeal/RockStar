@@ -1,9 +1,9 @@
 import Foundation
 
 public struct UserDefaultsConfig: Configuration {
-    let defaults: UserDefaults
+    public let defaults: UserDefaults
     
-    init(_ defaults: UserDefaults) {
+    public init(_ defaults: UserDefaults = .standard) {
         self.defaults = defaults
     }
 }

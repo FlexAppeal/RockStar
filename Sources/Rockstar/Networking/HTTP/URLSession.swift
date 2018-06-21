@@ -91,7 +91,7 @@ extension HTTPClient {
         }
     }
     
-    public func get<C: Content>(
+    public func get<C: ContentDecodable>(
         _ type: C.Type,
         from url: URLRepresentable,
         headers: HTTPHeaders
@@ -100,7 +100,7 @@ extension HTTPClient {
         return wrap(self.send(body, to: url, headers: headers, method: .get))
     }
     
-    public func put<Input: Content, Output: Content>(
+    public func put<Input: ContentEncodable, Output: ContentDecodable>(
         _ input: Input,
         to url: URLRepresentable,
         headers: HTTPHeaders,
@@ -109,7 +109,7 @@ extension HTTPClient {
         return wrap(self.send(encode(input), to: url, headers: headers, method: .put))
     }
     
-    public func post<Input: Content, Output: Content>(
+    public func post<Input: ContentEncodable, Output: ContentDecodable>(
         _ input: Input,
         to url: URLRepresentable,
         headers: HTTPHeaders,
@@ -118,7 +118,7 @@ extension HTTPClient {
         return wrap(self.send(encode(input), to: url, headers: headers, method: .post))
     }
     
-    public func patch<Input: Content, Output: Content>(
+    public func patch<Input: ContentEncodable, Output: ContentDecodable>(
         _ input: Input,
         to url: URLRepresentable,
         headers: HTTPHeaders,
@@ -127,7 +127,7 @@ extension HTTPClient {
         return wrap(self.send(encode(input), to: url, headers: headers, method: .patch))
     }
     
-    public func delete<C: Content>(
+    public func delete<C: ContentDecodable>(
         _ type: C.Type,
         from url: URLRepresentable,
         headers: HTTPHeaders
@@ -136,7 +136,7 @@ extension HTTPClient {
         return wrap(self.send(body, to: url, headers: headers, method: .delete))
     }
     
-    private func encode<C: Content>(_ input: C) -> Future<HTTPBody> {
+    private func encode<C: ContentEncodable>(_ input: C) -> Future<HTTPBody> {
         do {
             let registery = try Services.default.make(CoderRegistery.self)
             
@@ -155,5 +155,11 @@ extension HTTPClient {
         for content: C.Type = C.self
     ) -> Future<ContentResponse<C>> {
         return response.map(ContentResponse<C>.init)
+    }
+}
+
+extension Future {
+    public func body<C: ContentDecodable>() -> Future<C> where FutureValue == ContentResponse<C> {
+        return self.flatMap { $0.decodeBody() }
     }
 }

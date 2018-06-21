@@ -27,9 +27,12 @@ public struct MediaType: ExpressibleByStringLiteral, Hashable {
     public static let jpeg: MediaType = "image/jpeg"
 }
 
-public protocol Content: Codable {
+public protocol Content {
     static var defaultContentType: MediaType { get }
 }
+
+public typealias ContentEncodable = Content & Encodable
+public typealias ContentDecodable = Content & Decodable
 
 extension Content {
     public static var defaultContentType: MediaType { return .json }
@@ -43,7 +46,7 @@ public protocol APIContent: Content {
 
 public protocol Model: Codable {}
 
-public struct ContentResponse<C: Content> {
+public struct ContentResponse<C: ContentDecodable> {
     public let raw: HTTPResponse
     
     public func decodeBody() -> Future<C> {
@@ -71,6 +74,8 @@ public protocol ContentDecoder {
     
     func decodeContent<D: Decodable>(_ type: D.Type, from body: HTTPBody) -> Future<D>
 }
+
+public typealias ContentCodable = ContentEncoder & ContentDecodable
 
 extension JSONEncoder: ContentEncoder {
     public static let mediaType = MediaType.json

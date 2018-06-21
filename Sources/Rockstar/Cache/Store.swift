@@ -25,8 +25,8 @@ public struct PaginatedResults<Result> {
     }
 }
 
-public protocol DataManagerSource {
-    associatedtype Entity: Storeable & AnyObject
+public protocol DataStoreSource {
+    associatedtype Entity: Storeable
     
     func count() -> Future<Int>
     
@@ -43,7 +43,7 @@ fileprivate struct EntityNotFound: RockstarError {
     let location = SourceLocation()
 }
 
-extension DataManagerSource {
+extension DataStoreSource {
     public func fetchMany(byIds ids: Set<Entity.Identifier>) -> Future<[Entity]> {
         var entities = [Future<Entity>]()
         for id in ids {
