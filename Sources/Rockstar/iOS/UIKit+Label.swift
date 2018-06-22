@@ -9,13 +9,4 @@ extension UILabel: Label {
             self.attributedText = newValue.attributedString
         }
     }
-    
-    public var color: Color? {
-        get {
-            return self.textColor.makeColor()
-        }
-        set {
-            self.textColor = newValue?.uiColor
-        }
-    }
 }

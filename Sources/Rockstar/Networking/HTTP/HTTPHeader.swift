@@ -12,11 +12,18 @@ public struct HTTPHeaderKey<Value: HTTPHeaderValue>: ExpressibleByStringLiteral 
 
 extension HTTPHeaderKey where Value == MediaType {
     public static let contentType: HTTPHeaderKey<MediaType> = "Content-Type"
+    public static let contentLength: HTTPHeaderKey<Int> = "Content-Length"
 }
 
 extension String: HTTPHeaderValue {
     public var headerValue: String {
         return self
+    }
+}
+
+extension Int: HTTPHeaderValue {
+    public var headerValue: String {
+        return "\(self)"
     }
 }
 
@@ -45,22 +52,31 @@ public struct HTTPHeaders: ExpressibleByDictionaryLiteral {
     
     public init(dictionaryLiteral elements: (String, String)...) {
         for (key, value) in elements {
-            self.add(key, value: value)
+            self[key] = value
         }
     }
     
-    public mutating func add<Value: HTTPHeaderValue>(
+    public mutating func add<Value>(
         _ key: HTTPHeaderKey<Value>,
         value: Value
     ) {
-        self.add(key.headerKey, value: value.headerValue)
+        self[key.headerKey] = value.headerValue
     }
     
-    public mutating func add(_ key: String, value: String) {
-        if let index = self.storage.index(where: { $0.0 == key }) {
-            storage[index].1 = value
-        } else {
-            storage.append((key, value))
+    public subscript(key: String) -> String? {
+        get {
+            return self.storage.first { $0.0 == key }?.1
+        }
+        set {
+            if let index = self.storage.index(where: { $0.0 == key }) {
+                if let newValue = newValue {
+                    storage[index].1 = newValue
+                } else {
+                    storage.remove(at: index)
+                }
+            } else if let newValue = newValue {
+                storage.append((key, newValue))
+            }
         }
     }
 }
@@ -69,11 +85,11 @@ public func +(lhs: HTTPHeaders, rhs: HTTPHeaders) -> HTTPHeaders {
     var headers = HTTPHeaders()
     
     for (key, value) in lhs.storage {
-        headers.add(key, value: value)
+        headers[key] = value
     }
     
     for (key, value) in rhs.storage {
-        headers.add(key, value: value)
+        headers[key] = value
     }
     
     return headers
@@ -81,6 +97,6 @@ public func +(lhs: HTTPHeaders, rhs: HTTPHeaders) -> HTTPHeaders {
 
 public func +=(lhs: inout HTTPHeaders, rhs: HTTPHeaders) {
     for (key, value) in rhs.storage {
-        lhs.add(key, value: value)
+        lhs[key] = value
     }
 }

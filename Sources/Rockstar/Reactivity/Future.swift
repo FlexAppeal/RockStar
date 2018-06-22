@@ -26,7 +26,6 @@ public struct Future<FutureValue> {
         self.storage = .promise(promise)
     }
     
-    @discardableResult
     public func map<R>(_ mapper: @escaping (FutureValue) throws -> (R)) -> Future<R> {
         switch storage {
         case .concrete(let result):
@@ -63,7 +62,6 @@ public struct Future<FutureValue> {
         }
     }
     
-    @discardableResult
     public func flatMap<R>(_ mapper: @escaping (FutureValue) throws -> (Future<R>)) -> Future<R> {
         switch storage {
         case .concrete(let result):
@@ -90,14 +88,6 @@ public struct Future<FutureValue> {
                 }.catch(newPromise.fail)
             
             return newPromise.future
-        }
-    }
-    
-    @discardableResult
-    public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> Future<FutureValue> {
-        return self.then { value in
-            var type = type
-            type[keyPath: path] = value
         }
     }
     

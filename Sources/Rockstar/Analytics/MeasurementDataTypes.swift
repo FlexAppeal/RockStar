@@ -14,6 +14,7 @@ public struct Performance {
 
 public struct SanityCheck {
     public let isSane: Bool
+    public let message: String
 }
 
 public struct Measurement {

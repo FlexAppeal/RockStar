@@ -1,20 +1,27 @@
-public enum Reference<S: Store> {
-    case reference(S.Entity.Identifier)
-    case concrete(S.Entity)
+public enum Reference<S: Storeable> {
+    case reference(S.Identifier)
+    case concrete(S)
+    
+    public var identifier: S.Identifier {
+        switch self {
+        case .reference(let id): return id
+        case .concrete(let entity): return entity.identifier
+        }
+    }
 }
 
-extension Reference: Decodable where S.Entity: Decodable, S.Entity.Identifier: Decodable {
+extension Reference: Decodable where S: Decodable, S.Identifier: Decodable {
     public init(from decoder: Decoder) throws {
         do {
-            self = try .concrete(S.Entity.init(from: decoder))
+            self = try .concrete(S.init(from: decoder))
         } catch {
-            self = try .reference(S.Entity.Identifier.init(from: decoder))
+            self = try .reference(S.Identifier.init(from: decoder))
         }
     }
 }
 
 extension Store {
-    func resolve(_ reference: Reference<Self>) -> Future<Entity?> {
+    func resolve(_ reference: Reference<Entity>) -> Future<Entity?> {
         switch reference {
         case .reference(let identifier):
             return self[identifier]

@@ -5,7 +5,6 @@ public struct OutputStream<FutureValue> {
         self.inputStream = inputStream
     }
     
-    @discardableResult
     public func map<R>(_ mapper: @escaping (FutureValue) throws -> (R)) -> OutputStream<R> {
         let newInputStream = InputStream<R>()
         self.inputStream.registerCallback { result in
@@ -26,8 +25,7 @@ public struct OutputStream<FutureValue> {
         return newInputStream.listener
     }
     
-    @discardableResult
-    public func flatMap<R>(_ mapper: @escaping (FutureValue) throws -> (OutputStream<R>)) -> OutputStream<R> {
+    public func flatMap<R>(_ mapper: @escaping (FutureValue) throws -> (Future<R>)) -> OutputStream<R> {
         let newInputStream = InputStream<R>()
         self.then { value in
             do {
@@ -38,14 +36,6 @@ public struct OutputStream<FutureValue> {
         }.catch(newInputStream.error)
         
         return newInputStream.listener
-    }
-    
-    @discardableResult
-    public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> OutputStream<FutureValue> {
-        return self.then { value in
-            var type = type
-            type[keyPath: path] = value
-        }
     }
     
     public func cancel() {

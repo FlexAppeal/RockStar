@@ -36,11 +36,12 @@ public final class Analytics {
     
     public func assert(
         location: SourceLocation = SourceLocation(),
-        check: @autoclosure () throws -> Bool
+        check: @autoclosure () throws -> Bool,
+        message: String = ""
     ) {
         #if ANALYZE
         let success = try? check() == true
-        let check = SanityCheck(isSane: success)
+        let check = SanityCheck(isSane: success, message: message)
         observable.next(Measurement(data: .sanity(check), location: location))
         #endif
     }

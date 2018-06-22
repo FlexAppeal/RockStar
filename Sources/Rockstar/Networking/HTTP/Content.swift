@@ -75,7 +75,7 @@ public protocol ContentDecoder {
     func decodeContent<D: Decodable>(_ type: D.Type, from body: HTTPBody) -> Future<D>
 }
 
-public typealias ContentCodable = ContentEncoder & ContentDecodable
+public typealias ContentCodable = ContentEncodable & ContentDecodable
 
 extension JSONEncoder: ContentEncoder {
     public static let mediaType = MediaType.json
@@ -100,8 +100,6 @@ extension JSONDecoder: ContentDecoder {
                     return Future(result: try self.decode(D.self, from: Data()))
                 case .data(let data):
                     return Future(result: try self.decode(D.self, from: data))
-                case .async(let future):
-                    return future.flatMap(decode)
                 }
             } catch {
                 return Future(error: error)

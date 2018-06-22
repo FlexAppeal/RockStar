@@ -12,7 +12,7 @@ fileprivate extension HTTPResponse {
         var headers = HTTPHeaders()
         
         for (key, value) in response.allHeaderFields {
-            headers.add(key.description, value: "\(value)")
+            headers[key.description] = "\(value)"
         }
         
         let body: HTTPBody
@@ -67,10 +67,6 @@ extension URLSession: HTTPClient {
         case .data(let data):
             request.httpBody = data
             return Future(result: request)
-        case .async(let body):
-            return body.flatMap { storage in
-                return self.withBody(storage, on: request)
-            }
         case .none:
             return Future(result: request)
         }
@@ -78,11 +74,11 @@ extension URLSession: HTTPClient {
 }
 
 extension HTTPClient {
-    public func send(_ body: Future<HTTPBody>, to url: URLRepresentable, headers: HTTPHeaders, method: HTTPMethod) -> Future<HTTPResponse> {
-        return body.flatMap { body in
+    public func send(_ body: HTTPBody, to url: URLRepresentable, headers: HTTPHeaders, method: HTTPMethod) -> Future<HTTPResponse> {
+        return Future.do {
             let request = HTTPRequest(
                 method: method,
-                url: try url.makeURL(),
+                url: try url.makeURL(), 
                 headers: headers,
                 body: body
             )
@@ -96,7 +92,7 @@ extension HTTPClient {
         from url: URLRepresentable,
         headers: HTTPHeaders
     ) -> Future<ContentResponse<C>> {
-        let body = Future(result: HTTPBody())
+        let body = HTTPBody()
         return wrap(self.send(body, to: url, headers: headers, method: .get))
     }
     
@@ -106,7 +102,13 @@ extension HTTPClient {
         headers: HTTPHeaders,
         expecting response: Output.Type
     ) -> Future<ContentResponse<Output>> {
-        return wrap(self.send(encode(input), to: url, headers: headers, method: .put))
+        return encode(input).flatMap { body in
+            var headers = headers
+            headers.add(.contentType, value: Input.defaultContentType)
+//            headers.add(.contentLength, value: body.storage.count)
+            
+            return self.wrap(self.send(body, to: url, headers: headers, method: .put))
+        }
     }
     
     public func post<Input: ContentEncodable, Output: ContentDecodable>(
@@ -115,7 +117,13 @@ extension HTTPClient {
         headers: HTTPHeaders,
         expecting response: Output.Type
     ) -> Future<ContentResponse<Output>> {
-        return wrap(self.send(encode(input), to: url, headers: headers, method: .post))
+        return encode(input).flatMap { body in
+            var headers = headers
+            headers.add(.contentType, value: Input.defaultContentType)
+//            headers.add(.contentLength, value: body.storage.count)
+            
+            return self.wrap(self.send(body, to: url, headers: headers, method: .post))
+        }
     }
     
     public func patch<Input: ContentEncodable, Output: ContentDecodable>(
@@ -124,7 +132,13 @@ extension HTTPClient {
         headers: HTTPHeaders,
         expecting response: Output.Type
     ) -> Future<ContentResponse<Output>> {
-        return wrap(self.send(encode(input), to: url, headers: headers, method: .patch))
+        return encode(input).flatMap { body in
+            var headers = headers
+            headers.add(.contentType, value: Input.defaultContentType)
+//            headers.add(.contentLength, value: body.storage.count)
+            
+            return self.wrap(self.send(body, to: url, headers: headers, method: .patch))
+        }
     }
     
     public func delete<C: ContentDecodable>(
@@ -132,7 +146,7 @@ extension HTTPClient {
         from url: URLRepresentable,
         headers: HTTPHeaders
     ) -> Future<ContentResponse<C>> {
-        let body = Future(result: HTTPBody())
+        let body = HTTPBody()
         return wrap(self.send(body, to: url, headers: headers, method: .delete))
     }
     

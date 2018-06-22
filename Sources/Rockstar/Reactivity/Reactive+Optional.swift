@@ -8,6 +8,18 @@ extension Future {
             return value
         }
     }
+    
+    public func optionalMap<B, T>(
+        _ run: @escaping (B) throws -> T
+    ) -> Future<T?> where FutureValue == B? {
+        return self.map { value -> T? in
+            if let value = value {
+                return try run(value)
+            }
+            
+            return nil
+        }
+    }
 }
 
 extension OutputStream {
@@ -18,6 +30,18 @@ extension OutputStream {
             }
             
             return value
+        }
+    }
+    
+    public func optionalMap<B, T>(
+        _ run: @escaping (B) throws -> T
+    ) -> OutputStream<T?> where FutureValue == B? {
+        return self.map { value -> T? in
+            if let value = value {
+                return try run(value)
+            }
+            
+            return nil
         }
     }
 }

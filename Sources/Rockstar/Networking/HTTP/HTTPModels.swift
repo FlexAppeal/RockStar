@@ -58,8 +58,14 @@ public struct HTTPResponse {
 public struct HTTPBody {
     public indirect enum Storage {
         case data(Data)
-        case async(Future<Storage>)
         case none
+        
+        public var count: Int {
+            switch self {
+            case .data(let data): return data.count
+            case .none: return 0
+            }
+        }
     }
     
     public let storage: Storage
@@ -70,11 +76,5 @@ public struct HTTPBody {
     
     public init(data: Data) {
         self.storage = .data(data)
-    }
-    
-    public init(data: Future<Data>) {
-        self.storage = .async(data.map {
-            Storage.data($0)
-        })
     }
 }
