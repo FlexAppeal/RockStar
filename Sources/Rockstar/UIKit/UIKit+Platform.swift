@@ -21,7 +21,7 @@ public final class UIKitPlatform: GUIPlatform {
     public typealias TableCellType = UITableViewCell
     public typealias ButtonType = UIButton
     public typealias LabelType = UILabel
-    public typealias NavigatorType = UINavigationController
+    public typealias NavigatorType = UIKitNavigator
     public typealias ImageType = UIImageView
     public typealias FormComponentType = UIKitFormComponent
 }

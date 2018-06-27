@@ -7,6 +7,13 @@ public protocol UIViewControllerRepresentable {
 public struct UINavigationItemConfiguration {
     fileprivate let controller: UIViewController
     fileprivate let navigator: UINavigationController
+    fileprivate var actions: NavigationActions
+}
+
+final class NavigationActions {
+    var items = [AnyNavigationAction]()
+    
+    public init() {}
 }
 
 extension ConfigurationHandle where Configurable == UINavigationItemConfiguration {
@@ -25,9 +32,8 @@ extension ConfigurationHandle where Configurable == UINavigationItemConfiguratio
         alignment: HorizontalDirection = .right,
         run action: @escaping (UINavigationController) throws -> ()
     ) -> ActionHandle {
+        let navigator = self.configurable.navigator
         let action = AnyNavigationAction {
-            let navigator = self.configurable.navigator
-            
             do {
                 try action(navigator)
             } catch let error as RockstarError {
@@ -42,7 +48,9 @@ extension ConfigurationHandle where Configurable == UINavigationItemConfiguratio
             }
         }
         
-        let button = UIBarButtonItem(title: name, style: .plain, target: action, action: #selector(AnyNavigationAction.run))
+        self.configurable.actions.items.append(action)
+        
+        let button = UIBarButtonItem(title: name, style: .plain, target: action, action: #selector(action.run))
         
         switch alignment {
         case .left:
@@ -61,21 +69,33 @@ extension ConfigurationHandle where Configurable == UINavigationItemConfiguratio
     }
 }
 
-extension UINavigationController: Navigator {
+public final class UIKitNavigator: Navigator, UIViewControllerRepresentable {
+    private let navigator: UINavigationController
+    private var items = [UINavigationItemConfiguration]()
+    
+    public var controller: UIViewController { return navigator }
+    
     public typealias Platform = UIKitPlatform
     public typealias Navigateable = UIViewControllerRepresentable
     public typealias NavigationConfiguration = UINavigationItemConfiguration
+    
+    public init() {
+        navigator = UINavigationController(rootViewController: UIViewController())
+    }
     
     @discardableResult
     public func setView(to navigateable: Navigateable) -> ConfigurationHandle<NavigationConfiguration> {
         let item = UINavigationItemConfiguration(
             controller: navigateable.controller,
-            navigator: self
+            navigator: navigator,
+            actions: NavigationActions()
         )
         
         return ConfigurationHandle(item) {
-            print(navigateable.controller.title)
-            self.setViewControllers([navigateable.controller], animated: false)
+            self.items = [item]
+            
+            /// FIXME: navigateable.controller has no tit
+            self.navigator.setViewControllers([item.controller], animated: false)
         }
     }
     
@@ -83,24 +103,30 @@ extension UINavigationController: Navigator {
     public func open(_ navigateable: Navigateable) -> ConfigurationHandle<NavigationConfiguration> {
         let item = UINavigationItemConfiguration(
             controller: navigateable.controller,
-            navigator: self
+            navigator: navigator,
+            actions: NavigationActions()
         )
         
         return ConfigurationHandle(item) {
-            self.pushViewController(navigateable.controller, animated: true)
+            self.items.append(item)
+            self.navigator.pushViewController(item.controller, animated: true)
         }
     }
     
     public func `return`(to navigateable: Navigateable) {
-        self.popToViewController(navigateable.controller, animated: true)
+        let count = navigator.popToViewController(navigateable.controller, animated: true)?.count
+        
+        if let count = count {
+            self.items.removeLast(count)
+        }
     }
     
     public var background: Background {
         get {
-            return view.background
+            return navigator.view.background
         }
         set {
-            view.background = newValue
+            navigator.view.background = newValue
         }
     }
 }

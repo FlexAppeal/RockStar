@@ -35,7 +35,7 @@ public protocol Navigator {
 }
 
 public struct ActionHandle {
-    internal let action: Action
+    public let action: Action
 }
 
 struct UnnassignedNavigationController: Error {}
@@ -276,10 +276,11 @@ open class UIKitApplication: UIViewController {
 public final class ApplicationContext {
     internal var view = UIView()
     internal var controller: UIViewController?
+    internal var associatedReferences = [AnyObject]()
     
-    public func display(_ controller: UIViewController) {
-        self.controller = controller
-        self.view = controller.view
+    public func display(_ controller: UIViewControllerRepresentable) {
+        self.controller = controller.controller
+        self.view = controller.controller.view
     }
     
     init() {}

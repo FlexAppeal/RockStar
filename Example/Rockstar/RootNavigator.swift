@@ -9,13 +9,6 @@
 import UIKit
 import Rockstar
 
-final class RootNavigator: UINavigationController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        UIKitAppState.default.currentNavigator = self
-    }
-}
-
 enum AuthenticationMechanism {
     case none
     case mongoCR
@@ -34,12 +27,10 @@ enum AuthenticationMechanism {
 
 final class ApplicationView: UIKitApplication {
     override func configure(_ application: ApplicationContext) {
-        let mainView = UINavigationController()
+        let navigator = UIKitNavigator()
         let favouriteDatabases = TableView<UIKitPlatform>()
-        let viewHandle = mainView.setView(to: favouriteDatabases)
+        let viewHandle = navigator.setView(to: favouriteDatabases)
         viewHandle.title = "Favourites"
-        
-        print(viewHandle.title)
         
         viewHandle.addAction(named: "New") { navigationView in
             let builder = FormBuilder<UIKitPlatform>()
@@ -111,9 +102,9 @@ final class ApplicationView: UIKitApplication {
 //                } catch {}
             }
             
-            navigationView.open(builder.makeFormController())
+            navigator.open(builder.makeFormController())
         }
         
-        application.display(mainView)
+        application.display(navigator)
     }
 }
