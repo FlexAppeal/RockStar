@@ -42,7 +42,7 @@ public struct HTTPRequest {
         request.httpMethod = method.rawValue
         
         for (key, value) in headers.storage {
-            request.addValue(key, forHTTPHeaderField: value)
+            request.addValue(value, forHTTPHeaderField: key)
         }
         
         return request

@@ -105,4 +105,12 @@ public struct Color {
     public static var blue: Color {
         return Color.fromBytes(red: 0, green: 0, blue: 1, alpha: 1)
     }
+    
+    public static var white: Color {
+        return Color.fromBytes(red: 0, green: 1, blue: 1, alpha: 1)
+    }
+    
+    public static var black: Color {
+        return Color.fromBytes(red: 0, green: 0, blue: 0, alpha: 1)
+    }
 }

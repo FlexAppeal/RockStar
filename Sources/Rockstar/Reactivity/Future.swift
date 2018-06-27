@@ -163,4 +163,13 @@ public struct Future<FutureValue> {
         
         return self
     }
+    
+    public static func `do`(_ run: () throws -> Future<FutureValue>) -> Future<FutureValue> {
+        do {
+            return try run()
+        } catch {
+            return Future(error: error)
+        }
+    }
 }
+

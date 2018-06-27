@@ -13,6 +13,8 @@ public final class Promise<FutureValue> {
         }
     }
     
+    public var failOnDeinit = true
+    
     var cancelAction: (()->())?
     
     var result: Observation<FutureValue>?
@@ -65,4 +67,12 @@ public final class Promise<FutureValue> {
         
         triggerCallbacks(with: result)
     }
+    
+    deinit {
+        if failOnDeinit {
+            self.fail(NeverCompleted())
+        }
+    }
 }
+
+struct NeverCompleted: Error {}

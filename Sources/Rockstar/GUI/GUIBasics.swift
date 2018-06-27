@@ -11,10 +11,3 @@ public protocol TableRow: GUIElement {}
 public protocol Image: GUIElement {
     var imageFile: ImageFile? { get set }
 }
-
-public protocol Navigator: class, GUIElement {
-    associatedtype Element: GUIElementRepresentable
-    
-    func forward(to element: Element)
-    func backwards()
-}

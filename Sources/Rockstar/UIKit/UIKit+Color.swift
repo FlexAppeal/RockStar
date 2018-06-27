@@ -1,5 +1,5 @@
 extension Color {
-    var uiColor: UIColor {
+    public var uiColor: UIColor {
         return UIColor(
             red: CGFloat(floatView.red),
             green: CGFloat(floatView.green),

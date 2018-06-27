@@ -1,7 +1,7 @@
 import UIKit
 
 extension Store where Entity: UITableViewCellRepresentable {
-    public func makeDataSource(for table: UITableView) {
+    public func makeDataSource(forTable table: UITableView) {
         let inputStream = InputStream<[Entity]>()
         
         func reloadData() -> Future<Void> {
@@ -15,7 +15,7 @@ extension Store where Entity: UITableViewCellRepresentable {
 }
 
 extension OutputStream where FutureValue: Sequence, FutureValue.Element: UITableViewCellRepresentable {
-    public func makeDataSource(for table: UITableView) {
+    public func makeDataSource(forTable table: UITableView) {
         let data = self.map(Array.init)
         
         let source = OutputStreamTableDataSource(observable: data, table: table) {
