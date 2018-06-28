@@ -1,4 +1,4 @@
-//
+    //
 //  ViewController.swift
 //  Rockstar
 //
@@ -25,7 +25,7 @@ enum AuthenticationMechanism {
     }
 }
 
-final class ApplicationView: UIKitApplication {
+final class ApplicationView: UIKitApplication
     override func configure(_ application: ApplicationContext) {
         let navigator = UIKitNavigator()
         let favouriteDatabases = TableView<UIKitPlatform>()
@@ -36,6 +36,7 @@ final class ApplicationView: UIKitApplication {
             let builder = FormBuilder<UIKitPlatform>()
             
             let connectionString = TextField()
+            connectionString.placeholder = "MongoDB Connection URI"
             builder.addRow(connectionString)
             
             let hostname = TextField()
@@ -49,10 +50,12 @@ final class ApplicationView: UIKitApplication {
             port.placeholder = "27017"
 
             let username = TextField()
+            username.placeholder = "Username"
             builder.addRow(username)
 //            password.placeholder = Application.translation(for: .username)
 
             let password = TextField.password()
+            password.placeholder = "Password"
             builder.addRow(password)
 //            password.placeholder = Application.translation(for: .password)
             
@@ -102,7 +105,8 @@ final class ApplicationView: UIKitApplication {
 //                } catch {}
             }
             
-            navigator.open(builder.makeFormController())
+            let form = navigator.open(builder.makeFormController())
+            form.title = "New connection"
         }
         
         application.display(navigator)

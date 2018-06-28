@@ -61,17 +61,33 @@ public final class FormBuilder<P: GUIPlatform> {
 }
 
 extension FormBuilder where P == UIKitPlatform {
-    public func makeFormController() -> UIViewController {
-        let controller = UIViewController()
-        
-        for row in rows {
-            for item in row {
-                controller.view.addSubview(item.view)
-            }
-        }
-        
-        return controller
-    }
+    /// TODO: Form-encoded/JSON generator
+    
+//    @available(iOS 9.0, *)
+//    public func makeFormController() -> UIViewController {
+//        let controller = UIViewController()
+//
+//        for row in self.rows {
+//            let view = row[0].view
+//
+//            let base = view.viewConstraint
+//            let parent = controller.view.viewConstraint
+//
+//            base.addConstraint(base.width == parent.width)
+//
+//            let width = NSLayoutConstraint(
+//                item: view,
+//                attribute: .width,
+//                relatedBy: .equal,
+//                toItem: controller.view,
+//                attribute: .width,
+//                multiplier: 1,
+//                constant: 0
+//            )
+//        }
+//
+//        return controller
+//    }
     
     public func addSelection<R>(
         result: R.Type,
@@ -81,6 +97,69 @@ extension FormBuilder where P == UIKitPlatform {
         self.rows.append([selection])
         
         return selection
+    }
+}
+
+public func ==(lhs: ConstraintType, rhs: ConstraintType) -> Constraint {
+    return Constraint(
+        lhs: lhs.builder.view,
+        lhsAttribute: lhs.attribute,
+        relation: .equal,
+        rhs: rhs.builder.view,
+        rhsAttribute: rhs.attribute
+    )
+}
+
+public struct Constraint {
+    internal var lhs: Any
+    internal var lhsAttribute: NSLayoutAttribute
+    
+    internal var relation: NSLayoutRelation
+    
+    internal var rhs: Any?
+    internal var rhsAttribute: NSLayoutAttribute
+}
+
+public final class ConstraintType {
+    let builder: ConstraintBuilder
+    let attribute: NSLayoutAttribute
+    
+    init(builder: ConstraintBuilder, attribute: NSLayoutAttribute) {
+        self.builder = builder
+        self.attribute = attribute
+    }
+}
+
+/// Do not kepe a strong reference to this entity
+public final class ConstraintBuilder {
+    public var width: ConstraintType {
+        return ConstraintType(builder: self, attribute: .width)
+    }
+    
+    public func addConstraint(_ constraint: Constraint, multipliedBy multiplier: CGFloat = 1, addingConstant constant: CGFloat = 0) {
+        let layoutConstraint = NSLayoutConstraint(
+            item: constraint.lhs,
+            attribute: constraint.lhsAttribute,
+            relatedBy: constraint.relation,
+            toItem: constraint.rhs,
+            attribute: constraint.rhsAttribute,
+            multiplier: multiplier,
+            constant: constant
+        )
+        
+        view.addConstraint(layoutConstraint)
+    }
+    
+    let view: UIView
+    
+    init(for view: UIView) {
+        self.view = view
+    }
+}
+
+extension UIView {
+    public var viewConstraint: ConstraintBuilder {
+        return ConstraintBuilder(for: self)
     }
 }
 

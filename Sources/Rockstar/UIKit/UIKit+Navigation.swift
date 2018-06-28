@@ -16,6 +16,10 @@ final class NavigationActions {
     public init() {}
 }
 
+struct Weak<T: AnyObject> {
+    weak var value: T?
+}
+
 extension ConfigurationHandle where Configurable == UINavigationItemConfiguration {
     public var title: String {
         get {
@@ -32,8 +36,11 @@ extension ConfigurationHandle where Configurable == UINavigationItemConfiguratio
         alignment: HorizontalDirection = .right,
         run action: @escaping (UINavigationController) throws -> ()
     ) -> ActionHandle {
-        let navigator = self.configurable.navigator
+        let navigator = Weak(value: self.configurable.navigator)
+        
         let action = AnyNavigationAction {
+            guard let navigator = navigator.value else { return }
+            
             do {
                 try action(navigator)
             } catch let error as RockstarError {
