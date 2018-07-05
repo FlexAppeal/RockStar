@@ -1,10 +1,16 @@
 import Foundation
 
-public struct HTTPClientConfig {
+public struct HTTPClientConfig: Service {
     public static var `default` = HTTPClientConfig()
     
-    public var timeout: RSTimeout?
+    public var timeout: RSTimeout? = RSTimeout(after: .seconds(30), onThread: .dispatchQueue(.main))
+    public var switchThread: AnyThread? = .dispatchQueue(.main)
+    
+    public var debugLogs: LogDestination?
+    
     public var services: () -> (Services) = { return .default }
+    
+    public init() {}
 }
 
 fileprivate extension HTTPResponse {
@@ -26,12 +32,43 @@ fileprivate extension HTTPResponse {
     }
 }
 
+public final class RSURLSession: Service, HTTPClient {
+    let session: URLSession
+    let config: HTTPClientConfig
+    
+    public init(config: HTTPClientConfig) {
+        self.session = URLSession(configuration: .default)
+        self.config = config
+    }
+    
+    public func request(_ request: HTTPRequest) -> Future<HTTPResponse> {
+        var response = session.request(request)
+            
+        if let switchThread = config.switchThread {
+            response = response.switchThread(to: .dispatchQueue(.main))
+        }
+        
+        #if DEBUG
+        if let logger = config.debugLogs {
+            response.then { response in
+                logger.log("\(request)")
+                logger.log("\(response)")
+            }
+        }
+        #endif
+        
+        if let timeout = config.timeout {
+            response = response.timeout(timeout)
+        }
+        
+        return response
+    }
+}
+
 extension URLSession: Service {}
 extension URLSessionConfiguration: Service {}
 
-extension URLSession: BasicRockstar {
-    public static var settings: HTTPClientConfig { return .default }
-}
+extension URLSession: BasicRockstar {}
 
 extension URLSession: HTTPClient {
     public func request(_ request: HTTPRequest) -> Future<HTTPResponse> {
@@ -52,11 +89,7 @@ extension URLSession: HTTPClient {
             task.resume()
             promise.onCancel(task.cancel)
             
-            if let timeout = URLSession.settings.timeout {
-                return promise.timeout(timeout).future
-            } else {
-                return promise.future
-            }
+            return promise.future
         }
     }
     
@@ -135,7 +168,6 @@ extension HTTPClient {
         return encode(input).flatMap { body in
             var headers = headers
             headers.add(.contentType, value: Input.defaultContentType)
-//            headers.add(.contentLength, value: body.storage.count)
             
             return self.wrap(self.send(body, to: url, headers: headers, method: .patch))
         }
