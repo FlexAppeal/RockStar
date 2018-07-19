@@ -1,7 +1,7 @@
 public protocol AsyncServiceFactory {
     associatedtype Result: AsyncService
     
-    func make(from services: Services) -> Future<Result>
+    func make(from services: ServiceContext) -> Future<Result>
 }
 
 public protocol AsyncService {}
@@ -13,27 +13,27 @@ struct AsyncSingleValueFactory<Result: AsyncService>: AsyncServiceFactory {
         self.service = service
     }
     
-    func make(from services: Services) -> Future<Result> {
+    func make(from services: ServiceContext) -> Future<Result> {
         return service
     }
 }
 
 struct AnyAsyncClosureFactory<Result: AsyncService>: AsyncServiceFactory {
-    typealias Closure = (Services) -> Future<Result>
+    typealias Closure = (ServiceContext) -> Future<Result>
     let factory: Closure
     
     init(factory: @escaping Closure) {
         self.factory = factory
     }
     
-    func make(from services: Services) -> Future<Result> {
+    func make(from services: ServiceContext) -> Future<Result> {
         return factory(services)
     }
 }
 
 public struct AnyAsyncServiceFactory {
     let identifier: ObjectIdentifier
-    private let factoryMethod: (Services) throws -> Future<Any>
+    private let factoryMethod: (ServiceContext) throws -> Future<Any>
     
     init<Factory: AsyncServiceFactory>(factory: Factory) {
         self.identifier = ObjectIdentifier(Factory.Result.self)
@@ -42,7 +42,7 @@ public struct AnyAsyncServiceFactory {
         }
     }
     
-    public func make(from services: Services) -> Future<Any> {
+    public func make(from services: ServiceContext) -> Future<Any> {
         do {
             return try factoryMethod(services)
         } catch {
@@ -52,7 +52,7 @@ public struct AnyAsyncServiceFactory {
 }
 
 extension ServiceBuilder {
-    public typealias AsyncClosureFactory<S: AsyncService> = (Services) -> Future<S>
+    public typealias AsyncClosureFactory<S: AsyncService> = (ServiceContext) -> Future<S>
     
     public func register<S: AsyncService, Result>(_ service: Future<S>, substituting type: Result.Type) {
         assert(S.self is Result, "The registered service does not match the resulting type")

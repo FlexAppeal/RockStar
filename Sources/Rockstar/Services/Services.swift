@@ -106,7 +106,9 @@ public struct Services {
             return Future(error: ServiceNotFound())
         }
         
-        return factory.make(from: self).map { $0 as! Result }
+        let context = ServiceContext(services: self)
+        
+        return factory.make(from: context).map { $0 as! Result }
     }
     
     public func makeDefault() {
@@ -123,5 +125,13 @@ public struct ServiceContext {
     
     fileprivate init(services: Services) {
         self.services = services
+    }
+    
+    public func make<Result>(_ type: Result.Type = Result.self) throws -> Result {
+        return try services.make(type)
+    }
+    
+    public func makeAsync<Result>(_ type: Result.Type = Result.self) -> Future<Result> {
+        return try services.makeAsync(type)
     }
 }
