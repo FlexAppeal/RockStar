@@ -3,6 +3,11 @@ import Dispatch
 
 public struct RSTimeInterval {
     public let dispatch: DispatchTimeInterval
+//    public var seconds: Double {
+//        switch dispatch {
+//            case .seconds(<#T##Int#>)
+//        }
+//    }
     
     public static func seconds(_ seconds: Int) -> RSTimeInterval {
         return .dispatch(.seconds(seconds))

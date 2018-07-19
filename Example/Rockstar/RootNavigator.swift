@@ -25,7 +25,7 @@ enum AuthenticationMechanism {
     }
 }
 
-final class ApplicationView: UIKitApplication
+final class ApplicationView: UIKitApplication {
     override func configure(_ application: ApplicationContext) {
         let navigator = UIKitNavigator()
         let favouriteDatabases = TableView<UIKitPlatform>()

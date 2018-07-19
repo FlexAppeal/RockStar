@@ -11,7 +11,7 @@ extension Future {
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue>) -> Future<FutureValue> {
         return self.then { value in
-            var type = type
+            let type = type
             type[keyPath: path] = value
         }
     }
@@ -28,7 +28,7 @@ extension Future {
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue?>) -> Future<FutureValue> {
         return self.then { value in
-            var type = type
+            let type = type
             type[keyPath: path] = value
         }
     }
@@ -47,7 +47,7 @@ extension OutputStream {
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue>) -> OutputStream<FutureValue> {
         return self.then { value in
-            var type = type
+            let type = type
             type[keyPath: path] = value
         }
     }
@@ -65,7 +65,7 @@ extension OutputStream {
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue?>) -> OutputStream<FutureValue> {
         return self.then { value in
-            var type = type
+            let type = type
             type[keyPath: path] = value
         }
     }

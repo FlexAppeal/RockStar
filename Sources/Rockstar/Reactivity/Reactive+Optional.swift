@@ -44,4 +44,16 @@ extension OutputStream {
             return nil
         }
     }
+    
+    public func notNil<B>() -> OutputStream<B> where FutureValue == B? {
+        let input = InputStream<B>()
+        
+        self.then { value in
+            if let value = value {
+                input.next(value)
+            }
+        }.catch(input.error)
+        
+        return input.listener
+    }
 }

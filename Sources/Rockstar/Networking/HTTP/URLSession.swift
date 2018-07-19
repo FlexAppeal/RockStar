@@ -45,17 +45,8 @@ public final class RSURLSession: Service, HTTPClient {
         var response = session.request(request)
             
         if let switchThread = config.switchThread {
-            response = response.switchThread(to: .dispatchQueue(.main))
+            response = response.switchThread(to: switchThread)
         }
-        
-        #if DEBUG
-        if let logger = config.debugLogs {
-            response.then { response in
-                logger.log("\(request)")
-                logger.log("\(response)")
-            }
-        }
-        #endif
         
         if let timeout = config.timeout {
             response = response.timeout(timeout)

@@ -22,11 +22,8 @@ public final class ServiceBuilder {
     }
     
     public func forEnvironments(_ environments: ApplicationEnvironment..., run: () throws -> ()) rethrows {
-        for environment in environments {
-            if self.environment == environment {
-                try run()
-                return
-            }
+        if environments.contains(self.environment) {
+            try run()
         }
     }
     
@@ -40,7 +37,7 @@ public final class ServiceBuilder {
     }
     
     public func finalize() -> Services {
-        return Services(sync: self.syncFactories, async: self.asyncFactories)
+        return Services(environment: self.environment, sync: self.syncFactories, async: self.asyncFactories)
     }
 }
 
@@ -79,17 +76,18 @@ public struct Services {
         builder.register(coderRegistery, substituting: CoderRegistery.self)
         builder.register(URLSessionConfiguration.default, substituting: URLSessionConfiguration.self)
         
-        builder.register(substitutionFor: URLSession.self) { services in
-            return try URLSession(configuration: services.make())
+        builder.register(substitutionFor: URLSession.self) { context in
+            return try URLSession(configuration: context.services.make())
         }
         
-        builder.register(substitutionFor: HTTPClient.self) { services in
-            return try URLSession(configuration: services.make())
+        builder.register(substitutionFor: HTTPClient.self) { context in
+            return try URLSession(configuration: context.services.make())
         }
         
         return builder.finalize()
     }()
     
+    fileprivate let environment: ApplicationEnvironment
     fileprivate var sync: [ObjectIdentifier: AnyServiceFactory]
     fileprivate var async: [ObjectIdentifier: AnyAsyncServiceFactory]
     
@@ -98,7 +96,9 @@ public struct Services {
             throw ServiceNotFound()
         }
         
-        return try factory.make(from: self) as! Result
+        let context = ServiceContext(services: self)
+        
+        return try factory.make(from: context) as! Result
     }
     
     public func makeAsync<Result>(_ type: Result.Type = Result.self) -> Future<Result> {
@@ -111,5 +111,17 @@ public struct Services {
     
     public func makeDefault() {
         Services.default = self
+    }
+}
+
+public struct ServiceContext {
+    public let services: Services
+    
+    public var environment: ApplicationEnvironment {
+        return services.environment
+    }
+    
+    fileprivate init(services: Services) {
+        self.services = services
     }
 }

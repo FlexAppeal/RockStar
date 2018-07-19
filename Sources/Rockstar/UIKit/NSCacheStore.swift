@@ -37,6 +37,12 @@ public final class NSCacheStore<Entity: Storeable>: Store {
         }
     }
     
+    /// Do not change this variable while the cache is in use
+    ///
+    /// It may lead to unexpected release results
+    public var cacheLifetime: RSTimeInterval = .seconds(3600 &* 4) // 4 hours
+    
+    private var lifetimes = [(Date, AnyIdentifier)]()
     private var entities = NSCache<AnyIdentifier, AnyInstance>()
     private var source: AnyNSCacheDataSource<Entity>?
     
@@ -65,10 +71,7 @@ public final class NSCacheStore<Entity: Storeable>: Store {
         
         return source.fetchOne(id).then { object in
             if let object = object {
-                let instance = AnyInstance(instance: object)
-                Analytics.default.assert(check: object.identifier == id)
-                
-                self.entities.setObject(instance, forKey: identifier)
+                self.cache(object)
             }
         }
     }
@@ -79,6 +82,18 @@ public final class NSCacheStore<Entity: Storeable>: Store {
     
     public var count: Future<Int> { return source?.count() ?? 0 }
     public var all: Future<[Entity]> { return source?.all() ?? [] }
+    
+    private func cache(_ entity: Entity) {
+        let identifier = AnyIdentifier(identifier: entity.identifier)
+        let instance = AnyInstance(instance: entity)
+        
+        self.entities.setObject(instance, forKey: identifier)
+        
+//        var end = Date()
+//        end.addTimeInterval(cacheLifetime.dispatch)
+//        
+//        self.lifetimes.append(())
+    }
     
     public subscript<S: Sequence>(ids: S) -> Future<[Entity]> where S.Element == Entity.Identifier {
         var cachedEntities = [Entity]()
@@ -102,10 +117,7 @@ public final class NSCacheStore<Entity: Storeable>: Store {
             
             return source.fetchMany(unresolvedIds).map { newlyFetched in
                 for entity in newlyFetched {
-                    let identifier = AnyIdentifier(identifier: entity.identifier)
-                    let instance = AnyInstance(instance: entity)
-                    
-                    self.entities.setObject(instance, forKey: identifier)
+                    self.cache(entity)
                 }
                 
                 return cachedEntities + newlyFetched

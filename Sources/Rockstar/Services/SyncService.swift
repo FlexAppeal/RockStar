@@ -1,39 +1,39 @@
 public protocol ServiceFactory {
     associatedtype Result: Service
     
-    func make(from services: Services) throws -> Result
+    func make(from context: ServiceContext) throws -> Result
 }
 
 public protocol Service {}
 
-struct SingleValueFactory<Result: Service>: ServiceFactory {
+fileprivate struct SingleValueFactory<Result: Service>: ServiceFactory {
     let service: Result
     
     init(service: Result) {
         self.service = service
     }
     
-    func make(from services: Services) -> Result {
+    func make(from context: ServiceContext) -> Result {
         return service
     }
 }
 
-struct AnySyncClosureFactory<Result: Service>: ServiceFactory {
-    typealias Closure = (Services) throws -> Result
+fileprivate struct AnySyncClosureFactory<Result: Service>: ServiceFactory {
+    typealias Closure = (ServiceContext) throws -> Result
     let factory: Closure
     
     init(factory: @escaping Closure) {
         self.factory = factory
     }
     
-    func make(from services: Services) throws -> Result {
-        return try factory(services)
+    func make(from context: ServiceContext) throws -> Result {
+        return try factory(context)
     }
 }
 
 public struct AnyServiceFactory {
     let identifier: ObjectIdentifier
-    private let factoryMethod: (Services) throws -> Any
+    private let factoryMethod: (ServiceContext) throws -> Any
     
     init<Factory: ServiceFactory>(factory: Factory) {
         self.identifier = ObjectIdentifier(Factory.Result.self)
@@ -42,13 +42,13 @@ public struct AnyServiceFactory {
         }
     }
     
-    public func make(from services: Services) throws -> Any {
-        return try factoryMethod(services)
+    public func make(from context: ServiceContext) throws -> Any {
+        return try factoryMethod(context)
     }
 }
 
 extension ServiceBuilder {
-    public typealias SyncClosureFactory<S: Service> = (Services) throws -> S
+    public typealias SyncClosureFactory<S: Service> = (ServiceContext) throws -> S
     
     public func register<S: Service, Result>(_ service: S, substituting type: Result.Type) {
         assert(service is Result, "The registered service does not match the resulting type")
