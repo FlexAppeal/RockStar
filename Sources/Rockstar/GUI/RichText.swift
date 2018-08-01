@@ -27,8 +27,8 @@ public enum RichTextAttribute {
 
 public struct RangedRichTextAttributes {
     public var attribute: RichTextAttribute
-    public let from: Int
-    public private(set) var to: Int
+    public fileprivate(set) var from: Int
+    public fileprivate(set) var to: Int
     
     var rangeIsEmpty: Bool { return to < from }
     
@@ -95,12 +95,12 @@ public struct RichText: ExpressibleByStringLiteral {
         }
         set {
             _string = newValue
-            self.attributes = []
+            self.textAttributes = []
         }
     }
     
     public var alignment: TextAlignment = .left
-    public private(set) var attributes = [RangedRichTextAttributes]()
+    public fileprivate(set) var textAttributes = [RangedRichTextAttributes]()
     
     public init(stringLiteral value: String) {
         self._string = value
@@ -115,27 +115,27 @@ public struct RichText: ExpressibleByStringLiteral {
     }
     
     public func attributes(at index: Int) -> RichCharacter {
-        let attributes = self.attributes.compactMap { attribute in
+        let textAttributes = self.textAttributes.compactMap { attribute in
             return attribute.affects(characterAt: index) ? attribute.attribute : nil
         }
         
-        return RichCharacter(attributes: attributes)
+        return RichCharacter(attributes: textAttributes)
     }
     
     public mutating func remove(at index: Int) {
         _string.remove(at: String.Index(encodedOffset: index))
         var removableIndices = [Int]()
         
-        for i in 0..<attributes.count where attributes[i].affects(characterAt: index) {
-            attributes[i].popCharacter(at: index)
+        for i in 0..<textAttributes.count where textAttributes[i].affects(characterAt: index) {
+            textAttributes[i].popCharacter(at: index)
             
-            if attributes[i].rangeIsEmpty {
+            if textAttributes[i].rangeIsEmpty {
                 removableIndices.append(i)
             }
         }
         
         for index in removableIndices {
-            self.attributes.remove(at: index)
+            self.textAttributes.remove(at: index)
         }
     }
     
@@ -143,18 +143,40 @@ public struct RichText: ExpressibleByStringLiteral {
         _string += string
     }
     
-    public mutating func apply(attribute: RichTextAttribute, inRange range: Range<Int>) {
+    public mutating func apply(attribute: RichTextAttribute, inRange range: Range<Int>? = nil) {
+        let range = range ?? 0..<self.string.count &- 1
+        
         assert(range.lowerBound >= 0, "The range starts at a negative offset")
+        
+        /// TODO: Fail gracefully?
         assert(range.upperBound < _string.count, "Range exceeds the RichText characters count")
         
-        self.attributes.append(RangedRichTextAttributes(
+        self.textAttributes.append(RangedRichTextAttributes(
             attribute: attribute,
             from: range.lowerBound,
             to: range.upperBound
         ))
     }
     
-    public mutating func apply(font: TextFont, inRange range: Range<Int>) {
+    public mutating func apply(font: TextFont, inRange range: Range<Int>? = nil) {
+        let range = range ?? 0..<self.string.count &- 1
+        
         self.apply(attribute: .font(font), inRange: range)
     }
+}
+
+public func +(lhs: RichText, rhs: RichText) -> RichText {
+    var lhs = lhs
+    let offset = lhs.string.count
+    lhs.append(rhs.string)
+    
+    let rhsAttributes = rhs.textAttributes.map { attribute -> RangedRichTextAttributes in
+        var attribute = attribute
+        attribute.from += offset
+        attribute.to += offset
+        return attribute
+    }
+    
+    lhs.textAttributes += rhsAttributes
+    return lhs
 }

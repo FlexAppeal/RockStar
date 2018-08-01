@@ -56,7 +56,7 @@ public struct HTTPResponse {
 }
 
 public struct HTTPBody {
-    public indirect enum Storage {
+    internal indirect enum Storage {
         case data(Data)
         case none
         
@@ -68,7 +68,7 @@ public struct HTTPBody {
         }
     }
     
-    public let storage: Storage
+    internal let storage: Storage
     
     public init() {
         self.storage = .none
@@ -76,5 +76,14 @@ public struct HTTPBody {
     
     public init(data: Data) {
         self.storage = .data(data)
+    }
+    
+    public func makeData() -> Future<Data?> {
+        switch storage {
+        case .none:
+            return nil
+        case .data(let data):
+            return Future(result: data)
+        }
     }
 }

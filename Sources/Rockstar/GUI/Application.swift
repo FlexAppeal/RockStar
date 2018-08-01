@@ -178,7 +178,7 @@ public final class FormButton: UIKitFormComponent {
         self.clickHandler()
     }
     
-    public func onClick(_ run: @escaping () -> ()) {
+    public func onClick(run: @escaping () -> ()) {
         self.clickHandler = run
     }
 }
@@ -224,7 +224,7 @@ public final class UIKitSelection<R>: NSObject, UIKitFormComponent, UIPickerView
         return optionValues[selectedIndex]
     }
     
-    public func beforeChange(_ run: @escaping (R) -> ()) {
+    public func beforeChange(run: @escaping (R) -> ()) {
         self.beforeChangeHandler = run
     }
     
@@ -285,11 +285,11 @@ public final class TextField: NSObject, UIKitFormComponent, UITextFieldDelegate 
         }
     }
     
-    public func onInvalidText(_ run: @escaping (String, TextField) -> ()) {
+    public func onInvalidText(run: @escaping (String, TextField) -> ()) {
         self.invalidTextHandler = run
     }
     
-    public func beforeChange(_ run: @escaping (String) -> ()) {
+    public func beforeChange(run: @escaping (String) -> ()) {
         self.beforeChangeHandler = run
     }
     

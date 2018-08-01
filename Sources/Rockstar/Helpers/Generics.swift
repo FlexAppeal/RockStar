@@ -1,16 +1,16 @@
-public protocol ArrayInitializable {
+public protocol _ArrayInitializable {
     associatedtype Element
     
     init(array: [Element])
 }
 
-extension Array: ArrayInitializable {
+extension Array: _ArrayInitializable {
     public init(array: [Element]) {
         self = array
     }
 }
 
-extension Set: ArrayInitializable {
+extension Set: _ArrayInitializable {
     public init(array: [Element]) {
         self = Set(array)
     }

@@ -78,7 +78,7 @@ extension URLSession: HTTPClient {
             }
                 
             task.resume()
-            promise.onCancel(task.cancel)
+            promise.onCancel(run: task.cancel)
             
             return promise.future
         }
@@ -196,7 +196,7 @@ extension HTTPClient {
 }
 
 extension Future {
-    public func body<C: ContentDecodable>() -> Future<C> where FutureValue == ContentResponse<C> {
+    public func body<C: ContentDecodable>(_ type: C.Type = C.self) -> Future<C> where FutureValue == ContentResponse<C> {
         return self.flatMap { $0.decodeBody() }
     }
 }
