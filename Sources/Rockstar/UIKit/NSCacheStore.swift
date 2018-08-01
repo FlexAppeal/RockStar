@@ -37,12 +37,6 @@ public final class NSCacheStore<Entity: Storeable>: Store {
         }
     }
     
-    /// Do not change this variable while the cache is in use
-    ///
-    /// It may lead to unexpected release results
-    public var cacheLifetime: RSTimeInterval = .seconds(3600 &* 4) // 4 hours
-    
-    private var lifetimes = [(Date, AnyIdentifier)]()
     private var entities = NSCache<AnyIdentifier, AnyInstance>()
     private var source: AnyNSCacheDataSource<Entity>?
     
@@ -88,11 +82,6 @@ public final class NSCacheStore<Entity: Storeable>: Store {
         let instance = AnyInstance(instance: entity)
         
         self.entities.setObject(instance, forKey: identifier)
-        
-//        var end = Date()
-//        end.addTimeInterval(cacheLifetime.dispatch)
-//        
-//        self.lifetimes.append(())
     }
     
     public subscript<S: Sequence>(ids: S) -> Future<[Entity]> where S.Element == Entity.Identifier {

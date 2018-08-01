@@ -11,7 +11,7 @@ public final class Analytics {
     }
     
     public func measure<T>(
-        location: SourceLocation = SourceLocation(),
+        location: SourceLocation,
         _ function: @autoclosure () throws -> (T)
     ) rethrows -> T {
         #if ANALYZE
@@ -35,7 +35,7 @@ public final class Analytics {
     }
     
     public func assert(
-        location: SourceLocation = SourceLocation(),
+        location: SourceLocation,
         check: @autoclosure () throws -> Bool,
         message: String = ""
     ) {

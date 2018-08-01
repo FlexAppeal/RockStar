@@ -19,17 +19,17 @@ public final class RSButton: UIButton {
         touchDownAction()
     }
     
-    public func onTouchDown(_ run: @escaping () -> ()) {
+    public func onTouchDown(run: @escaping () -> ()) {
         self.touchDownAction = run
         self.addTarget(self, action: #selector(didTouchDown), for: .touchDown)
     }
     
-    public func onTouchUpInside(_ run: @escaping () -> ()) {
+    public func onTouchUpInside(run: @escaping () -> ()) {
         self.touchUpInsideAction = run
         self.addTarget(self, action: #selector(didTouchUpInside), for: .touchUpInside)
     }
     
-    public func onTouchUpOutside(_ run: @escaping () -> ()) {
+    public func onTouchUpOutside(run: @escaping () -> ()) {
         self.touchUpOutsideAction = run
         self.addTarget(self, action: #selector(didTouchUpOutside), for: .touchUpOutside)
     }

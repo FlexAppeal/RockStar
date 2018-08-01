@@ -79,7 +79,6 @@
 		C3860FCA7843838BD756C7D8601EF1F2 /* InputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2FDA072452C17110468678C78DCE96 /* InputStream.swift */; };
 		C618B7101ED0132FB03FE9DDD53A83F0 /* Pods-Rockstar_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 845C9F8466B950A5872033D7020499E6 /* Pods-Rockstar_Example-dummy.m */; };
 		CAF9E39C142D3A2589666A53453D4BAD /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7EC140D8ADD9068061B0F0FC1DAF5 /* Services.swift */; };
-		CE7B6CF5E9726329E5A1A778B2BF13A6 /* Component.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0DF63BB149FB5978DF50B8CDAD9A3 /* Component.swift */; };
 		D15493E1741A864D530ED98FEFED6C8B /* Pods-Rockstar_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A23212C427822E67562ECAE86A29D728 /* Pods-Rockstar_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DA09D7F634E11A995E32F7E9F00219F8 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E830EF94DD3B7ECF037939BD60CB1FB /* Configuration.swift */; };
 		DE3587F674B0A376C34EB7579E2F1458 /* Rockstar-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 19DA7B2296D8351BC9C94403187455F7 /* Rockstar-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -161,7 +160,6 @@
 		24D2E1D320DEDCA3004B627D /* Reactivity+KeyPaths.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Reactivity+KeyPaths.swift"; sourceTree = "<group>"; };
 		2A260F8FDC8F735CDD7B872B660025CC /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2D20CECD3D8E253144E97249DE94F3A8 /* MeasurementDataTypes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MeasurementDataTypes.swift; sourceTree = "<group>"; };
-		34E0DF63BB149FB5978DF50B8CDAD9A3 /* Component.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Component.swift; sourceTree = "<group>"; };
 		3A83D01161F29C59F1FF25AFEE121020 /* Pods-Rockstar_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Rockstar_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		3BA082275A2589DA26B68D8EA56823A5 /* Pods-Rockstar_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Rockstar_Tests.modulemap"; sourceTree = "<group>"; };
 		3BA4BB352B458657DA8821ED52DECC6C /* UIKit+Table.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIKit+Table.swift"; sourceTree = "<group>"; };
@@ -310,7 +308,6 @@
 			isa = PBXGroup;
 			children = (
 				24C3316620D686680076DA80 /* HTTP+Content.swift */,
-				24C3316720D686680076DA80 /* Server */,
 				24C3316820D686680076DA80 /* HTTPHeader.swift */,
 				24C3316920D686680076DA80 /* HTTPClient.swift */,
 				24C3316A20D686680076DA80 /* HTTPModels.swift */,
@@ -320,13 +317,6 @@
 				24C3316E20D686680076DA80 /* Client */,
 			);
 			path = HTTP;
-			sourceTree = "<group>";
-		};
-		24C3316720D686680076DA80 /* Server */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Server;
 			sourceTree = "<group>";
 		};
 		24C3316E20D686680076DA80 /* Client */ = {
@@ -386,7 +376,6 @@
 		5CD8E4D5DF98527BB7592A43A007975F /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				34E0DF63BB149FB5978DF50B8CDAD9A3 /* Component.swift */,
 			);
 			name = Components;
 			path = Sources/Rockstar/Components;
@@ -760,7 +749,6 @@
 				1D82537DB08C81A5DE94D6A69EA6F675 /* Base.swift in Sources */,
 				24C3316320D686580076DA80 /* UIKit+Label.swift in Sources */,
 				24C3317720D686680076DA80 /* Content.swift in Sources */,
-				CE7B6CF5E9726329E5A1A778B2BF13A6 /* Component.swift in Sources */,
 				DA09D7F634E11A995E32F7E9F00219F8 /* Configuration.swift in Sources */,
 				240B98AF20D41F9200290B0B /* Time.swift in Sources */,
 				248A79D820D806BE00113C2B /* UIKit+Color.swift in Sources */,
