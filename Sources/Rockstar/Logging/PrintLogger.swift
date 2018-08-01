@@ -24,8 +24,10 @@ fileprivate extension LogLevel {
     }
 }
 
-public struct PrintLogger: LogDestination {
+public struct PrintLogger: LogDestination, Service {
     public var detailed = true
+    
+    public init() {}
     
     public func log(_ message: LogMessage<String>) {
         // These 2 prints statements are purposely separated even though they're similar. This is for performance and future-proofness

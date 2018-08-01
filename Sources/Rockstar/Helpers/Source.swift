@@ -11,4 +11,8 @@ public struct SourceLocation {
         
         self.function = function
     }
+    
+    public static func here(file: String = #file, line: UInt = #line, column: UInt = #column, function: String = #function) -> SourceLocation {
+        return SourceLocation(file: file, line: line, column: column, function: function)
+    }
 }

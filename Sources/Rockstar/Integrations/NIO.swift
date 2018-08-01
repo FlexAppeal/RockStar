@@ -4,7 +4,7 @@
 import NIO
 
 extension EventLoopFuture: ObserverProtocol {
-    public func onCompletion(_ run: @escaping (Observation<T>) -> ()) -> Self {
+    public func onCompletion(run: @escaping (Observation<T>) -> ()) -> Self {
         whenSuccess { result in
             run(.success(result))
         }

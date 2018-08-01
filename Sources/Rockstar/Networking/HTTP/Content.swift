@@ -49,7 +49,7 @@ public protocol Model: Codable {}
 public struct ContentResponse<C: ContentDecodable> {
     public let raw: HTTPResponse
     
-    public func decodeBody() -> Future<C> {
+    public func decodeBody(to type: C.Type = C.self) -> Future<C> {
         do {
             let coders = try Services.default.make(CoderRegistery.self)
             guard let decoder = coders.decoder(for: C.defaultContentType) else {
