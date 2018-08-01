@@ -42,7 +42,7 @@ public struct OutputStream<FutureValue> {
         self.inputStream.cancel()
     }
     
-    public func always(_ run: @escaping () -> ()) {
+    public func always(run: @escaping () -> ()) {
         self.onCompletion { _ in run() }
     }
     

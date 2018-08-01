@@ -12,6 +12,14 @@ extension Future: ExpressibleByBooleanLiteral where FutureValue == Bool {
     public init(booleanLiteral value: Bool) {
         self.init(result: value)
     }
+    
+    public func `if`(_ literal: Bool, run: @escaping () -> ()) -> Future<Bool> {
+        return self.then { value in
+            if value == literal {
+                run()
+            }
+        }
+    }
 }
 
 extension Future where FutureValue == Void {
@@ -20,10 +28,10 @@ extension Future where FutureValue == Void {
     }
 }
 
-extension Future: ExpressibleByArrayLiteral where FutureValue: ArrayInitializable {
+extension Future: ExpressibleByArrayLiteral where FutureValue: _ArrayInitializable {
     public typealias ArrayLiteralElement = FutureValue.Element
     
-    public init(arrayLiteral elements: ArrayLiteralElement ...) {
+    public init(arrayLiteral elements: ArrayLiteralElement...) {
         self.init(result: FutureValue(array: elements))
     }
 }
@@ -32,4 +40,46 @@ extension Future: ExpressibleByNilLiteral where FutureValue: ExpressibleByNilLit
     public init(nilLiteral: ()) {
         self.init(result: nil)
     }
+}
+
+extension Future {
+    public func ifNil<B>(run: @escaping () -> ()) -> Future<FutureValue> where FutureValue == Optional<B> {
+        return self.then { value in
+            if value == nil {
+                run()
+            }
+        }
+    }
+    
+    public func ifNotNil<B>(run: @escaping (B) -> ()) -> Future<FutureValue> where FutureValue == Optional<B> {
+        return self.then { value in
+            if let value = value {
+                run(value)
+            }
+        }
+    }
+    
+    public func mapIfNotNil<B, T>(run: @escaping (B) throws -> (T)) -> Future<T> where FutureValue == Optional<B> {
+        return self.map { value in
+            guard let value = value else {
+                throw ValueUnwrappedNil()
+            }
+            
+            return try run(value)
+        }
+    }
+    
+    public func flatMapIfNotNil<B, T>(run: @escaping (B) throws -> (Future<T>)) -> Future<T> where FutureValue == Optional<B> {
+        return self.flatMap { value in
+            guard let value = value else {
+                throw ValueUnwrappedNil()
+            }
+            
+            return try run(value)
+        }
+    }
+}
+
+struct ValueUnwrappedNil: RockstarError {
+    var location = SourceLocation()
 }

@@ -1,6 +1,6 @@
 extension Future {
     public func switchThread(to thread: AnyThread) -> Future<FutureValue> {
-        let promise = Promise<FutureValue>()
+        let promise = Promise<FutureValue>(onCancel: self.cancel)
         
         self.onCompletion { result in
             DispatchQueue.main.async {
@@ -8,7 +8,7 @@ extension Future {
             }
         }
         
-        promise.onCancel(self.cancel)
+        promise.onCancel(run: self.cancel)
         return promise.future
     }
     
@@ -16,7 +16,7 @@ extension Future {
         _ timeout: RSTimeout,
         throwing error: Error = PromiseTimeout()
     ) -> Future<FutureValue> {
-        let promise = Promise<FutureValue>()
+        let promise = Promise<FutureValue>(onCancel: self.cancel)
         self.onCompletion(promise.fulfill)
         
         timeout.execute {
@@ -38,7 +38,7 @@ extension OutputStream {
             }
         }
         
-        inputStream.onCancel(self.cancel)
+        inputStream.onCancel(run: self.cancel)
         return inputStream.listener
     }
     

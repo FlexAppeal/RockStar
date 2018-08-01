@@ -23,7 +23,7 @@ public final class InputStream<FutureValue> {
     
     public init() {}
     
-    public func onCancel(_ run: @escaping () -> ()) {
+    public func onCancel(run: @escaping () -> ()) {
         self.cancelAction = run
     }
     

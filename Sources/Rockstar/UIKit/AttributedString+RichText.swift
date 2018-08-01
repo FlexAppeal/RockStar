@@ -1,10 +1,11 @@
+import UIKit
 import Foundation
 
 extension RichText {
-    var attributedString: NSAttributedString {
+    public var attributedString: NSAttributedString {
         let attributedString = NSMutableAttributedString(string: self.string)
         
-        for attribute in self.attributes {
+        for attribute in self.textAttributes {
             attributedString.addAttributes(
                 attribute.foundationAttributes,
                 range: NSRange(location: attribute.from, length: (attribute.to - attribute.from) + 1)
@@ -36,7 +37,8 @@ extension RangedRichTextAttributes {
             if font.underlined {
                 /// FIXME:
                 return [
-                    .font: uiFont
+                    .font: uiFont,
+                    .underlineStyle: NSUnderlineStyle.patternSolid
                 ]
             } else {
                 return [
@@ -44,6 +46,12 @@ extension RangedRichTextAttributes {
                 ]
             }
         }
+    }
+}
+
+extension UIFont {
+    public var textFont: TextFont {
+        return TextFont(named: fontName, size: Float(pointSize))
     }
 }
 

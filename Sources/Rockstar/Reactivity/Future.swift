@@ -42,7 +42,7 @@ public struct Future<FutureValue> {
                 return Future<R>.cancelled
             }
         case .promise(let promise):
-            let newPromise = Promise<R>()
+            let newPromise = Promise<R>(onCancel: self.cancel)
             promise.registerCallback { result in
                 do {
                     switch result {
@@ -78,7 +78,7 @@ public struct Future<FutureValue> {
                 return Future<R>.cancelled
             }
         case .promise(let promise):
-            let newPromise = Promise<R>()
+            let newPromise = Promise<R>(onCancel: self.cancel)
             promise.future.then { value in
                 do {
                     try mapper(value).onCompletion(newPromise.fulfill)
@@ -98,7 +98,7 @@ public struct Future<FutureValue> {
     }
     
     @discardableResult
-    public func always(_ run: @escaping () -> ()) -> Future<FutureValue> {
+    public func always(run: @escaping () -> ()) -> Future<FutureValue> {
         self.onCompletion { _ in run() }
         return self
     }
@@ -164,7 +164,7 @@ public struct Future<FutureValue> {
         return self
     }
     
-    public static func `do`(_ run: () throws -> Future<FutureValue>) -> Future<FutureValue> {
+    public static func `do`(run: () throws -> Future<FutureValue>) -> Future<FutureValue> {
         do {
             return try run()
         } catch {

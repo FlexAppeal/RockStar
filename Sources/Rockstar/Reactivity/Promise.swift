@@ -22,17 +22,26 @@ public final class Promise<FutureValue> {
     
     public init() {}
     
-    public func onCancel(_ run: @escaping () -> ()) {
+    internal init(onCancel: @escaping () -> ()) {
+        self.cancelAction = onCancel
+    }
+    
+    public func onCancel(run: @escaping () -> ()) {
         self.cancelAction = run
     }
     
     func registerCallback(_ callback: @escaping FutureCallback<FutureValue>) {
-        self.callbacks.append(callback)
+        if let result = self.result {
+            callback(result)
+        } else {
+            self.callbacks.append(callback)
+        }
     }
     
     func triggerCallbacks(with result: Observation<FutureValue>) {
         let callbacks = self.callbacks
         finalized = true
+        self.result = result
         
         for callback in callbacks {
             callback(result)
@@ -42,9 +51,7 @@ public final class Promise<FutureValue> {
     public func complete(_ value: FutureValue) {
         if finalized { return }
         
-        let result = Observation.success(value)
-        triggerCallbacks(with: result)
-        self.result = result
+        triggerCallbacks(with: .success(value))
     }
     
     public func cancel() {
@@ -57,9 +64,7 @@ public final class Promise<FutureValue> {
     public func fail(_ error: Error) {
         if finalized { return }
         
-        let result = Observation<FutureValue>.failure(error)
-        triggerCallbacks(with: result)
-        self.result = result
+        triggerCallbacks(with: .failure(error))
     }
     
     public func fulfill(_ result: Observation<FutureValue>) {
@@ -76,3 +81,4 @@ public final class Promise<FutureValue> {
 }
 
 struct NeverCompleted: Error {}
+

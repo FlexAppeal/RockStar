@@ -10,7 +10,7 @@ extension Future {
     }
     
     public func optionalMap<B, T>(
-        _ run: @escaping (B) throws -> T
+        run: @escaping (B) throws -> T
     ) -> Future<T?> where FutureValue == B? {
         return self.map { value -> T? in
             if let value = value {
@@ -34,7 +34,7 @@ extension OutputStream {
     }
     
     public func optionalMap<B, T>(
-        _ run: @escaping (B) throws -> T
+        run: @escaping (B) throws -> T
     ) -> OutputStream<T?> where FutureValue == B? {
         return self.map { value -> T? in
             if let value = value {

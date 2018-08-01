@@ -1,18 +1,50 @@
 import Dispatch
 
 extension Array {
-    public func joined<T>() -> Future<[T]> where Element == Future<T> {
+    public func joined<T>(ordered: Bool = true) -> Future<[T]> where Element == Future<T> {
+        if ordered {
+            return _orderedJoin()
+        } else {
+            return _unorderedJoin()
+        }
+    }
+    
+    private func _orderedJoin<T>() -> Future<[T]> where Element == Future<T> {
+        var values = [T]()
+        values.reserveCapacity(self.count)
+        var iterator = self.makeIterator()
+        let promise = Promise<[T]>()
+        var i = 0
+        
+        func next() {
+            if let value = iterator.next() {
+                value.onCompletion { value in
+                    switch value {
+                    case .cancelled:
+                        promise.cancel()
+                    case .failure(let error):
+                        promise.fail(error)
+                    case .success(let value):
+                        values.append(value)
+                        
+                        next()
+                    }
+                }
+            } else {
+                promise.complete(values)
+            }
+        }
+        
+        next()
+        
+        return promise.future
+    }
+    
+    private func _unorderedJoin<T>() -> Future<[T]> where Element == Future<T> {
         var values = [T]()
         var size = self.count
         values.reserveCapacity(size)
         let promise = Promise<[T]>()
-        
-        promise.onCancel {
-            /// TODO: Is this always a good idea?
-            for future in self {
-                future.cancel()
-            }
-        }
         
         for element in self {
             element.onCompletion { value in
@@ -35,6 +67,15 @@ extension Array {
         return promise.future
     }
     
+    public func asyncMap<T, B>(_ function: @escaping (T) throws -> (B)) -> OutputStream<B> where Element == Future<T> {
+        return self.streamed(sequentially: true).map(function)
+    }
+    
+    /// TODO: Should the next element be streamed after flatMap returned successfully?
+    public func asyncFlatMap<T, B>(_ function: @escaping (T) throws -> (Future<B>)) -> OutputStream<B> where Element == Future<T> {
+        return self.streamed(sequentially: true).flatMap(function)
+    }
+    
     public func streamed<T>(sequentially: Bool) -> OutputStream<T> where Element == Future<T> {
         let inputStream = InputStream<T>()
         
@@ -46,7 +87,7 @@ extension Array {
                     return
                 }
                 
-                future.onCompletion(inputStream.write).always(next)
+                future.onCompletion(inputStream.write).always(run: next)
             }
             
             next()
@@ -57,6 +98,14 @@ extension Array {
         }
         
         return inputStream.listener
+    }
+}
+
+extension Future {
+    public func filteringNil<T>() -> Future<[T]> where FutureValue == [T?] {
+        return self.map { array in
+            return array.compactMap { $0 }
+        }
     }
 }
 
@@ -73,7 +122,7 @@ extension OutputStream where FutureValue: Sequence {
 extension Future where FutureValue: Sequence {
     public func mapContents<NewValue>(
         _ transform: @escaping (FutureValue.Element) throws -> NewValue
-        ) -> Future<[NewValue]> {
+    ) -> Future<[NewValue]> {
         return self.map { sequence in
             return try sequence.map(transform)
         }
