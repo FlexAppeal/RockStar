@@ -6,13 +6,13 @@ fileprivate class AnyNSObject<Base>: NSObject {
     }
 }
 
-public final class ValueInputStream<Value> {
+public final class ValueWriteStream<Value> {
     public var currentValue: Value
     private var observation: NSKeyValueObservation!
-    private let inputStream = InputStream<Value>()
+    private let writeStream = WriteStream<Value>()
     
-    public var observable: OutputStream<Value> {
-        return inputStream.listener
+    public var observable: ReadStream<Value> {
+        return writeStream.listener
     }
     
     public init<Base: AnyObject>(keyPath: KeyPath<Base, Value>, in base: Base) {
@@ -42,7 +42,7 @@ public final class ValueInputStream<Value> {
     private func update<Base: NSObject>(object: Base, change: NSKeyValueObservedChange<Value>) {
         if let newValue = change.newValue {
             self.currentValue = newValue
-            inputStream.next(newValue)
+            writeStream.next(newValue)
         }
     }
 }

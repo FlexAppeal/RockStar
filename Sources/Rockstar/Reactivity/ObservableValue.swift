@@ -5,9 +5,9 @@ public struct ObservableValue<FutureValue> {
         }
     }
     
-    private let writeStream = InputStream<FutureValue>()
+    private let writeStream = WriteStream<FutureValue>()
     
-    public var listener: OutputStream<FutureValue> {
+    public var listener: ReadStream<FutureValue> {
          return writeStream.listener
     }
     

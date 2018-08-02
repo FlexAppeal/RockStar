@@ -28,31 +28,31 @@ extension Future {
 }
 
 
-extension OutputStream {
-    public func switchThread(to thread: AnyThread) -> OutputStream<FutureValue> {
-        let inputStream = InputStream<FutureValue>()
+extension ReadStream {
+    public func switchThread(to thread: AnyThread) -> ReadStream<FutureValue> {
+        let writeStream = WriteStream<FutureValue>()
         
         self.onCompletion { result in
             DispatchQueue.main.async {
-                inputStream.write(result)
+                writeStream.write(result)
             }
         }
         
-        inputStream.onCancel(run: self.cancel)
-        return inputStream.listener
+        writeStream.onCancel(run: self.cancel)
+        return writeStream.listener
     }
     
     public func timeout(
         _ timeout: RSTimeout,
         throwing error: Error = PromiseTimeout()
-    ) -> OutputStream<FutureValue> {
-        let inputStream = InputStream<FutureValue>()
-        self.onCompletion(inputStream.write)
+    ) -> ReadStream<FutureValue> {
+        let writeStream = WriteStream<FutureValue>()
+        self.onCompletion(writeStream.write)
         
         timeout.execute {
-            inputStream.fatal(error)
+            writeStream.fatal(error)
         }
         
-        return inputStream.listener
+        return writeStream.listener
     }
 }

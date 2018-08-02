@@ -1,6 +1,6 @@
-public final class InputStream<FutureValue> {
-    public var listener: OutputStream<FutureValue> {
-        return OutputStream(inputStream: self)
+public final class WriteStream<FutureValue> {
+    public var listener: ReadStream<FutureValue> {
+        return ReadStream(writeStream: self)
     }
     
     public var isCompleted: Bool {

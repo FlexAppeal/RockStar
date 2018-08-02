@@ -2,19 +2,19 @@ import UIKit
 
 extension Store where Entity: UITableViewCellRepresentable {
     public func makeDataSource(forTable table: UITableView) {
-        let inputStream = InputStream<[Entity]>()
+        let writeStream = WriteStream<[Entity]>()
         
         func reloadData() -> Future<Void> {
-            return self.all.onCompletion(inputStream.write).map { _ in }
+            return self.all.onCompletion(writeStream.write).map { _ in }
         }
         
-        let source = OutputStreamTableDataSource(observable: inputStream.listener, table: table, reload: reloadData)
+        let source = OutputStreamTableDataSource(observable: writeStream.listener, table: table, reload: reloadData)
         
         table.dataSource = source
     }
 }
 
-extension OutputStream where FutureValue: Sequence, FutureValue.Element: UITableViewCellRepresentable {
+extension ReadStream where FutureValue: Sequence, FutureValue.Element: UITableViewCellRepresentable {
     public func makeDataSource(forTable table: UITableView) {
         let data = self.map(Array.init)
         
@@ -32,7 +32,7 @@ fileprivate final class OutputStreamTableDataSource<Entity: UITableViewCellRepre
     private let table: UITableView
     let reload: () -> Future<Void>
     
-    public init(observable: OutputStream<[Entity]>, table: UITableView, reload: @escaping () -> Future<Void>) {
+    public init(observable: ReadStream<[Entity]>, table: UITableView, reload: @escaping () -> Future<Void>) {
         self.table = table
         self.reload = reload
         super.init()

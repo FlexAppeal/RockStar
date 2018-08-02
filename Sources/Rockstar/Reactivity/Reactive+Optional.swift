@@ -22,8 +22,8 @@ extension Future {
     }
 }
 
-extension OutputStream {
-    public func assert<T>(or error: Error) -> OutputStream<T> where FutureValue == T? {
+extension ReadStream {
+    public func assert<T>(or error: Error) -> ReadStream<T> where FutureValue == T? {
         return self.map { value in
             guard let value = value else {
                 throw error
@@ -35,7 +35,7 @@ extension OutputStream {
     
     public func optionalMap<B, T>(
         run: @escaping (B) throws -> T
-    ) -> OutputStream<T?> where FutureValue == B? {
+    ) -> ReadStream<T?> where FutureValue == B? {
         return self.map { value -> T? in
             if let value = value {
                 return try run(value)
@@ -45,8 +45,8 @@ extension OutputStream {
         }
     }
     
-    public func notNil<B>() -> OutputStream<B> where FutureValue == B? {
-        let input = InputStream<B>()
+    public func notNil<B>() -> ReadStream<B> where FutureValue == B? {
+        let input = WriteStream<B>()
         
         self.then { value in
             if let value = value {

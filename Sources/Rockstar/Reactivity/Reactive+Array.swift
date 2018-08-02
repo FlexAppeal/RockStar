@@ -67,17 +67,17 @@ extension Array {
         return promise.future
     }
     
-    public func asyncMap<T, B>(_ function: @escaping (T) throws -> (B)) -> OutputStream<B> where Element == Future<T> {
+    public func asyncMap<T, B>(_ function: @escaping (T) throws -> (B)) -> ReadStream<B> where Element == Future<T> {
         return self.streamed(sequentially: true).map(function)
     }
     
     /// TODO: Should the next element be streamed after flatMap returned successfully?
-    public func asyncFlatMap<T, B>(_ function: @escaping (T) throws -> (Future<B>)) -> OutputStream<B> where Element == Future<T> {
+    public func asyncFlatMap<T, B>(_ function: @escaping (T) throws -> (Future<B>)) -> ReadStream<B> where Element == Future<T> {
         return self.streamed(sequentially: true).flatMap(function)
     }
     
-    public func streamed<T>(sequentially: Bool) -> OutputStream<T> where Element == Future<T> {
-        let inputStream = InputStream<T>()
+    public func streamed<T>(sequentially: Bool) -> ReadStream<T> where Element == Future<T> {
+        let writeStream = WriteStream<T>()
         
         if sequentially {
             var iterator = self.makeIterator()
@@ -87,17 +87,17 @@ extension Array {
                     return
                 }
                 
-                future.onCompletion(inputStream.write).always(run: next)
+                future.onCompletion(writeStream.write).always(run: next)
             }
             
             next()
         } else {
             for element in self {
-                element.onCompletion(inputStream.write)
+                element.onCompletion(writeStream.write)
             }
         }
         
-        return inputStream.listener
+        return writeStream.listener
     }
 }
 
@@ -109,10 +109,10 @@ extension Future {
     }
 }
 
-extension OutputStream where FutureValue: Sequence {
+extension ReadStream where FutureValue: Sequence {
     public func mapContents<NewValue>(
         _ transform: @escaping (FutureValue.Element) throws -> NewValue
-    ) -> OutputStream<[NewValue]> {
+    ) -> ReadStream<[NewValue]> {
         return self.map { sequence in
             return try sequence.map(transform)
         }

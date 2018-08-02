@@ -3,10 +3,10 @@ import SystemConfiguration
 struct UnknownReachabilityError: Error {}
 
 public final class ReachabilityListener {
-    private let inputStream = InputStream<NetworkStatus>()
+    private let writeStream = WriteStream<NetworkStatus>()
     
-    public var notifications: OutputStream<NetworkStatus> {
-        return inputStream.listener
+    public var notifications: ReadStream<NetworkStatus> {
+        return writeStream.listener
     }
     
     private let reachability: SCNetworkReachability
@@ -27,14 +27,14 @@ public final class ReachabilityListener {
         
         guard SCNetworkReachabilitySetCallback(reachability, { reachability, flags, info in
             let notifier = Unmanaged<ReachabilityListener>.fromOpaque(info!).takeUnretainedValue()
-            notifier.inputStream.next(NetworkStatus(reachability: reachability, flags: flags))
+            notifier.writeStream.next(NetworkStatus(reachability: reachability, flags: flags))
         }, &context) else {
             throw UnknownReachabilityError()
         }
     }
     
     private func callback(status: SCNetworkReachability, flags: SCNetworkReachabilityFlags, metadata: UnsafeMutableRawPointer?) {
-        inputStream.next(NetworkStatus(reachability: status, flags: flags))
+        writeStream.next(NetworkStatus(reachability: status, flags: flags))
     }
     
     deinit {

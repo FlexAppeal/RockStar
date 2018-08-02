@@ -5,7 +5,7 @@ public struct ConfigurationOption<O> {
         case literal(O)
         case `default`
         case factory(() -> (O?))
-        case inputStream(ValueInputStream<O>)
+        case WriteStream(ValueWriteStream<O>)
     }
 
     private let storage: Storage
@@ -27,7 +27,7 @@ public struct ConfigurationOption<O> {
         in object: Base
     ) -> ConfigurationOption<O> {
         return ConfigurationOption<O>(
-            storage: .inputStream(ValueInputStream(keyPath: keyPath, in: object))
+            storage: .WriteStream(ValueWriteStream(keyPath: keyPath, in: object))
         )
     }
 
@@ -36,7 +36,7 @@ public struct ConfigurationOption<O> {
         case .literal(let value): return value
         case .default: return nil
         case .factory(let factory): return factory()
-        case .inputStream(let inputStream): return inputStream.currentValue
+        case .WriteStream(let WriteStream): return WriteStream.currentValue
         }
     }
 }

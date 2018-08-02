@@ -110,7 +110,7 @@ public struct RichText: ExpressibleByStringLiteral {
         self._string = value
     }
     
-    public init(string: String, attributes: [RichTextAttribute]) {
+    public init(string: String, attributes: [RichTextAttribute] = []) {
         self._string = string
         
         for attribute in attributes {
@@ -160,6 +160,28 @@ public struct RichText: ExpressibleByStringLiteral {
             from: range.lowerBound,
             to: range.upperBound
         ))
+    }
+    
+    public mutating func apply(attributes: RichTextAttribute..., inRange range: Range<Int>? = nil) {
+        for attribute in attributes {
+            self.apply(attribute: attribute, inRange: range)
+        }
+    }
+    
+    public func applying(attribute: RichTextAttribute, inRange range: Range<Int>? = nil) -> RichText {
+        var me = self
+        me.apply(attribute: attribute, inRange: range)
+        return me
+    }
+    
+    public func applying(attributes: RichTextAttribute..., inRange range: Range<Int>? = nil) -> RichText {
+        var me = self
+        
+        for attribute in attributes {
+            me.apply(attribute: attribute, inRange: range)
+        }
+        
+        return me
     }
     
     public mutating func apply(font: TextFont, inRange range: Range<Int>? = nil) {

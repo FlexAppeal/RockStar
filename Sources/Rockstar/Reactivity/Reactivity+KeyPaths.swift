@@ -34,10 +34,10 @@ extension Future {
     }
 }
 
-extension OutputStream {
+extension ReadStream {
     /// MARK - Normal
     @discardableResult
-    public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> OutputStream<FutureValue> {
+    public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> ReadStream<FutureValue> {
         return self.then { value in
             var type = type
             type[keyPath: path] = value
@@ -45,7 +45,7 @@ extension OutputStream {
     }
     
     @discardableResult
-    public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue>) -> OutputStream<FutureValue> {
+    public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue>) -> ReadStream<FutureValue> {
         return self.then { value in
             let type = type
             type[keyPath: path] = value
@@ -55,7 +55,7 @@ extension OutputStream {
     /// MARK - Optional
     
     @discardableResult
-    public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue?>) -> OutputStream<FutureValue> {
+    public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue?>) -> ReadStream<FutureValue> {
         return self.then { value in
             var type = type
             type[keyPath: path] = value
@@ -63,7 +63,7 @@ extension OutputStream {
     }
     
     @discardableResult
-    public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue?>) -> OutputStream<FutureValue> {
+    public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue?>) -> ReadStream<FutureValue> {
         return self.then { value in
             let type = type
             type[keyPath: path] = value

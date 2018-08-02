@@ -43,9 +43,9 @@ extension CLLocation {
 @available(iOS 9.0, *)
 public final class LocationManager: NSObject, CLLocationManagerDelegate {
     let manager: CLLocationManager
-    private let locationStream = InputStream<Location>()
+    private let locationStream = WriteStream<Location>()
     
-    public var locationChanges: OutputStream<Location> {
+    public var locationChanges: ReadStream<Location> {
         manager.startUpdatingLocation()
         
         return locationStream.listener
