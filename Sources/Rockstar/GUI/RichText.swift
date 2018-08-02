@@ -22,6 +22,7 @@ public struct TextFont {
 
 public enum RichTextAttribute {
     case font(TextFont)
+    case centered
     case color(Color)
 }
 
@@ -54,6 +55,7 @@ public struct RichCharacter {
         var italic = false
         var underlined = false
         var color: Color?
+        var centered = false
         
         for attribute in attributes {
             switch attribute {
@@ -73,6 +75,8 @@ public struct RichCharacter {
                 }
             case .color(let foundColor):
                 color = foundColor
+            case .centered:
+                centered = true
             }
         }
         

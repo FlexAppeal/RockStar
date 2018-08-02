@@ -45,6 +45,13 @@ extension RangedRichTextAttributes {
                     .font: uiFont
                 ]
             }
+        case .centered:
+            var style = NSMutableParagraphStyle()
+            style.alignment = .center
+            
+            return [
+                .paragraphStyle: style
+            ]
         }
     }
 }

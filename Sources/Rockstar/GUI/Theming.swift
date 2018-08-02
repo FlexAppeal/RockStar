@@ -37,7 +37,7 @@ public struct Color {
         public var alpha: UInt8
     }
     
-    public private(set) var floatView: FloatView {
+    public var floatView: FloatView {
         get {
             return FloatView(
                 red: Float(byteView.red) / 255,
@@ -47,10 +47,10 @@ public struct Color {
             )
         }
         set {
-            assert(newValue.red > 0 && newValue.red < 1, "Invalid floating point received for the red value")
-            assert(newValue.green > 0 && newValue.green < 1, "Invalid floating point received for the green value")
-            assert(newValue.blue > 0 && newValue.blue < 1, "Invalid floating point received for the blue value")
-            assert(newValue.alpha > 0 && newValue.alpha < 1, "Invalid floating point received for the alpha value")
+            assert(newValue.red >= 0 && newValue.red <= 1, "Invalid floating point received for the red value")
+            assert(newValue.green >= 0 && newValue.green <= 1, "Invalid floating point received for the green value")
+            assert(newValue.blue >= 0 && newValue.blue <= 1, "Invalid floating point received for the blue value")
+            assert(newValue.alpha >= 0 && newValue.alpha <= 1, "Invalid floating point received for the alpha value")
             
             self.byteView = ByteView(
                 red: UInt8(newValue.red * 255),
@@ -61,7 +61,7 @@ public struct Color {
         }
     }
     
-    public private(set) var byteView: ByteView
+    public var byteView: ByteView
     
     public static func fromFloats(red: Float, green: Float, blue: Float, alpha: Float = 1.0) -> Color {
         assert(red > 0 && red < 1, "Invalid floating point received for the red value")
@@ -95,22 +95,22 @@ public struct Color {
     }
     
     public static var red: Color {
-        return Color.fromBytes(red: 1, green: 0, blue: 0, alpha: 1)
+        return Color.fromBytes(red: 255, green: 0, blue: 0, alpha: 255)
     }
     
     public static var green: Color {
-        return Color.fromBytes(red: 0, green: 1, blue: 0, alpha: 1)
+        return Color.fromBytes(red: 0, green: 255, blue: 0, alpha: 255)
     }
     
     public static var blue: Color {
-        return Color.fromBytes(red: 0, green: 0, blue: 1, alpha: 1)
+        return Color.fromBytes(red: 0, green: 0, blue: 255, alpha: 255)
     }
     
     public static var white: Color {
-        return Color.fromBytes(red: 0, green: 1, blue: 1, alpha: 1)
+        return Color.fromBytes(red: 255, green: 255, blue: 255, alpha: 255)
     }
     
     public static var black: Color {
-        return Color.fromBytes(red: 0, green: 0, blue: 0, alpha: 1)
+        return Color.fromBytes(red: 0, green: 0, blue: 0, alpha: 255)
     }
 }
