@@ -59,23 +59,13 @@ extension Future {
         }
     }
     
-    public func mapIfNotNil<B, T>(run: @escaping (B) throws -> (T)) -> Future<T> where FutureValue == Optional<B> {
+    public func assertNotNil<B>() -> Future<B> where FutureValue == Optional<B> {
         return self.map { value in
             guard let value = value else {
                 throw ValueUnwrappedNil()
             }
             
-            return try run(value)
-        }
-    }
-    
-    public func flatMapIfNotNil<B, T>(run: @escaping (B) throws -> (Future<T>)) -> Future<T> where FutureValue == Optional<B> {
-        return self.flatMap { value in
-            guard let value = value else {
-                throw ValueUnwrappedNil()
-            }
-            
-            return try run(value)
+            return value
         }
     }
 }
