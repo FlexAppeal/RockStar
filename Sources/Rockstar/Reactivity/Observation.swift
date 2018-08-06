@@ -4,6 +4,8 @@ import Foundation
 public indirect enum Observation<FutureValue> {
     case success(FutureValue)
     case failure(Error)
+    
+    /// FIXME: Work around this with a helper struct `Cancellable<Void>`
     case cancelled
 }
 
