@@ -1,3 +1,5 @@
+import Dispatch
+
 extension Future {
     public func switchThread(to thread: AnyThread) -> Future<FutureValue> {
         let promise = Promise<FutureValue>(onCancel: self.cancel)

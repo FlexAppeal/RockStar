@@ -1,3 +1,5 @@
+import Foundation
+
 fileprivate class AnyNSObject<Base>: NSObject {
     let base: Base
     

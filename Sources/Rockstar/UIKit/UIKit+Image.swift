@@ -1,3 +1,5 @@
+import UIKit
+
 extension UIImageView: Image {
     public var imageFile: ImageFile? {
         get {

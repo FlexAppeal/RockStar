@@ -1,3 +1,6 @@
+import Foundation
+import UIKit
+
 public protocol FormPart {
     var name: String { get }
     var filename: String? { get }

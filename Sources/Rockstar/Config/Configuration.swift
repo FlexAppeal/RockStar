@@ -1,3 +1,5 @@
+import Foundation
+
 /// FIXME: Dynamic member lookup (Swift 4.2) on config files
 
 public struct ConfigurationOption<O> {

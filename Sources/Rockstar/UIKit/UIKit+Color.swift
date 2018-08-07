@@ -1,3 +1,5 @@
+import UIKit
+
 extension Color {
     public var uiColor: UIColor {
         let floatView = self.floatView

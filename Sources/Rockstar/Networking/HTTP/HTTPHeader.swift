@@ -1,3 +1,5 @@
+import Foundation
+
 public protocol HTTPHeaderValue {
     var headerValue: String { get }
 }

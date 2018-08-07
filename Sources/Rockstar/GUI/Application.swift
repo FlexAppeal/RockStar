@@ -1,3 +1,5 @@
+import UIKit
+
 public enum OperatingSystem {
     case macOS, iOS, linux
 }

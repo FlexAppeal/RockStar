@@ -1,3 +1,5 @@
+import Foundation
+
 public struct ImageFile {
     public private(set) var data: Data
     public private(set) var mediaType: MediaType

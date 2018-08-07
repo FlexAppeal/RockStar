@@ -1,3 +1,5 @@
+import UIKit
+
 public protocol RockstarError: Error {
     var location: SourceLocation { get }
 }
