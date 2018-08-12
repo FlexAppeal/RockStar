@@ -218,7 +218,7 @@ public final class ApplicationDescription {
             
             let view = try controller.describeView().representUIKit()
             let viewController = UIViewController()
-            viewController.view = view
+//            viewController.view = view
             
             app.window.rootViewController = viewController
         }
@@ -227,14 +227,16 @@ public final class ApplicationDescription {
 
 extension ViewControllerDescription {
     func representUIKit() throws -> UIViewController {
-        let view: UIView
-        
-        switch self.description {
-        case .table(let table):
-            view = try table.representUIKit()
-        }
-        
-        return view
+        struct TempError: Error {}
+        throw TempError()
+//        let view: UIView
+//
+//        switch self.description {
+//        case .table(let table):
+//            view = try table.representUIKit()
+//        }
+//
+//        return view
     }
 }
 
@@ -250,8 +252,8 @@ extension TableRowDescription {
         
         switch self.description {
         case .view(let view):
-            let subView = try view.representUIKit()
-            cell.addSubview(subView)
+//            let subView = try view.representUIKit()
+//            cell.addSubview(subView)
         }
         
         return cell

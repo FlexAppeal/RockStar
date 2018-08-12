@@ -26,10 +26,15 @@ fileprivate extension LogLevel {
 
 public struct PrintLogger: LogDestination, Service {
     public var detailed = true
+    public var level: LogLevel = .fatal
     
     public init() {}
     
     public func log(_ message: LogMessage<String>) {
+        guard message.level >= level else {
+            return
+        }
+        
         // These 2 prints statements are purposely separated even though they're similar. This is for performance and future-proofness
         if detailed {
             print("[\(message.level.shortCode)]: \(message.message) @ \(message.location.file) [line: \(message.location.line), column: \(message.location.column)]")
