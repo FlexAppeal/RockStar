@@ -42,6 +42,14 @@ public struct ReadStream<FutureValue> {
         self.writeStream.cancel()
     }
     
+    public func ifNotCancelled(run: @escaping () -> ()) {
+        self.onCompletion { value in
+            if case .cancelled = value { return }
+            
+            run()
+        }
+    }
+    
     public func always(run: @escaping () -> ()) {
         self.onCompletion { _ in run() }
     }

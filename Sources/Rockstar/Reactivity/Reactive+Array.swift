@@ -67,6 +67,36 @@ extension Array {
         return promise.future
     }
     
+    public func asyncReduce<Value>(_ element: Value, _ function: @escaping (Value, Element) throws -> Future<Value>) -> Future<Value> {
+        var iterator = self.makeIterator()
+        var element = Future(result: element)
+        var cancelled = false
+        
+        let promise = Promise<Value> {
+            cancelled = true
+        }
+        
+        func next() {
+            if cancelled {
+                return
+            }
+            
+            if let iterable = iterator.next() {
+                element = element.flatMap { element in
+                    let element = try function(element, iterable)
+                    
+                    return element
+                }.ifNotCancelled(run: next)
+            } else {
+                element.onCompletion(promise.fulfill)
+            }
+        }
+        
+        next()
+        
+        return promise.future
+    }
+    
     public func asyncMap<T, B>(_ function: @escaping (T) throws -> (B)) -> ReadStream<B> where Element == Future<T> {
         return self.streamed(sequentially: true).map(function)
     }
@@ -87,7 +117,7 @@ extension Array {
                     return
                 }
                 
-                future.onCompletion(writeStream.write).always(run: next)
+                future.onCompletion(writeStream.write).ifNotCancelled(run: next)
             }
             
             next()

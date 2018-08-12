@@ -132,6 +132,6 @@ public struct ServiceContext {
     }
     
     public func makeAsync<Result>(_ type: Result.Type = Result.self) -> Future<Result> {
-        return try services.makeAsync(type)
+        return services.makeAsync(type)
     }
 }

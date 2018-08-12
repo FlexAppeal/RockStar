@@ -12,8 +12,8 @@ public struct HTTPClientConfig: Service {
 }
 
 public protocol HTTPClientMiddleware {
-    func transform(request: HTTPRequest) -> Future<HTTPRequest>
-    func transform(response: HTTPResponse, forRequest request: HTTPRequest) -> Future<HTTPResponse>
+    func transform(request: HTTPRequest) throws -> Future<HTTPRequest>
+    func transform(response: HTTPResponse, forRequest request: HTTPRequest) throws -> Future<HTTPResponse>
 }
 
 fileprivate extension HTTPResponse {
@@ -35,7 +35,7 @@ fileprivate extension HTTPResponse {
     }
 }
 
-public final class RSURLSession: Service, HTTPClient {
+public final class RSHTTPClient: Service, HTTPClient {
     let session: URLSession
     let config: HTTPClientConfig
     
@@ -45,8 +45,18 @@ public final class RSURLSession: Service, HTTPClient {
     }
     
     public func request(_ request: HTTPRequest) -> Future<HTTPResponse> {
-        var response = session.request(request)
-            
+        let allMiddleware = config.middleware
+        
+        var response = allMiddleware.asyncReduce(request) { request, middleware in
+            return try middleware.transform(request: request)
+        }.flatMap { request in
+            return self.session.request(request).flatMap { response in
+                return allMiddleware.asyncReduce(response) { response, middleware in
+                    return try middleware.transform(response: response, forRequest: request)
+                }
+            }
+        }
+        
         if let switchThread = config.switchThread {
             response = response.switchThread(to: switchThread)
         }

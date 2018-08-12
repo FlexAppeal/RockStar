@@ -98,6 +98,19 @@ public struct Future<FutureValue> {
     }
     
     @discardableResult
+    public func ifNotCancelled(run: @escaping () -> ()) -> Future<FutureValue> {
+        self.onCompletion { value in
+            if case .cancelled = value {
+                return
+            }
+            
+            run()
+        }
+        
+        return self
+    }
+    
+    @discardableResult
     public func always(run: @escaping () -> ()) -> Future<FutureValue> {
         self.onCompletion { _ in run() }
         return self

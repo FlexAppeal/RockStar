@@ -22,6 +22,7 @@ extension Future {
         self.onCompletion(promise.fulfill)
         
         timeout.execute {
+            self.cancel()
             promise.fail(error)
         }
         

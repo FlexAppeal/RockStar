@@ -40,7 +40,7 @@ fileprivate final class OutputStreamTableDataSource<Entity: UITableViewCellRepre
         observable.write(
             to: self,
             atKeyPath: \.entities
-            ).switchThread(to: .dispatchQueue(.main)).always(run: self.table.reloadData)
+        ).switchThread(to: .dispatchQueue(.main)).always(run: self.table.reloadData)
     }
     
     @discardableResult
