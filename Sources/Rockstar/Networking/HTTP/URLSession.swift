@@ -1,16 +1,19 @@
 import Foundation
 
 public struct HTTPClientConfig: Service {
-    public static var `default` = HTTPClientConfig()
-    
     public var timeout: RSTimeout? = RSTimeout(after: .seconds(30), onThread: .dispatchQueue(.main))
     public var switchThread: AnyThread? = .dispatchQueue(.main)
     
     public var debugLogs: LogDestination?
     
-    public var services: () -> (Services) = { return .default }
+    public var middleware = [HTTPClientMiddleware]()
     
     public init() {}
+}
+
+public protocol HTTPClientMiddleware {
+    func transform(request: HTTPRequest) -> Future<HTTPRequest>
+    func transform(response: HTTPResponse, forRequest request: HTTPRequest) -> Future<HTTPResponse>
 }
 
 fileprivate extension HTTPResponse {

@@ -251,7 +251,9 @@ extension TableRowDescription {
         let cell = UITableViewCell()
         
         switch self.description {
-        case .view(let view):
+        default:
+            break
+//        case .view(let view):
 //            let subView = try view.representUIKit()
 //            cell.addSubview(subView)
         }

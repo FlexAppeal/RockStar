@@ -26,4 +26,6 @@ APIs designed to leverage the existing ecosystems, providing swifty APIs to crea
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'Sources/Rockstar/**/*'
+
+  #s.dependency 'SwiftNIOTransportServices', '~> 0.2.0'
 end
