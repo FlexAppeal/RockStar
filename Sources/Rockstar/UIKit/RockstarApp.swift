@@ -430,22 +430,22 @@ public protocol RichTextRepresentable {
     var richText: RichText { get }
 }
 
-public extension RichText: RichTextRepresentable {
-    var richText: RichText { return self }
+extension RichText: RichTextRepresentable {
+    public var richText: RichText { return self }
 }
 
-public extension String: RichTextRepresentable {
-    var richText: RichText {
+extension String: RichTextRepresentable {
+    public var richText: RichText {
         return RichText(string: self)
     }
 }
 
-public extension RichTextRepresentable {
-    func fontSize(_ size: Float, inRange range: Range<Int>? = nil) -> RichText {
+extension RichTextRepresentable {
+    public func fontSize(_ size: Float, inRange range: Range<Int>? = nil) -> RichText {
         return self.richText.applying(attribute: .font(TextFont(size: size)), inRange: range)
     }
     
-    func color(_ color: Color, inRange range: Range<Int>? = nil) -> RichText {
+    public func color(_ color: Color, inRange range: Range<Int>? = nil) -> RichText {
         return self.richText.applying(attribute: .color(color), inRange: range)
     }
 }
