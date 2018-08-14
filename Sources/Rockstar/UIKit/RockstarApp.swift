@@ -426,21 +426,21 @@ extension ReadStream {
     }
 }
 
-protocol RichTextRepresentable {
+public protocol RichTextRepresentable {
     var richText: RichText { get }
 }
 
-extension RichText: RichTextRepresentable {
+public extension RichText: RichTextRepresentable {
     var richText: RichText { return self }
 }
 
-extension String: RichTextRepresentable {
+public extension String: RichTextRepresentable {
     var richText: RichText {
         return RichText(string: self)
     }
 }
 
-extension RichTextRepresentable {
+public extension RichTextRepresentable {
     func fontSize(_ size: Float, inRange range: Range<Int>? = nil) -> RichText {
         return self.richText.applying(attribute: .font(TextFont(size: size)), inRange: range)
     }
@@ -450,7 +450,7 @@ extension RichTextRepresentable {
     }
 }
 
-extension Array where Element == IndexPath {
+public extension Array where Element == IndexPath {
     init(section: Int, start: Int, count: Int) {
         var paths = [IndexPath]()
         
