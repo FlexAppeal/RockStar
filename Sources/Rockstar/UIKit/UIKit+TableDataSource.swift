@@ -1,6 +1,6 @@
 import UIKit
 
-extension Store where Entity: UITableViewCellRepresentable {
+extension DataStore where Entity: UITableViewCellRepresentable {
     public func makeDataSource(forTable table: UITableView) {
         let writeStream = WriteStream<[Entity]>()
         

@@ -20,7 +20,7 @@ fileprivate struct NoDataSource: RockstarError {
     let location = SourceLocation()
 }
 
-public final class NSCacheStore<Entity: Storeable>: Store {
+public final class NSCacheStore<Entity: Storeable>: DataStore {
     private final class AnyIdentifier {
         let identifier: Entity.Identifier
         

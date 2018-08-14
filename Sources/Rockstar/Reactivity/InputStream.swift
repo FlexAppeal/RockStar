@@ -3,19 +3,6 @@ public final class WriteStream<FutureValue> {
         return ReadStream(writeStream: self)
     }
     
-    public var isCompleted: Bool {
-        return finalized
-    }
-    
-    var finalized = false {
-        didSet {
-            if finalized {
-                
-                
-            }
-        }
-    }
-    
     var cancelAction: (()->())?
     
     var result: Observation<FutureValue>?

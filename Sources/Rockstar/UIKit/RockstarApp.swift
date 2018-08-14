@@ -121,16 +121,63 @@ public final class TableDescription {
     }
 }
 
+internal final class BindChangeContext<Bound> {
+    let value: Bound
+    var previousHandlers = Set<ObjectIdentifier>()
+    
+    init(value: Bound, initiator: Binding<Bound>) {
+        self.value = value
+        
+        for next in initiator.cascades {
+            cascade(for: next)
+        }
+    }
+    
+    private func cascade(for cascade: CascadedBind<Bound>) {
+        guard !self.previousHandlers.contains(cascade.id) else { return }
+        
+        if let binding = cascade.binding {
+            self.previousHandlers.insert(cascade.id)
+            
+            binding.update(to: value)
+            
+            for next in binding.cascades {
+                self.cascade(for: next)
+            }
+        }
+    }
+}
+
+struct CascadedBind<Bound>: Hashable {
+    weak var binding: Binding<Bound>?
+    let id: ObjectIdentifier
+    
+    init(binding: Binding<Bound>) {
+        self.id = ObjectIdentifier(binding)
+        self.binding = binding
+    }
+    
+    var hashValue: Int {
+        return id.hashValue
+    }
+    
+    static func ==(lhs: CascadedBind<Bound>, rhs: CascadedBind<Bound>) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
 public final class Binding<Bound> {
     public private(set) var currentValue: Bound {
         didSet {
-            for update in bindingUpdates {
-                update()
+            writeStream.next(currentValue)
+            
+            if cascades.count > 0 {
+                _ = BindChangeContext<Bound>(value: currentValue, initiator: self)
             }
         }
     }
     
-    private var bindingUpdates = [() -> ()]()
+    fileprivate var cascades = Set<CascadedBind<Bound>>()
     
     public init(_ value: Bound) {
         self.currentValue = value
@@ -140,15 +187,29 @@ public final class Binding<Bound> {
         self.currentValue = value
     }
     
+    private let writeStream = WriteStream<Bound>()
+    
+    public var readStream: ReadStream<Bound> {
+        return writeStream.listener
+    }
+    
+    public func bind(to binding: Binding<Bound>, bidirectionally: Bool = false) {
+        binding.update(to: self.currentValue)
+        
+        if bidirectionally {
+            binding.bind(to: self)
+        }
+    }
+    
     public func bind<C: AnyObject>(to object: C, atKeyPath path: WritableKeyPath<C, Bound>) {
         weak var object = object
         
-        func update() {
+        func update(to currentvalue: Bound) {
             object?[keyPath: path] = currentValue
         }
         
-        update()
-        self.bindingUpdates.append(update)
+        object?[keyPath: path] = self.currentValue
+        self.readStream.then(update)
     }
 }
 
@@ -332,5 +393,71 @@ public final class MemoryDataSource<Entity>: DataSource {
     
     public func set(to entities: [Entity]) {
         self.entities = entities
+    }
+}
+
+extension ReadStream {
+    public func filterMap<T>(_  mapper: @escaping (FutureValue) -> T?) -> ReadStream<T> {
+        let writer = WriteStream<T>()
+        
+        self.then { value in
+            if let mapped = mapper(value) {
+                writer.next(mapped)
+            }
+            }.catch { error in
+                writer.error(error)
+        }
+        
+        return writer.listener
+    }
+    
+    public func filter(_ condition: @escaping (FutureValue) -> (Bool)) -> ReadStream<FutureValue> {
+        let writer = WriteStream<FutureValue>()
+        
+        self.then { value in
+            if condition(value) {
+                writer.next(value)
+            }
+            }.catch { error in
+                writer.error(error)
+        }
+        
+        return writer.listener
+    }
+}
+
+protocol RichTextRepresentable {
+    var richText: RichText { get }
+}
+
+extension RichText: RichTextRepresentable {
+    var richText: RichText { return self }
+}
+
+extension String: RichTextRepresentable {
+    var richText: RichText {
+        return RichText(string: self)
+    }
+}
+
+extension RichTextRepresentable {
+    func fontSize(_ size: Float, inRange range: Range<Int>? = nil) -> RichText {
+        return self.richText.applying(attribute: .font(TextFont(size: size)), inRange: range)
+    }
+    
+    func color(_ color: Color, inRange range: Range<Int>? = nil) -> RichText {
+        return self.richText.applying(attribute: .color(color), inRange: range)
+    }
+}
+
+extension Array where Element == IndexPath {
+    init(section: Int, start: Int, count: Int) {
+        var paths = [IndexPath]()
+        
+        for i in start..<start + count {
+            paths.append(IndexPath(row: i, section: section))
+        }
+        
+        self = paths
     }
 }

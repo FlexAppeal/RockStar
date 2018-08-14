@@ -4,7 +4,7 @@ public protocol Storeable {
     var identifier: Identifier { get }
 }
 
-public protocol Store {
+public protocol DataStore {
     associatedtype Entity: Storeable
     
     var count: Future<Int> { get }
