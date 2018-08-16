@@ -72,8 +72,6 @@ public final class RSHTTPClient: Service, HTTPClient {
 extension URLSession: Service {}
 extension URLSessionConfiguration: Service {}
 
-extension URLSession: BasicRockstar {}
-
 extension URLSession: HTTPClient {
     public func request(_ request: HTTPRequest) -> Future<HTTPResponse> {
         let urlRequest = request.makeURLRequest()

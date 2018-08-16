@@ -70,6 +70,6 @@ extension Future {
     }
 }
 
-struct ValueUnwrappedNil: RockstarError {
+struct ValueUnwrappedNil: Error {
     var location = SourceLocation()
 }

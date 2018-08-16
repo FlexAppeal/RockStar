@@ -22,6 +22,9 @@
 
 /* Begin PBXBuildFile section */
 		243AE3292125FE1E005F9867 /* Weak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243AE3282125FE1E005F9867 /* Weak.swift */; };
+		243AE32A212600F6005F9867 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_29 /* Location.swift */; };
+		243AE32C21260183005F9867 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243AE32B21260183005F9867 /* Binding.swift */; };
+		243AE32E21260493005F9867 /* IndexPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243AE32D21260493005F9867 /* IndexPath.swift */; };
 		OBJ_263 /* c-atomics.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_160 /* c-atomics.c */; };
 		OBJ_270 /* shim.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_154 /* shim.c */; };
 		OBJ_277 /* shim.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_234 /* shim.c */; };
@@ -153,13 +156,8 @@
 		OBJ_502 /* AnalyticsCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* AnalyticsCollector.swift */; };
 		OBJ_503 /* MeasurementDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* MeasurementDataTypes.swift */; };
 		OBJ_504 /* Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* Reference.swift */; };
-		OBJ_505 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_22 /* Store.swift */; };
 		OBJ_507 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_26 /* Application.swift */; };
-		OBJ_508 /* GUIBasics.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_27 /* GUIBasics.swift */; };
-		OBJ_509 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_28 /* Image.swift */; };
-		OBJ_510 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_29 /* Location.swift */; };
-		OBJ_511 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_30 /* Platform.swift */; };
-		OBJ_512 /* Reactivity+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_31 /* Reactivity+Text.swift */; };
+		OBJ_512 /* RichTextHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_31 /* RichTextHelpers.swift */; };
 		OBJ_513 /* RichText.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_32 /* RichText.swift */; };
 		OBJ_514 /* Theming.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_33 /* Theming.swift */; };
 		OBJ_515 /* Byte.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_35 /* Byte.swift */; };
@@ -226,15 +224,8 @@
 		OBJ_627 /* Rockstar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rockstar::Rockstar::Product" /* Rockstar.framework */; };
 		OBJ_634 /* ActivityIndicator+Reactivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_80 /* ActivityIndicator+Reactivity.swift */; };
 		OBJ_635 /* AttributedString+RichText.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_81 /* AttributedString+RichText.swift */; };
-		OBJ_636 /* NSCacheStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_82 /* NSCacheStore.swift */; };
-		OBJ_638 /* RockstarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_84 /* RockstarApp.swift */; };
-		OBJ_639 /* UIKit+Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_85 /* UIKit+Button.swift */; };
 		OBJ_640 /* UIKit+Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_86 /* UIKit+Color.swift */; };
-		OBJ_641 /* UIKit+GUIElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_87 /* UIKit+GUIElement.swift */; };
-		OBJ_642 /* UIKit+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_88 /* UIKit+Image.swift */; };
 		OBJ_643 /* UIKit+Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_89 /* UIKit+Label.swift */; };
-		OBJ_644 /* UIKit+Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_90 /* UIKit+Navigation.swift */; };
-		OBJ_648 /* UIKit+TableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_94 /* UIKit+TableDataSource.swift */; };
 		OBJ_650 /* RockstarApple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rockstar::RockstarApple::Product" /* RockstarApple.framework */; };
 		OBJ_651 /* Rockstar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rockstar::Rockstar::Product" /* Rockstar.framework */; };
 		OBJ_659 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_122 /* Package.swift */; };
@@ -660,6 +651,8 @@
 
 /* Begin PBXFileReference section */
 		243AE3282125FE1E005F9867 /* Weak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weak.swift; sourceTree = "<group>"; };
+		243AE32B21260183005F9867 /* Binding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
+		243AE32D21260493005F9867 /* IndexPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexPath.swift; sourceTree = "<group>"; };
 		OBJ_10 /* Foundation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Foundation.swift; sourceTree = "<group>"; };
 		OBJ_103 /* empty.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = empty.c; sourceTree = "<group>"; };
 		OBJ_105 /* c_nio_openssl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = c_nio_openssl.h; sourceTree = "<group>"; };
@@ -760,7 +753,6 @@
 		OBJ_217 /* Thread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
 		OBJ_218 /* TypeAssistedChannelHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeAssistedChannelHandler.swift; sourceTree = "<group>"; };
 		OBJ_219 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
-		OBJ_22 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		OBJ_222 /* c_nio_sha1.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = c_nio_sha1.c; sourceTree = "<group>"; };
 		OBJ_224 /* c_nio_sha1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = c_nio_sha1.h; sourceTree = "<group>"; };
 		OBJ_225 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = /Users/joannisorlandos/Projects/Rockstar/Rockstar.xcodeproj/GeneratedModuleMap/CNIOSHA1/module.modulemap; sourceTree = "<group>"; };
@@ -772,11 +764,8 @@
 		OBJ_237 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = /Users/joannisorlandos/Projects/Rockstar/Rockstar.xcodeproj/GeneratedModuleMap/CNIOLinux/module.modulemap; sourceTree = "<group>"; };
 		OBJ_238 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = Package.swift; path = "/Users/joannisorlandos/Projects/Rockstar/.build/checkouts/swift-nio.git--6700915045182984639/Package.swift"; sourceTree = "<group>"; };
 		OBJ_26 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
-		OBJ_27 /* GUIBasics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GUIBasics.swift; sourceTree = "<group>"; };
-		OBJ_28 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		OBJ_29 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
-		OBJ_30 /* Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
-		OBJ_31 /* Reactivity+Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reactivity+Text.swift"; sourceTree = "<group>"; };
+		OBJ_31 /* RichTextHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RichTextHelpers.swift; sourceTree = "<group>"; };
 		OBJ_32 /* RichText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RichText.swift; sourceTree = "<group>"; };
 		OBJ_33 /* Theming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theming.swift; sourceTree = "<group>"; };
 		OBJ_35 /* Byte.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Byte.swift; sourceTree = "<group>"; };
@@ -819,16 +808,9 @@
 		OBJ_78 /* Translator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Translator.swift; sourceTree = "<group>"; };
 		OBJ_80 /* ActivityIndicator+Reactivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ActivityIndicator+Reactivity.swift"; sourceTree = "<group>"; };
 		OBJ_81 /* AttributedString+RichText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributedString+RichText.swift"; sourceTree = "<group>"; };
-		OBJ_82 /* NSCacheStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSCacheStore.swift; sourceTree = "<group>"; };
-		OBJ_84 /* RockstarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RockstarApp.swift; sourceTree = "<group>"; };
-		OBJ_85 /* UIKit+Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Button.swift"; sourceTree = "<group>"; };
 		OBJ_86 /* UIKit+Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Color.swift"; sourceTree = "<group>"; };
-		OBJ_87 /* UIKit+GUIElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+GUIElement.swift"; sourceTree = "<group>"; };
-		OBJ_88 /* UIKit+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Image.swift"; sourceTree = "<group>"; };
 		OBJ_89 /* UIKit+Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Label.swift"; sourceTree = "<group>"; };
 		OBJ_9 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
-		OBJ_90 /* UIKit+Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Navigation.swift"; sourceTree = "<group>"; };
-		OBJ_94 /* UIKit+TableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+TableDataSource.swift"; sourceTree = "<group>"; };
 		OBJ_97 /* RockstarTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RockstarTests.swift; sourceTree = "<group>"; };
 		OBJ_98 /* XCTestManifests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestManifests.swift; sourceTree = "<group>"; };
 		OBJ_99 /* Example */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Example; sourceTree = SOURCE_ROOT; };
@@ -1425,7 +1407,6 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_21 /* Reference.swift */,
-				OBJ_22 /* Store.swift */,
 			);
 			path = Cache;
 			sourceTree = "<group>";
@@ -1547,11 +1528,6 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_26 /* Application.swift */,
-				OBJ_27 /* GUIBasics.swift */,
-				OBJ_28 /* Image.swift */,
-				OBJ_29 /* Location.swift */,
-				OBJ_30 /* Platform.swift */,
-				OBJ_31 /* Reactivity+Text.swift */,
 				OBJ_32 /* RichText.swift */,
 				OBJ_33 /* Theming.swift */,
 				243AE3282125FE1E005F9867 /* Weak.swift */,
@@ -1562,6 +1538,7 @@
 		OBJ_34 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				OBJ_31 /* RichTextHelpers.swift */,
 				OBJ_35 /* Byte.swift */,
 				OBJ_36 /* Environment.swift */,
 				OBJ_37 /* Error.swift */,
@@ -1645,6 +1622,7 @@
 				OBJ_70 /* Reactive+Optional.swift */,
 				OBJ_71 /* Reactivity+KeyPaths.swift */,
 				OBJ_72 /* ReadStream.swift */,
+				243AE32B21260183005F9867 /* Binding.swift */,
 			);
 			path = Reactivity;
 			sourceTree = "<group>";
@@ -1684,15 +1662,8 @@
 			children = (
 				OBJ_80 /* ActivityIndicator+Reactivity.swift */,
 				OBJ_81 /* AttributedString+RichText.swift */,
-				OBJ_82 /* NSCacheStore.swift */,
-				OBJ_84 /* RockstarApp.swift */,
-				OBJ_85 /* UIKit+Button.swift */,
 				OBJ_86 /* UIKit+Color.swift */,
-				OBJ_87 /* UIKit+GUIElement.swift */,
-				OBJ_88 /* UIKit+Image.swift */,
 				OBJ_89 /* UIKit+Label.swift */,
-				OBJ_90 /* UIKit+Navigation.swift */,
-				OBJ_94 /* UIKit+TableDataSource.swift */,
 			);
 			name = RockstarUIKit;
 			path = Sources/RockstarUIKit;
@@ -1701,8 +1672,10 @@
 		OBJ_8 /* RockstarApple */ = {
 			isa = PBXGroup;
 			children = (
+				OBJ_29 /* Location.swift */,
 				OBJ_9 /* Configuration.swift */,
 				OBJ_10 /* Foundation.swift */,
+				243AE32D21260493005F9867 /* IndexPath.swift */,
 			);
 			name = RockstarApple;
 			path = Sources/RockstarApple;
@@ -2359,13 +2332,9 @@
 				OBJ_502 /* AnalyticsCollector.swift in Sources */,
 				OBJ_503 /* MeasurementDataTypes.swift in Sources */,
 				OBJ_504 /* Reference.swift in Sources */,
-				OBJ_505 /* Store.swift in Sources */,
 				OBJ_507 /* Application.swift in Sources */,
-				OBJ_508 /* GUIBasics.swift in Sources */,
-				OBJ_509 /* Image.swift in Sources */,
-				OBJ_510 /* Location.swift in Sources */,
-				OBJ_511 /* Platform.swift in Sources */,
-				OBJ_512 /* Reactivity+Text.swift in Sources */,
+				243AE32E21260493005F9867 /* IndexPath.swift in Sources */,
+				OBJ_512 /* RichTextHelpers.swift in Sources */,
 				OBJ_513 /* RichText.swift in Sources */,
 				OBJ_514 /* Theming.swift in Sources */,
 				OBJ_515 /* Byte.swift in Sources */,
@@ -2389,6 +2358,7 @@
 				OBJ_533 /* NetworkStatus.swift in Sources */,
 				OBJ_534 /* Future+Error.swift in Sources */,
 				OBJ_535 /* Future+ExtraHelpers.swift in Sources */,
+				243AE32C21260183005F9867 /* Binding.swift in Sources */,
 				OBJ_536 /* Future+Literals.swift in Sources */,
 				OBJ_537 /* Future.swift in Sources */,
 				OBJ_538 /* FutureResult+Thread.swift in Sources */,
@@ -2422,6 +2392,7 @@
 			buildActionMask = 0;
 			files = (
 				OBJ_569 /* Configuration.swift in Sources */,
+				243AE32A212600F6005F9867 /* Location.swift in Sources */,
 				OBJ_570 /* Foundation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2458,15 +2429,8 @@
 			files = (
 				OBJ_634 /* ActivityIndicator+Reactivity.swift in Sources */,
 				OBJ_635 /* AttributedString+RichText.swift in Sources */,
-				OBJ_636 /* NSCacheStore.swift in Sources */,
-				OBJ_638 /* RockstarApp.swift in Sources */,
-				OBJ_639 /* UIKit+Button.swift in Sources */,
 				OBJ_640 /* UIKit+Color.swift in Sources */,
-				OBJ_641 /* UIKit+GUIElement.swift in Sources */,
-				OBJ_642 /* UIKit+Image.swift in Sources */,
 				OBJ_643 /* UIKit+Label.swift in Sources */,
-				OBJ_644 /* UIKit+Navigation.swift in Sources */,
-				OBJ_648 /* UIKit+TableDataSource.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -7,7 +7,6 @@ public struct ConfigurationOption<O> {
         case literal(O)
         case `default`
         case factory(() -> (O?))
-        case WriteStream(ValueWriteStream<O>)
     }
 
     private let storage: Storage
@@ -24,21 +23,12 @@ public struct ConfigurationOption<O> {
         return ConfigurationOption<O>(storage: .factory(factory))
     }
     
-    public static func observing<Base: NSObject>(
-        keyPath: KeyPath<Base, O>,
-        in object: Base
-    ) -> ConfigurationOption<O> {
-        return ConfigurationOption<O>(
-            storage: .WriteStream(ValueWriteStream(keyPath: keyPath, in: object))
-        )
-    }
 
     public var value: O? {
         switch storage {
         case .literal(let value): return value
         case .default: return nil
         case .factory(let factory): return factory()
-        case .WriteStream(let WriteStream): return WriteStream.currentValue
         }
     }
 }

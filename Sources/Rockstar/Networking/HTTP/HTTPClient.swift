@@ -2,7 +2,7 @@ public protocol HTTPClient {
     func request(_ request: HTTPRequest) -> Future<HTTPResponse>
 }
 
-public struct AnyHTTPClient: HTTPClient, BasicRockstar {
+public struct AnyHTTPClient: HTTPClient {
     let requestClosure: (HTTPRequest) -> Future<HTTPResponse>
     
     public init(_ client: HTTPClient) {

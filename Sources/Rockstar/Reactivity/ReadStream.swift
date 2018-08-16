@@ -33,7 +33,7 @@ public struct ReadStream<FutureValue> {
             } catch {
                 newWriteStream.error(error)
             }
-        }.catch(newWriteStream.error)
+            }.catch(newWriteStream.error)
         
         return newWriteStream.listener
     }
@@ -82,11 +82,19 @@ public struct ReadStream<FutureValue> {
         return self
     }
     
+    public func bind(to binding: Binding<FutureValue>) {
+        weak var binding = binding
+        
+        self.then { newValue in
+            binding?.update(to: newValue)
+        }
+    }
+    
     @discardableResult
     public func `catch`<E: Error>(
         _ errorType: E.Type,
         _ handle: @escaping (E) -> ()
-    ) -> ReadStream<FutureValue> {
+        ) -> ReadStream<FutureValue> {
         self.catch { error in
             if let error = error as? E {
                 handle(error)
@@ -94,5 +102,33 @@ public struct ReadStream<FutureValue> {
         }
         
         return self
+    }
+    
+    public func filterMap<T>(_  mapper: @escaping (FutureValue) -> T?) -> ReadStream<T> {
+        let writer = WriteStream<T>()
+        
+        self.then { value in
+            if let mapped = mapper(value) {
+                writer.next(mapped)
+            }
+            }.catch { error in
+                writer.error(error)
+        }
+        
+        return writer.listener
+    }
+    
+    public func filter(_ condition: @escaping (FutureValue) -> (Bool)) -> ReadStream<FutureValue> {
+        let writer = WriteStream<FutureValue>()
+        
+        self.then { value in
+            if condition(value) {
+                writer.next(value)
+            }
+            }.catch { error in
+                writer.error(error)
+        }
+        
+        return writer.listener
     }
 }

@@ -1,9 +1,10 @@
 import UIKit
+import Rockstar
 
-extension UILabel: Label {
-    public var richText: RichTextRepresentable {
+extension UILabel: RichTextConvertible {
+    public var richText: RichText {
         get {
-            return self.attributedText
+            return self.attributedText?.richText ?? ""
         }
         set {
             self.attributedText = newValue.richText.attributedString

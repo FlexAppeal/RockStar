@@ -101,7 +101,7 @@ extension Color {
         }
     }
     
-    public init?(hex: String) {
+    public init?(hex: String, transparency: UInt8 = .max) {
         var hex = hex
         
         if hex.first == "#" {
@@ -109,7 +109,10 @@ extension Color {
         }
         
         let hexCode = [UInt8](hex.utf8)
+        let hexSize = hexCode.count
         
+        guard hexSize == 6 else { return nil }
         
+        self = .white
     }
 }

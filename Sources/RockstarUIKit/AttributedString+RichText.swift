@@ -1,4 +1,5 @@
 import UIKit
+import Rockstar
 import Foundation
 
 extension RichText {
@@ -46,7 +47,7 @@ extension RangedRichTextAttributes {
                 ]
             }
         case .centered:
-            var style = NSMutableParagraphStyle()
+            let style = NSMutableParagraphStyle()
             style.alignment = .center
             
             return [

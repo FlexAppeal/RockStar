@@ -1,4 +1,5 @@
 import UIKit
+import Rockstar
 
 extension Color {
     public var uiColor: UIColor {
@@ -13,7 +14,7 @@ extension Color {
     }
 }
 
-extension UIColor: ColorRepresentable {
+extension UIColor {
     public func makeColor() -> Color {
         var red: CGFloat = 0
         var green: CGFloat = 0
