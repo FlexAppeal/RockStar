@@ -18,6 +18,9 @@ var package = Package(
         .target(
             name: "Rockstar",
             dependencies: []),
+        .target(
+            name: "RockstarCrypto",
+            dependencies: ["Rockstar"]),
         .testTarget(
             name: "RockstarTests",
             dependencies: ["Rockstar"]),
