@@ -3,21 +3,18 @@
 
 import PackageDescription
 
-let package = Package(
+var package = Package(
     name: "Rockstar",
     products: [
-        // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
             name: "Rockstar",
-            targets: ["Rockstar"]),
+            targets: ["Rockstar"]
+        ),
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        //.package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "0.2.0")
+        .package(url: "https://github.com/apple/swift-nio.git", from: "1.9.1"),
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "Rockstar",
             dependencies: []),
@@ -26,3 +23,91 @@ let package = Package(
             dependencies: ["Rockstar"]),
     ]
 )
+
+#if os(Linux)
+    package.targets.append(
+        .target(
+            name: "RockstarNIO",
+            dependencies: ["NIO", "Rockstar"]
+        )
+    )
+    package.dependencies.append(
+        .package(url: "https://github.com/apple/swift-nio-ssl.git", from: "1.2.0")
+    )
+    package.products.append(
+        .library(
+            name: "RockstarNIO",
+            targets: ["RockstarNIO", "NIOOpenSSL"]
+        )
+    )
+#endif
+
+#if os(macOS) || os(iOS)
+    package.dependencies.append(
+        .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "0.2.0")
+    )
+    package.targets.append(
+        .target(
+            name: "RockstarApple",
+            dependencies: ["Rockstar"]
+        )
+    )
+    package.products.append(
+        .library(
+            name: "RockstarNIO",
+            targets: ["RockstarNIO"]
+        )
+    )
+    package.products.append(
+        .library(
+            name: "RockstarApple",
+            targets: ["RockstarApple"]
+        )
+    )
+#endif
+
+#if os(macOS)
+    package.targets.append(
+        .target(
+            name: "RockstarAppKit",
+            dependencies: ["Rockstar", "RockstarApple"]
+        )
+    )
+    package.dependencies.append(
+        .package(url: "https://github.com/apple/swift-nio-ssl.git", from: "1.2.0")
+    )
+    package.products.append(
+        .library(
+            name: "RockstarAppKit",
+            targets: ["RockstarAppKit"]
+        )
+    )
+    package.targets.append(
+        .target(
+            name: "RockstarNIO",
+            dependencies: ["NIO", "Rockstar", "NIOTransportServices", "NIOOpenSSL"]
+        )
+    )
+//#endif
+//#if os(iOS)
+    package.targets.append(
+        .target(
+            name: "RockstarUIKit",
+            dependencies: ["Rockstar", "RockstarApple"]
+        )
+    )
+    package.products.append(
+        .library(
+            name: "RockstarUIKit",
+            targets: ["RockstarUIKit"]
+        )
+    )
+    // package.targets.append(
+    //     .target(
+    //         name: "RockstarNIO",
+    //         dependencies: ["NIO", "Rockstar", "NIOTransportServices"]
+    //     )
+    // )
+
+    /// Texture when it has a package.swift
+#endif

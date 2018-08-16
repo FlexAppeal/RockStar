@@ -1,4 +1,4 @@
-public enum Reference<S: Storeable> {
+public enum DataStoreReference<S: Storeable> {
     case reference(S.Identifier)
     case concrete(S)
     
@@ -10,13 +10,13 @@ public enum Reference<S: Storeable> {
     }
 }
 
-extension Reference: Encodable where S.Identifier: Encodable {
+extension DataStoreReference: Encodable where S.Identifier: Encodable {
     public func encode(to encoder: Encoder) throws {
         try identifier.encode(to: encoder)
     }
 }
 
-extension Reference: Decodable where S: Decodable, S.Identifier: Decodable {
+extension DataStoreReference: Decodable where S: Decodable, S.Identifier: Decodable {
     public init(from decoder: Decoder) throws {
         do {
             self = try .reference(S.Identifier.init(from: decoder))
@@ -27,7 +27,7 @@ extension Reference: Decodable where S: Decodable, S.Identifier: Decodable {
 }
 
 extension DataStore {
-    func resolve(_ reference: Reference<Entity>) -> Future<Entity?> {
+    public func resolve(_ reference: DataStoreReference<Entity>) -> Future<Entity?> {
         switch reference {
         case .reference(let identifier):
             return self[identifier]

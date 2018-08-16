@@ -1,27 +1,3 @@
-import UIKit
-
-public struct Background {
-    public var color: Color
-    
-    public init(color: Color) {
-        self.color = color
-    }
-}
-
-public protocol GUIElement {
-    var background: Background { get set }
-}
-
-public protocol GUIElementRepresentable {
-    associatedtype Element: GUIElement
-    
-    var guiElement: Element { get }
-}
-
-public protocol ColorRepresentable {
-    func makeColor() -> Color
-}
-
 public struct Color {
     public struct FloatView {
         public var red: Float
@@ -89,8 +65,10 @@ public struct Color {
         
         return Color(byteView: view)
     }
-    
-    public static var none: Color {
+}
+
+extension Color {
+    public static var clear: Color {
         return Color.fromBytes(red: 0, green: 0, blue: 0, alpha: 0)
     }
     
@@ -112,5 +90,26 @@ public struct Color {
     
     public static var black: Color {
         return Color.fromBytes(red: 0, green: 0, blue: 0, alpha: 255)
+    }
+    
+    public var transparency: Float {
+        get {
+            return self.floatView.alpha
+        }
+        set {
+            self.floatView.alpha = newValue
+        }
+    }
+    
+    public init?(hex: String) {
+        var hex = hex
+        
+        if hex.first == "#" {
+            hex.removeFirst()
+        }
+        
+        let hexCode = [UInt8](hex.utf8)
+        
+        
     }
 }

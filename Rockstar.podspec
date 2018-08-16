@@ -26,9 +26,20 @@ APIs designed to leverage the existing ecosystems, providing swifty APIs to crea
   s.swift_version           = '4.0'
 
   s.ios.deployment_target   = '10.0'
+  s.ios.source_files = 'Sources/RockstarUIKit/**/*'
+  s.osx.source_files = 'Sources/RockstarAppKit/**/*'
 
   s.source_files     = 'Sources/Rockstar/**/*'
-  s.ios.source_files = 'Sources/Rockstar'  
+
+  s.subspec 'RockstarTexture' do |sp|
+    sp.dependency 'RockstarUIKit'
+  end
+
+  s.subspec 'RockstarNIO' do |sp|
+    sp.dependency 'SwiftNIO'
+    sp.dependency 'SwiftNIOTransportServices'
+    sp.dependency 'SwiftNIOWebSocket'
+end
 
   #s.dependency 'SwiftNIOTransportServices', '~> 0.2.0'
 end

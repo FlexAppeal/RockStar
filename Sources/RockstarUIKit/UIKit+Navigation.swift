@@ -1,23 +1,10 @@
 import UIKit
 
-public protocol UIViewControllerRepresentable {
-    var controller: UIViewController { get }
-}
-
-public struct UINavigationItemConfiguration {
-    fileprivate let controller: UIViewController
-    fileprivate let navigator: UINavigationController
-    fileprivate var actions: NavigationActions
-}
 
 final class NavigationActions {
     var items = [AnyNavigationAction]()
     
     public init() {}
-}
-
-struct Weak<T: AnyObject> {
-    weak var value: T?
 }
 
 extension ConfigurationHandle where Configurable == UINavigationItemConfiguration {
