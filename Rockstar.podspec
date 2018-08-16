@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.name             = 'Rockstar'
   s.version          = '0.1.0'
   s.summary          = 'Swifty APIs for creating clean apps'
-  
+
   s.description      = <<-DESC
 APIs designed to leverage the existing ecosystems, providing swifty APIs to create faster and more robust apps.
                        DESC
@@ -23,9 +23,12 @@ APIs designed to leverage the existing ecosystems, providing swifty APIs to crea
   s.source           = { :git => 'https://github.com/RockStarSwift/RockStar.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/joannisorlandos'
 
-  s.ios.deployment_target = '8.0'
+  s.swift_version           = '4.0'
 
-  s.source_files = 'Sources/Rockstar/**/*'
+  s.ios.deployment_target   = '10.0'
+
+  s.source_files     = 'Sources/Rockstar/**/*'
+  s.ios.source_files = 'Sources/Rockstar'  
 
   #s.dependency 'SwiftNIOTransportServices', '~> 0.2.0'
 end
