@@ -196,6 +196,8 @@ public final class Binding<Bound> {
     public func bind(to binding: Binding<Bound>, bidirectionally: Bool = false) {
         binding.update(to: self.currentValue)
         
+        self.cascades.insert(CascadedBind(binding: binding))
+        
         if bidirectionally {
             binding.bind(to: self)
         }
