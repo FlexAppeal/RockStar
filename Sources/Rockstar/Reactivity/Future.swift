@@ -1,10 +1,17 @@
 public struct Future<FutureValue> {
-    enum Storage {
+    private enum Storage {
         case concrete(Observation<FutureValue>)
         case promise(Promise<FutureValue>)
     }
+
+    private let storage: Storage
     
-    let storage: Storage
+    public var isPrecompleted: Bool {
+        switch storage {
+        case .concrete: return true
+        case .promise: return false
+        }
+    }
     
     public init(error: Error) {
         self.storage = .concrete(.failure(error))

@@ -108,9 +108,6 @@ extension Color {
             hex.removeFirst()
         }
         
-        let hexCode = [UInt8](hex.utf8)
-        let hexSize = hexCode.count
-        
         guard let bytes = hex.hexToBytes, bytes.count == 3 else { return nil }
         
         self = Color.fromBytes(red: bytes[0], green: bytes[1], blue: bytes[2], alpha: transparency)

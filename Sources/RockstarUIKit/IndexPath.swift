@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 public extension Array where Element == IndexPath {
     init(section: Int, start: Int, count: Int) {

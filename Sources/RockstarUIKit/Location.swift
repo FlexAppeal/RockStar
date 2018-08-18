@@ -1,4 +1,5 @@
 import CoreLocation
+import Foundation
 import Rockstar
 
 struct LocationUnavailable: Error {}

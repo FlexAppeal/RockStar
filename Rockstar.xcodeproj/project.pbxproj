@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		241DFFDB212858AD00189244 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* Location.swift */; };
+		241DFFDD212858BD00189244 /* IndexPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241DFFDC212858BD00189244 /* IndexPath.swift */; };
 		243AE36C21260A86005F9867 /* ImageFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243AE36B21260A86005F9867 /* ImageFile.swift */; };
 		OBJ_259 /* c-atomics.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_224 /* c-atomics.c */; };
 		OBJ_266 /* shim.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_143 /* shim.c */; };
@@ -202,8 +204,6 @@
 		OBJ_554 /* Rockstar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rockstar::Rockstar::Product" /* Rockstar.framework */; };
 		OBJ_562 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Configuration.swift */; };
 		OBJ_563 /* Foundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Foundation.swift */; };
-		OBJ_564 /* IndexPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* IndexPath.swift */; };
-		OBJ_565 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* Location.swift */; };
 		OBJ_567 /* Rockstar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rockstar::Rockstar::Product" /* Rockstar.framework */; };
 		OBJ_574 /* HMAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_73 /* HMAC.swift */; };
 		OBJ_575 /* Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_74 /* Hash.swift */; };
@@ -667,6 +667,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		241DFFDC212858BD00189244 /* IndexPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexPath.swift; sourceTree = "<group>"; };
 		243AE36B21260A86005F9867 /* ImageFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFile.swift; sourceTree = "<group>"; };
 		OBJ_10 /* Foundation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Foundation.swift; sourceTree = "<group>"; };
 		OBJ_101 /* c_nio_openssl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = c_nio_openssl.h; sourceTree = "<group>"; };
@@ -677,7 +678,6 @@
 		OBJ_107 /* OpenSSLServerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSSLServerHandler.swift; sourceTree = "<group>"; };
 		OBJ_108 /* PosixPort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosixPort.swift; sourceTree = "<group>"; };
 		OBJ_109 /* SSLCertificate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSLCertificate.swift; sourceTree = "<group>"; };
-		OBJ_11 /* IndexPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexPath.swift; sourceTree = "<group>"; };
 		OBJ_110 /* SSLConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSLConnection.swift; sourceTree = "<group>"; };
 		OBJ_111 /* SSLContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSLContext.swift; sourceTree = "<group>"; };
 		OBJ_112 /* SSLErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSLErrors.swift; sourceTree = "<group>"; };
@@ -1358,7 +1358,6 @@
 				OBJ_20 /* Application.swift */,
 				OBJ_21 /* RichText.swift */,
 				OBJ_22 /* Theming.swift */,
-				OBJ_23 /* Weak.swift */,
 			);
 			path = GUI;
 			sourceTree = "<group>";
@@ -1508,6 +1507,7 @@
 		OBJ_24 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				OBJ_23 /* Weak.swift */,
 				OBJ_25 /* Byte.swift */,
 				OBJ_26 /* Environment.swift */,
 				OBJ_27 /* Error.swift */,
@@ -1563,7 +1563,7 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -1573,7 +1573,6 @@
 				OBJ_95 /* Dependencies */,
 				OBJ_234 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_50 /* Reactivity */ = {
@@ -1649,8 +1648,6 @@
 			children = (
 				OBJ_9 /* Configuration.swift */,
 				OBJ_10 /* Foundation.swift */,
-				OBJ_11 /* IndexPath.swift */,
-				OBJ_12 /* Location.swift */,
 			);
 			name = RockstarApple;
 			path = Sources/RockstarApple;
@@ -1680,9 +1677,11 @@
 			children = (
 				OBJ_86 /* ActivityIndicator+Reactivity.swift */,
 				OBJ_87 /* AttributedString+RichText.swift */,
+				OBJ_12 /* Location.swift */,
 				OBJ_88 /* UIKit+Color.swift */,
 				OBJ_89 /* UIKit+Label.swift */,
 				243AE36B21260A86005F9867 /* ImageFile.swift */,
+				241DFFDC212858BD00189244 /* IndexPath.swift */,
 			);
 			name = RockstarUIKit;
 			path = Sources/RockstarUIKit;
@@ -2182,7 +2181,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_234 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -2457,8 +2456,6 @@
 			files = (
 				OBJ_562 /* Configuration.swift in Sources */,
 				OBJ_563 /* Foundation.swift in Sources */,
-				OBJ_564 /* IndexPath.swift in Sources */,
-				OBJ_565 /* Location.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2510,6 +2507,8 @@
 				OBJ_645 /* AttributedString+RichText.swift in Sources */,
 				OBJ_646 /* UIKit+Color.swift in Sources */,
 				OBJ_647 /* UIKit+Label.swift in Sources */,
+				241DFFDB212858AD00189244 /* Location.swift in Sources */,
+				241DFFDD212858BD00189244 /* IndexPath.swift in Sources */,
 				243AE36C21260A86005F9867 /* ImageFile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
