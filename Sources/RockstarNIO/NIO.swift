@@ -21,5 +21,3 @@ extension EventLoopFuture {
         return promise.future
     }
 }
-
-extension Future
