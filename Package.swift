@@ -71,9 +71,6 @@ var package = Package(
             dependencies: ["Rockstar", "RockstarApple"]
         )
     )
-    package.dependencies.append(
-        .package(url: "https://github.com/apple/swift-nio-ssl.git", from: "1.2.0")
-    )
     package.products.append(
         .library(
             name: "RockstarAppKit",
@@ -89,6 +86,9 @@ var package = Package(
         )
         NIOdeps.append("NIOTransportServices")
     } else {
+        package.dependencies.append(
+            .package(url: "https://github.com/apple/swift-nio-ssl.git", from: "1.2.0")
+        )
         NIOdeps.append("NIOOpenSSL")
     }
 
