@@ -46,9 +46,6 @@ var package = Package(
 #endif
 
 #if os(macOS) || os(iOS)
-    package.dependencies.append(
-        .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "0.2.0")
-    )
     package.targets.append(
         .target(
             name: "RockstarApple",
@@ -85,6 +82,9 @@ var package = Package(
             targets: ["RockstarAppKit"]
         )
     )
+//    package.dependencies.append(
+//        .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "0.2.0")
+//    )
     package.targets.append(
         .target(
             name: "RockstarNIO",
