@@ -45,7 +45,7 @@ var package = Package(
     )
 #endif
 
-#if os(macOS) || os(iOS)
+#if os(macOS)
     package.targets.append(
         .target(
             name: "RockstarApple",
@@ -64,9 +64,7 @@ var package = Package(
             targets: ["RockstarApple"]
         )
     )
-#endif
 
-#if os(macOS)
     package.targets.append(
         .target(
             name: "RockstarAppKit",
@@ -83,20 +81,15 @@ var package = Package(
         )
     )
 
-    var NIOdeps: [Target.Dependency] = ["NIO", "Rockstar", "NIOOpenSSL"]
-        
-    if #available(iOS 12.0, *) {
-        package.dependencies.append(
-            .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "0.2.0")
-        )
-        NIOdeps.append("NIOTransportServices")
-    }
+    var NIOdeps: [Target.Dependency] = ["NIO", "Rockstar"]
 
-    if #available(macOS 10.14, *) {
+    if #available(iOS 12.0, macOS 10.14, *) {
         package.dependencies.append(
             .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "0.2.0")
         )
         NIOdeps.append("NIOTransportServices")
+    } else {
+        NIOdeps.append("NIOOpenSSL")
     }
 
     package.targets.append(
