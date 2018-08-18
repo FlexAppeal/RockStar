@@ -91,8 +91,6 @@ var package = Package(
             dependencies: ["NIO", "Rockstar", "NIOOpenSSL"]// "NIOTransportServices", "NIOOpenSSL"]
         )
     )
-#endif
-#if os(iOS)
 //    package.targets.append(
 //        .target(
 //            name: "RockstarUIKit",
