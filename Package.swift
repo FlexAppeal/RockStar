@@ -82,13 +82,27 @@ var package = Package(
             targets: ["RockstarAppKit"]
         )
     )
-//    package.dependencies.append(
-//        .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "0.2.0")
-//    )
+
+    var NIOdeps: [Target.Dependency] = ["NIO", "Rockstar", "NIOOpenSSL"]
+        
+    if #available(iOS 12.0, *) {
+        package.dependencies.append(
+            .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "0.2.0")
+        )
+        NIOdeps.append("NIOTransportServices")
+    }
+
+    if #available(macOS 10.14, *) {
+        package.dependencies.append(
+            .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "0.2.0")
+        )
+        NIOdeps.append("NIOTransportServices")
+    }
+
     package.targets.append(
         .target(
             name: "RockstarNIO",
-            dependencies: ["NIO", "Rockstar", "NIOOpenSSL"]// "NIOTransportServices"]
+            dependencies: NIOdeps
         )
     )
     package.targets.append(
@@ -103,12 +117,6 @@ var package = Package(
             targets: ["RockstarUIKit"]
         )
     )
-    // package.targets.append(
-    //     .target(
-    //         name: "RockstarNIO",
-    //         dependencies: ["NIO", "Rockstar", "NIOTransportServices"]
-    //     )
-    // )
 
     /// Texture when it has a package.swift
 #endif
