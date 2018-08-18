@@ -88,23 +88,21 @@ var package = Package(
     package.targets.append(
         .target(
             name: "RockstarNIO",
-            dependencies: ["NIO", "Rockstar", "NIOOpenSSL"]// "NIOTransportServices", "NIOOpenSSL"]
+            dependencies: ["NIO", "Rockstar", "NIOOpenSSL"]// "NIOTransportServices"]
         )
     )
-#endif
-#if os(iOS)
-//    package.targets.append(
-//        .target(
-//            name: "RockstarUIKit",
-//            dependencies: ["Rockstar", "RockstarApple"]
-//        )
-//    )
-//    package.products.append(
-//        .library(
-//            name: "RockstarUIKit",
-//            targets: ["RockstarUIKit"]
-//        )
-//    )
+    package.targets.append(
+        .target(
+            name: "RockstarUIKit",
+            dependencies: ["Rockstar", "RockstarApple"]
+        )
+    )
+    package.products.append(
+        .library(
+            name: "RockstarUIKit",
+            targets: ["RockstarUIKit"]
+        )
+    )
     // package.targets.append(
     //     .target(
     //         name: "RockstarNIO",
