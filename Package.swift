@@ -45,10 +45,7 @@ var package = Package(
     )
 #endif
 
-#if os(macOS) || os(iOS)
-    package.dependencies.append(
-        .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "0.2.0")
-    )
+#if os(macOS)
     package.targets.append(
         .target(
             name: "RockstarApple",
@@ -67,17 +64,12 @@ var package = Package(
             targets: ["RockstarApple"]
         )
     )
-#endif
 
-#if os(macOS)
     package.targets.append(
         .target(
             name: "RockstarAppKit",
             dependencies: ["Rockstar", "RockstarApple"]
         )
-    )
-    package.dependencies.append(
-        .package(url: "https://github.com/apple/swift-nio-ssl.git", from: "1.2.0")
     )
     package.products.append(
         .library(
@@ -85,30 +77,39 @@ var package = Package(
             targets: ["RockstarAppKit"]
         )
     )
+
+    var NIOdeps: [Target.Dependency] = ["NIO", "Rockstar"]
+
+    if #available(iOS 12.0, macOS 10.14, *) {
+        package.dependencies.append(
+            .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "0.2.0")
+        )
+        NIOdeps.append("NIOTransportServices")
+    } else {
+        package.dependencies.append(
+            .package(url: "https://github.com/apple/swift-nio-ssl.git", from: "1.2.0")
+        )
+        NIOdeps.append("NIOOpenSSL")
+    }
+
     package.targets.append(
         .target(
             name: "RockstarNIO",
-            dependencies: ["NIO", "Rockstar", "NIOOpenSSL"]// "NIOTransportServices", "NIOOpenSSL"]
+            dependencies: NIOdeps
         )
     )
-//    package.targets.append(
-//        .target(
-//            name: "RockstarUIKit",
-//            dependencies: ["Rockstar", "RockstarApple"]
-//        )
-//    )
-//    package.products.append(
-//        .library(
-//            name: "RockstarUIKit",
-//            targets: ["RockstarUIKit"]
-//        )
-//    )
-    // package.targets.append(
-    //     .target(
-    //         name: "RockstarNIO",
-    //         dependencies: ["NIO", "Rockstar", "NIOTransportServices"]
-    //     )
-    // )
+    package.targets.append(
+        .target(
+            name: "RockstarUIKit",
+            dependencies: ["Rockstar", "RockstarApple"]
+        )
+    )
+    package.products.append(
+        .library(
+            name: "RockstarUIKit",
+            targets: ["RockstarUIKit"]
+        )
+    )
 
     /// Texture when it has a package.swift
 #endif
