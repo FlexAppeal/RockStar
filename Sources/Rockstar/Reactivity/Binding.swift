@@ -88,6 +88,16 @@ public final class Binding<Bound> {
         }
         
         object?[keyPath: path] = self.currentValue
-        self.readStream.then(update)
+        _ = self.readStream.then(update)
+    }
+}
+
+extension Binding {
+    public func map<T>(_ mapper: @escaping (Bound) -> T) -> Binding<T> {
+        let binding = Binding<T>(mapper(currentValue))
+        
+        _ = self.readStream.map(mapper).then(binding.update)
+        
+        return binding
     }
 }
