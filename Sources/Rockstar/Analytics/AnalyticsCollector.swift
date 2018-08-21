@@ -2,16 +2,15 @@ import Foundation
 
 public final class Analytics {
     let writeStream = WriteStream<Measurement>()
-    public let observable: ReadStream<Measurement>
+    public let errorStream: ReadStream<Measurement>
     
     public static let `default` = Analytics()
     
     public var analyze = false
     
     public init() {
-        self.observable = writeStream.listener
+        self.errorStream = writeStream.listener
     }
-    
     
     public func measureAsync<T>(
         location: SourceLocation,

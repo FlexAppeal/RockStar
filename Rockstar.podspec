@@ -32,7 +32,7 @@ APIs designed to leverage the existing ecosystems, providing swifty APIs to crea
   s.source_files     = 'Sources/Rockstar/**/*'
 
   s.subspec 'RockstarTexture' do |sp|
-    sp.dependency 'RockstarUIKit'
+    sp.dependency 'Rockstar'
   end
 
   s.subspec 'RockstarNIO' do |sp|
