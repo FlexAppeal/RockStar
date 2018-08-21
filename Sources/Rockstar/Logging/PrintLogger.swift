@@ -30,7 +30,8 @@ public struct PrintLogger: LogDestination, Service {
     
     public init() {}
     
-    public func log(_ message: LogMessage<String>) {
+    public func log(_ message: @autoclosure () -> (LogMessage<String>)) {
+        let message = message()
         guard message.level >= level else {
             return
         }

@@ -1,9 +1,9 @@
 public protocol LogDestination {
-    func log(_ message: LogMessage<String>)
+    func log(_ message: @autoclosure () -> (LogMessage<String>))
 }
 
 public protocol CodableLogDestination {
-    func log<E: Encodable>(_ message: LogMessage<E>)
+    func log<E: Encodable>(_ message: @autoclosure () -> (LogMessage<E>))
 }
 
 public enum LogLevel: String, Codable, Comparable {

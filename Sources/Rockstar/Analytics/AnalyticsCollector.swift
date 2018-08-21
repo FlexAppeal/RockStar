@@ -6,32 +6,69 @@ public final class Analytics {
     
     public static let `default` = Analytics()
     
+    public var analyze = false
+    
     public init() {
         self.observable = writeStream.listener
+    }
+    
+    
+    public func measureAsync<T>(
+        location: SourceLocation,
+        _ function: @autoclosure () throws -> (Future<T>)
+    ) rethrows  -> Future<T> {
+        if analyze {
+            let start = Date()
+            var success = true
+            
+            func log() {
+                let end = Date()
+                let check = Performance(start: start, end: end, successful: success)
+                self.writeStream.next(Measurement(data: .performance(check), location: location))
+            }
+            
+            do {
+                return try function().onCompletion { observation in
+                    if case .failure = observation {
+                        success = false
+                    }
+                    
+                    log()
+                }
+            } catch {
+                success = false
+                log()
+                throw error
+            }
+        } else {
+            return try function()
+        }
     }
     
     public func measure<T>(
         location: SourceLocation,
         _ function: @autoclosure () throws -> (T)
     ) rethrows -> T {
-        #if ANALYZE
-        let result: T
-        let start = Date()
-        let success = true
-        
-        defer {
-            let end = Date()
-            let check = Performance(start: start, end: end, successful: success)
-            observable.next(Measurement(data: .performance(check), location: location))
+        if analyze {
+            let result: T
+            let start = Date()
+            var success = true
+            
+            defer {
+                let end = Date()
+                let check = Performance(start: start, end: end, successful: success)
+                writeStream.next(Measurement(data: .performance(check), location: location))
+            }
+            
+            do {
+                return try function()
+            } catch {
+                success = false
+                throw error
+            }
+        } else {
+            return try function()
         }
-        
-        return try location()
-        success = false
-        
-        return result
-        #else
-        return try function()
-        #endif
     }
     
     public func assert(
@@ -39,10 +76,17 @@ public final class Analytics {
         check: @autoclosure () throws -> Bool,
         message: String = ""
     ) {
-        #if ANALYZE
-        let success = try? check() == true
-        let check = SanityCheck(isSane: success, message: message)
-        observable.next(Measurement(data: .sanity(check), location: location))
-        #endif
+        if analyze {
+            let success: Bool
+            
+            do {
+                success = try check()
+            } catch {
+                success = false
+            }
+            
+            let check = SanityCheck(isSane: success, message: message)
+            writeStream.next(Measurement(data: .sanity(check), location: location))
+        }
     }
 }
