@@ -32,13 +32,15 @@ APIs designed to leverage the existing ecosystems, providing swifty APIs to crea
   s.source_files     = 'Sources/Rockstar/**/*'
 
   s.subspec 'RockstarTexture' do |sp|
-    sp.dependency 'Rockstar'
+    sp.source_files  = 'Sources/RockstarTexture/**/*'
   end
 
   s.subspec 'RockstarNIO' do |sp|
     sp.dependency 'SwiftNIO'
     sp.dependency 'SwiftNIOTransportServices'
     sp.dependency 'SwiftNIOWebSocket'
+
+    sp.source_files  = 'Sources/RockstarNIO/**/*'
 end
 
   #s.dependency 'SwiftNIOTransportServices', '~> 0.2.0'
