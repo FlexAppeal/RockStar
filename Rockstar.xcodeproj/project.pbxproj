@@ -22,6 +22,7 @@
 
 /* Begin PBXBuildFile section */
 		24315234212C220900D08955 /* NetworkStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24315233212C220900D08955 /* NetworkStatus.swift */; };
+		247A87962130245100B7707F /* Exports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247A87952130245100B7707F /* Exports.swift */; };
 		OBJ_240 /* c-atomics.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_209 /* c-atomics.c */; };
 		OBJ_247 /* shim.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_135 /* shim.c */; };
 		OBJ_254 /* shim.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_128 /* shim.c */; };
@@ -168,11 +169,10 @@
 		OBJ_467 /* Services.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_63 /* Services.swift */; };
 		OBJ_468 /* SyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_64 /* SyncService.swift */; };
 		OBJ_469 /* Translator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_66 /* Translator.swift */; };
-		OBJ_476 /* AppKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_89 /* AppKit.swift */; };
+		OBJ_476 /* AttributedString+RichText.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_89 /* AttributedString+RichText.swift */; };
 		OBJ_478 /* RockstarApple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rockstar::RockstarApple::Product" /* RockstarApple.framework */; };
 		OBJ_479 /* Rockstar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rockstar::Rockstar::Product" /* Rockstar.framework */; };
 		OBJ_487 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_84 /* Configuration.swift */; };
-		OBJ_488 /* Foundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_85 /* Foundation.swift */; };
 		OBJ_490 /* Rockstar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rockstar::Rockstar::Product" /* Rockstar.framework */; };
 		OBJ_497 /* HMAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_76 /* HMAC.swift */; };
 		OBJ_498 /* Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_77 /* Hash.swift */; };
@@ -510,6 +510,7 @@
 
 /* Begin PBXFileReference section */
 		24315233212C220900D08955 /* NetworkStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NetworkStatus.swift; path = Sources/RockstarUIKit/NetworkStatus.swift; sourceTree = SOURCE_ROOT; };
+		247A87952130245100B7707F /* Exports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exports.swift; sourceTree = "<group>"; };
 		OBJ_10 /* AnalyticsCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsCollector.swift; sourceTree = "<group>"; };
 		OBJ_100 /* OpenSSLHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSSLHandler.swift; sourceTree = "<group>"; };
 		OBJ_101 /* OpenSSLServerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSSLServerHandler.swift; sourceTree = "<group>"; };
@@ -660,9 +661,8 @@
 		OBJ_81 /* SHA1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SHA1.swift; sourceTree = "<group>"; };
 		OBJ_82 /* SHA256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SHA256.swift; sourceTree = "<group>"; };
 		OBJ_84 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
-		OBJ_85 /* Foundation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Foundation.swift; sourceTree = "<group>"; };
 		OBJ_87 /* NIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIO.swift; sourceTree = "<group>"; };
-		OBJ_89 /* AppKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppKit.swift; sourceTree = "<group>"; };
+		OBJ_89 /* AttributedString+RichText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributedString+RichText.swift"; sourceTree = "<group>"; };
 		OBJ_92 /* RockstarTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RockstarTests.swift; sourceTree = "<group>"; };
 		OBJ_93 /* XCTestManifests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestManifests.swift; sourceTree = "<group>"; };
 		OBJ_94 /* Example */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Example; sourceTree = SOURCE_ROOT; };
@@ -1292,7 +1292,7 @@
 			path = Reactivity;
 			sourceTree = "<group>";
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -1302,7 +1302,6 @@
 				OBJ_95 /* Dependencies */,
 				OBJ_217 /* Products */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_61 /* Services */ = {
@@ -1327,12 +1326,12 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_68 /* ActivityIndicator+Reactivity.swift */,
-				OBJ_69 /* AttributedString+RichText.swift */,
 				OBJ_70 /* ImageFile.swift */,
 				OBJ_71 /* IndexPath.swift */,
 				OBJ_72 /* Location.swift */,
 				OBJ_73 /* UIKit+Color.swift */,
 				OBJ_74 /* UIKit+Label.swift */,
+				247A87952130245100B7707F /* Exports.swift */,
 			);
 			name = RockstarUIKit;
 			path = Sources/RockstarUIKit;
@@ -1346,7 +1345,7 @@
 				OBJ_75 /* RockstarCrypto */,
 				OBJ_83 /* RockstarApple */,
 				OBJ_86 /* RockstarNIO */,
-				OBJ_88 /* RockstarAppKit */,
+				OBJ_88 /* RockstarCocoa */,
 			);
 			name = Sources;
 			sourceTree = SOURCE_ROOT;
@@ -1386,8 +1385,8 @@
 		OBJ_83 /* RockstarApple */ = {
 			isa = PBXGroup;
 			children = (
+				OBJ_69 /* AttributedString+RichText.swift */,
 				OBJ_84 /* Configuration.swift */,
-				OBJ_85 /* Foundation.swift */,
 				24315233212C220900D08955 /* NetworkStatus.swift */,
 			);
 			name = RockstarApple;
@@ -1403,13 +1402,13 @@
 			path = Sources/RockstarNIO;
 			sourceTree = SOURCE_ROOT;
 		};
-		OBJ_88 /* RockstarAppKit */ = {
+		OBJ_88 /* RockstarCocoa */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_89 /* AppKit.swift */,
+				OBJ_89 /* AttributedString+RichText.swift */,
 			);
-			name = RockstarAppKit;
-			path = Sources/RockstarAppKit;
+			name = RockstarCocoa;
+			path = Sources/RockstarCocoa;
 			sourceTree = SOURCE_ROOT;
 		};
 		OBJ_9 /* Analytics */ = {
@@ -1853,7 +1852,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_217 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -2088,7 +2087,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_476 /* AppKit.swift in Sources */,
+				OBJ_476 /* AttributedString+RichText.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2097,7 +2096,6 @@
 			buildActionMask = 0;
 			files = (
 				OBJ_487 /* Configuration.swift in Sources */,
-				OBJ_488 /* Foundation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2152,6 +2150,7 @@
 				OBJ_566 /* Location.swift in Sources */,
 				OBJ_567 /* UIKit+Color.swift in Sources */,
 				OBJ_568 /* UIKit+Label.swift in Sources */,
+				247A87962130245100B7707F /* Exports.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
