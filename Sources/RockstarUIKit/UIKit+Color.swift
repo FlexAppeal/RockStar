@@ -1,17 +1,9 @@
 import UIKit
 import Rockstar
+import RockstarApple
 
 extension Color {
-    public var uiColor: UIColor {
-        let floatView = self.floatView
-        
-        return UIColor(
-            red: CGFloat(floatView.red),
-            green: CGFloat(floatView.green),
-            blue: CGFloat(floatView.blue),
-            alpha: CGFloat(floatView.alpha)
-        )
-    }
+    public var uiColor: UIColor { return nativeColor }
 }
 
 extension UIColor {
