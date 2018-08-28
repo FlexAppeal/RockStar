@@ -23,8 +23,11 @@ APIs designed to leverage the existing ecosystems, providing swifty APIs to crea
   s.social_media_url = 'https://twitter.com/joannisorlandos'
 
   s.ios.deployment_target   = '10.0'
-  s.source_files     = 'Sources/Rockstar/**/*'
 
+  s.subspec 'RockstarCore' do |sp|
+    s.source_files     = 'Sources/Rockstar/**/*'
+  end
+  
   s.subspec 'RockstarApple' do |sp|
     sp.ios.source_files = 'Sources/RockstarUIKit/**/*'
     sp.osx.source_files = 'Sources/RockstarAppKit/**/*'
