@@ -25,7 +25,7 @@ APIs designed to leverage the existing ecosystems, providing swifty APIs to crea
   s.ios.deployment_target   = '10.0'
 
   s.subspec 'RockstarCore' do |sp|
-    s.source_files     = 'Sources/Rockstar/**/*'
+    sp.source_files     = 'Sources/Rockstar/**/*'
   end
   
   s.subspec 'RockstarApple' do |sp|
