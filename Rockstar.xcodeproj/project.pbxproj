@@ -199,7 +199,7 @@
 		OBJ_553 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_93 /* XCTestManifests.swift */; };
 		OBJ_555 /* Rockstar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rockstar::Rockstar::Product" /* Rockstar.framework */; };
 		OBJ_562 /* ActivityIndicator+Reactivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_68 /* ActivityIndicator+Reactivity.swift */; };
-		OBJ_563 /* AttributedString+RichText.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_69 /* AttributedString+RichText.swift */; };
+		OBJ_563 /* NativeTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_69 /* NativeTypes.swift */; };
 		OBJ_564 /* ImageFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_70 /* ImageFile.swift */; };
 		OBJ_565 /* IndexPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_71 /* IndexPath.swift */; };
 		OBJ_566 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_72 /* Location.swift */; };
@@ -647,7 +647,7 @@
 		OBJ_64 /* SyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncService.swift; sourceTree = "<group>"; };
 		OBJ_66 /* Translator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Translator.swift; sourceTree = "<group>"; };
 		OBJ_68 /* ActivityIndicator+Reactivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ActivityIndicator+Reactivity.swift"; sourceTree = "<group>"; };
-		OBJ_69 /* AttributedString+RichText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributedString+RichText.swift"; sourceTree = "<group>"; };
+		OBJ_69 /* NativeTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeTypes.swift; sourceTree = "<group>"; };
 		OBJ_70 /* ImageFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFile.swift; sourceTree = "<group>"; };
 		OBJ_71 /* IndexPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexPath.swift; sourceTree = "<group>"; };
 		OBJ_72 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
@@ -1385,7 +1385,7 @@
 		OBJ_83 /* RockstarApple */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_69 /* AttributedString+RichText.swift */,
+				OBJ_69 /* NativeTypes.swift */,
 				OBJ_84 /* Configuration.swift */,
 				24315233212C220900D08955 /* NetworkStatus.swift */,
 			);
@@ -2143,7 +2143,7 @@
 			buildActionMask = 0;
 			files = (
 				OBJ_562 /* ActivityIndicator+Reactivity.swift in Sources */,
-				OBJ_563 /* AttributedString+RichText.swift in Sources */,
+				OBJ_563 /* NativeTypes.swift in Sources */,
 				OBJ_564 /* ImageFile.swift in Sources */,
 				OBJ_565 /* IndexPath.swift in Sources */,
 				24315234212C220900D08955 /* NetworkStatus.swift in Sources */,

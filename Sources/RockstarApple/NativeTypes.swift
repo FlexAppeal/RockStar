@@ -1,6 +1,17 @@
-import UIKit
 import Rockstar
 import Foundation
+
+#if os(macOS)
+import Cocoa
+
+public typealias NativeColor = NSColor
+public typealias NativeFont = NSFont
+#else
+import UIKit
+
+public typealias NativeColor = UIColor
+public typealias NativeFont = UIFont
+#endif
 
 extension RichText {
     public var attributedString: NSAttributedString {
@@ -28,22 +39,22 @@ extension RangedRichTextAttributes {
         switch attribute {
         case .color(let color):
             return [
-                .foregroundColor: color.uiColor
+                .foregroundColor: color.nativeColor
             ]
         case .font(let font):
-            guard let uiFont = font.uiFont else {
+            guard let nativeFont = font.nativeFont else {
                 return [:]
             }
             
             if font.underlined {
                 /// FIXME:
                 return [
-                    .font: uiFont,
+                    .font: nativeFont,
                     .underlineStyle: NSUnderlineStyle.patternSolid
                 ]
             } else {
                 return [
-                    .font: uiFont
+                    .font: nativeFont
                 ]
             }
         case .centered:
@@ -57,28 +68,46 @@ extension RangedRichTextAttributes {
     }
 }
 
-extension UIFont {
-    public var textFont: TextFont {
-        return TextFont(named: fontName, size: Float(pointSize))
-    }
-}
-
 extension TextFont {
-    public var uiFont: UIFont? {
+    public var nativeFont: NativeFont? {
         let size = CGFloat(self.size)
         
         if let name = self.name {
             /// FIXME: Bold/italic system fonts
-            return UIFont(name: name, size: size)
+            return NativeFont(name: name, size: size)
         } else {
             switch self.representation {
             case .normal:
-                return UIFont.systemFont(ofSize: size)
+                return NativeFont.systemFont(ofSize: size)
             case .bold:
-                return UIFont.boldSystemFont(ofSize: size)
+                return NativeFont.boldSystemFont(ofSize: size)
             case .italic:
-                return UIFont.italicSystemFont(ofSize: size)
+                #if os(iOS)
+                return NativeFont.italicSystemFont(ofSize: size)
+                #else
+                return NativeFont.systemFont(ofSize: size)
+                #endif
             }
         }
+    }
+}
+
+
+extension Color {
+    public var nativeColor: NativeColor {
+        let floatView = self.floatView
+        
+        return NativeColor(
+            red: CGFloat(floatView.red),
+            green: CGFloat(floatView.green),
+            blue: CGFloat(floatView.blue),
+            alpha: CGFloat(floatView.alpha)
+        )
+    }
+}
+
+extension NativeFont {
+    public var textFont: TextFont {
+        return TextFont(named: fontName, size: Float(pointSize))
     }
 }
