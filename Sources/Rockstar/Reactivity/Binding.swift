@@ -44,7 +44,7 @@ struct CascadedBind<Bound>: Hashable {
 }
 
 public final class Binding<Bound> {
-    public private(set) var currentValue: Bound {
+    public var currentValue: Bound {
         didSet {
             writeStream.next(currentValue)
             
