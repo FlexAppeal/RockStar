@@ -30,7 +30,8 @@ extension RichText {
 
 extension NSAttributedString {
     public var richText: RichText {
-        fatalError("Unimplemented")
+        // TODO: Markup
+        return self.string.richText
     }
 }
 
