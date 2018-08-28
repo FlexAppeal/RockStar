@@ -28,6 +28,12 @@ APIs designed to leverage the existing ecosystems, providing swifty APIs to crea
   s.subspec 'RockstarCore' do |sp|
     sp.ios.source_files = 'Sources/RockstarUIKit/**/*'
     sp.osx.source_files = 'Sources/RockstarAppKit/**/*'
+
+    sp.dependency "RockstarApple"
+  end
+
+  s.subspec 'RockstarApple' do |sp|
+    sp.source_files = "Sources/RockstarApple/**/*"
   end
 
   s.subspec 'RockstarTexture' do |sp|
