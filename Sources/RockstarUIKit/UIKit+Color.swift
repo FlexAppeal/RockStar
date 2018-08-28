@@ -1,6 +1,5 @@
 import UIKit
 import Rockstar
-import RockstarApple
 
 extension Color {
     public var uiColor: UIColor { return nativeColor }

@@ -1,3 +1,7 @@
 @_exported import Rockstar
-@_exported import RockstarApple
+
+#if canImport(RockstarApple)
+    @_exported import RockstarApple
+#endif
+
 @_exported import UIKit
