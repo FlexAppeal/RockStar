@@ -17,19 +17,19 @@ APIs designed to leverage the existing ecosystems, providing swifty APIs to crea
 
   s.swift_version = '4.1'
   s.homepage         = 'https://github.com/RockStarSwift/RockStar'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'joannis' => 'joannis@orlandos.nl' }
   s.source           = { :git => 'https://github.com/RockStarSwift/RockStar.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/joannisorlandos'
 
-  s.swift_version           = '4.0'
-
   s.ios.deployment_target   = '10.0'
-  s.ios.source_files = 'Sources/RockstarUIKit/**/*'
-  s.osx.source_files = 'Sources/RockstarAppKit/**/*'
 
-  s.source_files     = 'Sources/Rockstar/**/*'
+  s.subspec 'RockstarCore' do |dp|
+    s.ios.source_files = 'Sources/RockstarUIKit/**/*'
+    s.osx.source_files = 'Sources/RockstarAppKit/**/*'
+  
+    s.source_files     = 'Sources/Rockstar/**/*'
+  end
 
   s.subspec 'RockstarTexture' do |sp|
     sp.source_files  = 'Sources/RockstarTexture/**/*'
