@@ -104,6 +104,25 @@ public struct ReadStream<FutureValue> {
         return self
     }
     
+    @discardableResult
+    public func onCancel(_ run: @escaping () -> ()) -> ReadStream<FutureValue> {
+        return self.onCompletion { value in
+            if case .cancelled = value {
+                run()
+            }
+        }
+    }
+    
+    public func flatten<T>() -> ReadStream<T> where FutureValue == Future<T> {
+        let write = WriteStream<T>()
+        
+        self.then { future in
+            future.then(write.next).catch(write.error).onCancel(write.cancel)
+            }.catch(write.error).onCancel(write.cancel)
+        
+        return write.listener
+    }
+    
     public func filterMap<T>(_  mapper: @escaping (FutureValue) -> T?) -> ReadStream<T> {
         let writer = WriteStream<T>()
         

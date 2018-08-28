@@ -191,5 +191,14 @@ public struct Future<FutureValue> {
             return Future(error: error)
         }
     }
+    
+    @discardableResult
+    public func onCancel(_ run: @escaping () -> ()) -> Future<FutureValue> {
+        return self.onCompletion { value in
+            if case .cancelled = value {
+                run()
+            }
+        }
+    }
 }
 

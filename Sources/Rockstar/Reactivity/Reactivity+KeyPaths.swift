@@ -32,6 +32,12 @@ extension Future {
             type[keyPath: path] = value
         }
     }
+    
+    public func map<T>(toValueAt path: KeyPath<FutureValue, T>) -> Future<T> {
+        return self.map { bound in
+            return bound[keyPath: path]
+        }
+    }
 }
 
 extension ReadStream {
