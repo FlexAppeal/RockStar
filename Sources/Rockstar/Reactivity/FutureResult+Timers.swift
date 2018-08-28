@@ -17,10 +17,11 @@ extension Promise {
 }
 
 extension Future {
+    @discardableResult
     public func cancelAfter(
         _ timeout: RSTimeout,
         throwing error: Error = PromiseTimeout()
-    ) -> Promise<FutureValue> {
+    ) -> Future<FutureValue> {
         timeout.execute(self.cancel)
         
         return self
