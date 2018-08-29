@@ -93,7 +93,7 @@ public class _AnyBinding<Bound> {
 }
 
 public final class Binding<Bound>: _AnyBinding<Bound> {
-    public private(set) var currentValue: Bound {
+    public var currentValue: Bound {
         get {
             return bound
         }
