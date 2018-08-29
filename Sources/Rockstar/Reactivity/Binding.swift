@@ -2,7 +2,7 @@ internal final class BindChangeContext<Bound> {
     let value: Bound
     var previousHandlers = Set<ObjectIdentifier>()
     
-    init(value: Bound, initiator: Binding<Bound>) {
+    init(value: Bound, initiator: _AnyBinding<Bound>) {
         self.value = value
         
         for next in initiator.cascades {
@@ -26,10 +26,10 @@ internal final class BindChangeContext<Bound> {
 }
 
 struct CascadedBind<Bound>: Hashable {
-    weak var binding: Binding<Bound>?
+    weak var binding: _AnyBinding<Bound>?
     let id: ObjectIdentifier
     
-    init(binding: Binding<Bound>) {
+    init(binding: _AnyBinding<Bound>) {
         self.id = ObjectIdentifier(binding)
         self.binding = binding
     }
@@ -43,25 +43,15 @@ struct CascadedBind<Bound>: Hashable {
     }
 }
 
-public final class Binding<Bound> {
-    public var currentValue: Bound {
+public class _AnyBinding<Bound> {
+    internal var bound: Bound {
         didSet {
-            writeStream.next(currentValue)
+            writeStream.next(bound)
             
             if cascades.count > 0 {
-                _ = BindChangeContext<Bound>(value: currentValue, initiator: self)
+                _ = BindChangeContext<Bound>(value: bound, initiator: self)
             }
         }
-    }
-    
-    fileprivate var cascades = Set<CascadedBind<Bound>>()
-    
-    public init(_ value: Bound) {
-        self.currentValue = value
-    }
-    
-    public func update(to value: Bound) {
-        self.currentValue = value
     }
     
     private let writeStream = WriteStream<Bound>()
@@ -70,8 +60,18 @@ public final class Binding<Bound> {
         return writeStream.listener
     }
     
-    public func bind(to binding: Binding<Bound>, bidirectionally: Bool = false) {
-        binding.update(to: self.currentValue)
+    var cascades = Set<CascadedBind<Bound>>()
+    
+    internal init(bound: Bound) {
+        self.bound = bound
+    }
+    
+    public func update(to value: Bound) {
+        self.bound = value
+    }
+    
+    public func bind(to binding: _AnyBinding<Bound>, bidirectionally: Bool = false) {
+        binding.update(to: self.bound)
         
         self.cascades.insert(CascadedBind(binding: binding))
         
@@ -84,17 +84,49 @@ public final class Binding<Bound> {
         weak var object = object
         
         func update(to currentvalue: Bound) {
-            object?[keyPath: path] = currentValue
+            object?[keyPath: path] = bound
         }
         
-        object?[keyPath: path] = self.currentValue
+        object?[keyPath: path] = self.bound
         _ = self.readStream.then(update)
     }
 }
 
+public final class Binding<Bound>: _AnyBinding<Bound> {
+    public private(set) var currentValue: Bound {
+        get {
+            return bound
+        }
+        set {
+            bound = newValue
+        }
+    }
+    
+    public init(_ value: Bound) {
+        super.init(bound: value)
+    }
+}
+
+public final class ComputedBinding<Bound>: _AnyBinding<Bound> {
+    public private(set) var currentValue: Bound {
+        get {
+            return bound
+        }
+        set {
+            bound = newValue
+        }
+    }
+    
+    internal init(_ value: Bound) {
+        super.init(bound: value)
+    }
+}
+
+// TODO: Make binding codable where the contained value is codable
 extension Binding {
-    public func map<T>(_ mapper: @escaping (Bound) -> T) -> Binding<T> {
-        let binding = Binding<T>(mapper(currentValue))
+    /// TODO: -> ComputedBinding which can not be mutated
+    public func map<T>(_ mapper: @escaping (Bound) -> T) -> ComputedBinding<T> {
+        let binding = ComputedBinding<T>(mapper(currentValue))
         
         _ = self.readStream.map(mapper).then(binding.update)
         

@@ -1,23 +1,23 @@
 extension Binding {
-    public func reduceMap<T, C>(_ function: @escaping (Bound, T) -> C, value: T) -> Binding<C> {
+    public func reduceMap<T, C>(_ function: @escaping (Bound, T) -> C, value: T) -> ComputedBinding<C> {
         return self.map { bound in
             return function(bound, value)
         }
     }
 
-    public func reduceMap<T, C>(_ function: @escaping (Bound, T) -> C, value: Binding<T>) -> Binding<C> {
+    public func reduceMap<T, C>(_ function: @escaping (Bound, T) -> C, value: _AnyBinding<T>) -> ComputedBinding<C> {
         return self.map { bound in
-            return function(bound, value.currentValue)
+            return function(bound, value.bound)
         }
     }
 
-    public func map<T>(toValueAt path: KeyPath<Bound, T>) -> Binding<T> {
+    public func map<T>(toValueAt path: KeyPath<Bound, T>) -> ComputedBinding<T> {
         return self.map { bound in
             return bound[keyPath: path]
         }
     }
 
-    public func reduce<B, C>(_ base: B, function: @escaping (B, C) -> B) -> Binding<B> where Bound == [C] {
+    public func reduce<B, C>(_ base: B, function: @escaping (B, C) -> B) -> ComputedBinding<B> where Bound == [C] {
         return self.map { array in
             return array.reduce(base, function)
         }
