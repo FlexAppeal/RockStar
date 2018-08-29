@@ -1,5 +1,3 @@
-import Dispatch
-
 extension Array {
     public func joined<T>(ordered: Bool = true) -> Future<[T]> where Element == Future<T> {
         if ordered {
@@ -132,6 +130,38 @@ extension Array {
 }
 
 extension Future {
+    public func flattened<T>() -> Future<[T]> where FutureValue == [Future<T>] {
+        return self.flatMap { sequence in
+            var values = [T]()
+            var iterator = sequence.makeIterator()
+            let promise = Promise<[T]>()
+            
+            func next() {
+                if let nextFuture = iterator.next() {
+                    nextFuture.onCompletion { observation in
+                        switch observation {
+                        case .cancelled:
+                            promise.cancel()
+                        case .success(let value):
+                            values.append(value)
+                            next()
+                        case .failure(let error):
+                            promise.fail(error)
+                        }
+                    }
+                } else {
+                    promise.complete(values)
+                }
+            }
+            
+            next()
+            
+            return promise.future
+        }
+    }
+}
+
+extension Future {
     public func filteringNil<T>() -> Future<[T]> where FutureValue == [T?] {
         return self.map { array in
             return array.compactMap { $0 }
@@ -147,6 +177,14 @@ extension ReadStream where FutureValue: Sequence {
             return try sequence.map(transform)
         }
     }
+    
+    public func flatMapContents<NewValue>(
+        _ transform: @escaping (FutureValue.Element) throws -> Future<NewValue>
+    ) -> ReadStream<[NewValue]> {
+        return self.flatMap { sequence in
+            return try sequence.map(transform).joined()
+        }
+    }
 }
 
 extension Future where FutureValue: Sequence {
@@ -157,32 +195,12 @@ extension Future where FutureValue: Sequence {
             return try sequence.map(transform)
         }
     }
-}
-
-public struct AnyThread {
-    enum ThreadType {
-        case dispatch(DispatchQueue)
-    }
     
-    private let thread: ThreadType
-    
-    public func execute(_ closure: @escaping () -> ()) {
-        switch thread {
-        case .dispatch(let queue):
-            queue.async(execute: closure)
+    public func flatMapContents<NewValue>(
+        _ transform: @escaping (FutureValue.Element) throws -> Future<NewValue>
+    ) -> Future<[NewValue]> {
+        return self.flatMap { sequence in
+            return try sequence.map(transform).joined()
         }
-    }
-    
-    public func execute(after timeout: RSTimeInterval, _ closure: @escaping () -> ()) {
-        switch thread {
-        case .dispatch(let queue):
-            let deadline = DispatchTime.now() + timeout.dispatch
-            
-            queue.asyncAfter(deadline: deadline, execute: closure)
-        }
-    }
-    
-    public static func dispatchQueue(_ queue: DispatchQueue) -> AnyThread {
-        return AnyThread(thread: .dispatch(queue))
     }
 }

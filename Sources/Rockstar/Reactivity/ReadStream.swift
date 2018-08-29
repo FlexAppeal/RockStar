@@ -150,4 +150,18 @@ public struct ReadStream<FutureValue> {
         
         return writer.listener
     }
+    
+    public func errorMap(_ map: @escaping (Error) throws -> (Error)) -> ReadStream<FutureValue> {
+        let writeStream = WriteStream<FutureValue>()
+        
+        self.then(writeStream.next).catch { base in
+            do {
+                writeStream.error(try map(base))
+            } catch {
+                writeStream.error(error)
+            }
+        }.onCancel(writeStream.cancel)
+        
+        return writeStream.listener
+    }
 }

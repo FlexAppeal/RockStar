@@ -200,5 +200,19 @@ public struct Future<FutureValue> {
             }
         }
     }
+    
+    public func errorMap(_ map: @escaping (Error) throws -> (Error)) -> Future<FutureValue> {
+        let promise = Promise<FutureValue>()
+        
+        self.then(promise.complete).catch { base in
+            do {
+                promise.fail(try map(base))
+            } catch {
+                promise.fail(error)
+            }
+            }.onCancel(promise.cancel)
+        
+        return promise.future
+    }
 }
 

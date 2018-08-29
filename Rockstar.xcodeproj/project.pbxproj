@@ -24,6 +24,9 @@
 		24315234212C220900D08955 /* NetworkStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24315233212C220900D08955 /* NetworkStatus.swift */; };
 		2437CB5D2135E76F008F500A /* Reactivity+Reduce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2437CB5C2135E76F008F500A /* Reactivity+Reduce.swift */; };
 		247A87962130245100B7707F /* Exports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247A87952130245100B7707F /* Exports.swift */; };
+		249B84C12136DDB5001C009A /* RemoteValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84C02136DDB5001C009A /* RemoteValue.swift */; };
+		249B84C32136DE0B001C009A /* Reactivity+Change.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84C22136DE0B001C009A /* Reactivity+Change.swift */; };
+		249B84C52136DE5B001C009A /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84C42136DE5B001C009A /* Thread.swift */; };
 		OBJ_240 /* c-atomics.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_209 /* c-atomics.c */; };
 		OBJ_247 /* shim.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_135 /* shim.c */; };
 		OBJ_254 /* shim.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_128 /* shim.c */; };
@@ -513,6 +516,9 @@
 		24315233212C220900D08955 /* NetworkStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NetworkStatus.swift; path = Sources/RockstarUIKit/NetworkStatus.swift; sourceTree = SOURCE_ROOT; };
 		2437CB5C2135E76F008F500A /* Reactivity+Reduce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reactivity+Reduce.swift"; sourceTree = "<group>"; };
 		247A87952130245100B7707F /* Exports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exports.swift; sourceTree = "<group>"; };
+		249B84C02136DDB5001C009A /* RemoteValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteValue.swift; sourceTree = "<group>"; };
+		249B84C22136DE0B001C009A /* Reactivity+Change.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reactivity+Change.swift"; sourceTree = "<group>"; };
+		249B84C42136DE5B001C009A /* Thread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
 		OBJ_10 /* AnalyticsCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsCollector.swift; sourceTree = "<group>"; };
 		OBJ_100 /* OpenSSLHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSSLHandler.swift; sourceTree = "<group>"; };
 		OBJ_101 /* OpenSSLServerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSSLServerHandler.swift; sourceTree = "<group>"; };
@@ -1291,6 +1297,9 @@
 				OBJ_59 /* Reactivity+KeyPaths.swift */,
 				OBJ_60 /* ReadStream.swift */,
 				2437CB5C2135E76F008F500A /* Reactivity+Reduce.swift */,
+				249B84C02136DDB5001C009A /* RemoteValue.swift */,
+				249B84C22136DE0B001C009A /* Reactivity+Change.swift */,
+				249B84C42136DE5B001C009A /* Thread.swift */,
 			);
 			path = Reactivity;
 			sourceTree = "<group>";
@@ -2042,10 +2051,13 @@
 				OBJ_424 /* MeasurementDataTypes.swift in Sources */,
 				OBJ_425 /* Reference.swift in Sources */,
 				OBJ_426 /* Application.swift in Sources */,
+				249B84C12136DDB5001C009A /* RemoteValue.swift in Sources */,
 				OBJ_427 /* RichText.swift in Sources */,
 				OBJ_428 /* Theming.swift in Sources */,
 				OBJ_429 /* Byte.swift in Sources */,
 				OBJ_430 /* Environment.swift in Sources */,
+				249B84C32136DE0B001C009A /* Reactivity+Change.swift in Sources */,
+				249B84C52136DE5B001C009A /* Thread.swift in Sources */,
 				OBJ_431 /* Error.swift in Sources */,
 				OBJ_432 /* Generics.swift in Sources */,
 				OBJ_433 /* Hex.swift in Sources */,

@@ -47,10 +47,6 @@ public class _AnyBinding<Bound> {
     internal var bound: Bound {
         didSet {
             writeStream.next(bound)
-            
-            if cascades.count > 0 {
-                _ = BindChangeContext<Bound>(value: bound, initiator: self)
-            }
         }
     }
     
@@ -68,6 +64,10 @@ public class _AnyBinding<Bound> {
     
     public func update(to value: Bound) {
         self.bound = value
+        
+        if cascades.count > 0 {
+            _ = BindChangeContext<Bound>(value: bound, initiator: self)
+        }
     }
     
     public func bind(to binding: _AnyBinding<Bound>, bidirectionally: Bool = false) {
@@ -113,7 +113,7 @@ public final class ComputedBinding<Bound>: _AnyBinding<Bound> {
             return bound
         }
         set {
-            bound = newValue
+            update(to: newValue)
         }
     }
     
@@ -122,9 +122,7 @@ public final class ComputedBinding<Bound>: _AnyBinding<Bound> {
     }
 }
 
-// TODO: Make binding codable where the contained value is codable
 extension _AnyBinding {
-    /// TODO: -> ComputedBinding which can not be mutated
     public func map<T>(_ mapper: @escaping (Bound) -> T) -> ComputedBinding<T> {
         let binding = ComputedBinding<T>(mapper(bound))
         
@@ -133,3 +131,6 @@ extension _AnyBinding {
         return binding
     }
 }
+
+// TODO: Make binding codable where the contained value is codable
+// TODO: Bidirectionally update computed bindings
