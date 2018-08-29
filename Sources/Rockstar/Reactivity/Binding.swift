@@ -123,10 +123,10 @@ public final class ComputedBinding<Bound>: _AnyBinding<Bound> {
 }
 
 // TODO: Make binding codable where the contained value is codable
-extension Binding {
+extension _AnyBinding {
     /// TODO: -> ComputedBinding which can not be mutated
     public func map<T>(_ mapper: @escaping (Bound) -> T) -> ComputedBinding<T> {
-        let binding = ComputedBinding<T>(mapper(currentValue))
+        let binding = ComputedBinding<T>(mapper(bound))
         
         _ = self.readStream.map(mapper).then(binding.update)
         

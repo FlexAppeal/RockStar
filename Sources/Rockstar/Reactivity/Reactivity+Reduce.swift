@@ -1,4 +1,4 @@
-extension Binding {
+extension _AnyBinding {
     public func reduceMap<T, C>(_ function: @escaping (Bound, T) -> C, value: T) -> ComputedBinding<C> {
         return self.map { bound in
             return function(bound, value)
