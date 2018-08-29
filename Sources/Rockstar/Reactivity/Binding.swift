@@ -16,7 +16,7 @@ internal final class BindChangeContext<Bound> {
         if let binding = cascade.binding {
             self.previousHandlers.insert(cascade.id)
             
-            binding.update(to: value)
+            binding.bound = value
             
             for next in binding.cascades {
                 self.cascade(for: next)
