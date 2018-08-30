@@ -112,19 +112,19 @@ public class AnyBinding<Bound> {
     /// Updates the current value of this binding according to locking/thread preferences and cascades to peers
     internal func update(to value: Bound) {
         func run() {
-            lock.withLock {
-                self.bound = value
-                
-                if cascades.count > 0 {
-                    _ = BindChangeContext<Bound>(value: bound, initiator: self)
-                }
+            self.bound = value
+            
+            if cascades.count > 0 {
+                _ = BindChangeContext<Bound>(value: bound, initiator: self)
             }
         }
         
         if let newThread = newThread {
             newThread.execute(run)
         } else {
-            run()
+            lock.withLock {
+                run()
+            }
         }
     }
     
