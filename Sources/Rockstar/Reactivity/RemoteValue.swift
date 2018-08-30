@@ -56,14 +56,14 @@ public final class ExternalValue<T>: AnyBinding<T?> {
     }
     
     /// Creates a new ExternalValue which fetches the value from the
-    public init(source: @escaping LoadFunction, preload: Bool = true) {
+    public init(source: @escaping LoadFunction, preload: Bool = true, threadSafe: Bool = RockstarConfig.threadSafeBindings) {
         self.load = source
         
         if preload {
             let future = source()
             self.state = .future(future)
             
-            super.init(bound: nil)
+            super.init(bound: nil, threadSafe: threadSafe)
             
             future.then { value in
                 self.state = .available(value)
@@ -77,7 +77,7 @@ public final class ExternalValue<T>: AnyBinding<T?> {
         } else {
             self.state = .unavailable
             
-            super.init(bound: nil)
+            super.init(bound: nil, threadSafe: threadSafe)
         }
     }
     

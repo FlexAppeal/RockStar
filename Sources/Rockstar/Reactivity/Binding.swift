@@ -3,8 +3,8 @@ import Foundation
 // TODO: Examples
 // TODO: Bidirectional computed bindings
 // TODO: Make (manually defined) bindings codable where the contained value is codable
-// TODO: Codable helpers for futures
 // TODO: Bidirectionally update computed bindings
+// TODO: Binding unit test helpers
 
 /// Keeps track of all bindings that have been updated to a new value
 ///
@@ -85,7 +85,7 @@ public class AnyBinding<Bound> {
     }
     
     /// Used for applying thread safety when requested
-    private var lock: NSRecursiveLock?
+    internal let lock: NSRecursiveLock?
     
     /// Switches to this thread when updating if set
     internal var newThread: AnyThread?
@@ -104,6 +104,8 @@ public class AnyBinding<Bound> {
         
         if threadSafe {
             lock = NSRecursiveLock()
+        } else {
+            lock = nil
         }
     }
     
@@ -123,17 +125,6 @@ public class AnyBinding<Bound> {
             newThread.execute(run)
         } else {
             run()
-        }
-    }
-    
-    /// Cannot bind to computed bindings because they are programmatically defined and do not (yet) work bidirectionally
-    public func bind(to binding: Binding<Bound>, bidirectionally: Bool = false) {
-        binding.update(to: self.bound)
-        
-        self.cascades.insert(CascadedBind(binding: binding))
-        
-        if bidirectionally {
-            binding.bind(to: self)
         }
     }
     
@@ -176,6 +167,17 @@ public final class Binding<Bound>: AnyBinding<Bound> {
         super.update(to: value)
     }
     
+    /// Cannot bind to computed bindings because they are programmatically defined and do not (yet) work bidirectionally
+    public func bind(to binding: Binding<Bound>, bidirectionally: Bool = false) {
+        binding.update(to: self.bound)
+        
+        self.cascades.insert(CascadedBind(binding: binding))
+        
+        if bidirectionally {
+            binding.bind(to: self)
+        }
+    }
+    
     /// Creates a new binding based on a concrete value
     public init(_ value: Bound, threadSafe: Bool = RockstarConfig.threadSafeBindings) {
         super.init(bound: value, threadSafe: threadSafe)
@@ -202,6 +204,13 @@ public final class ComputedBinding<Bound>: AnyBinding<Bound> {
         set {
             update(to: newValue)
         }
+    }
+    
+    /// Cannot bind to computed bindings because they are programmatically defined and do not (yet) work bidirectionally
+    public func bind(to binding: Binding<Bound>) {
+        binding.update(to: self.bound)
+        
+        self.cascades.insert(CascadedBind(binding: binding))
     }
     
     /// Can not be manually instantiated since the value is programmatically defined
