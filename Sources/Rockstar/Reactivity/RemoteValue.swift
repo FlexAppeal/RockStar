@@ -1,30 +1,41 @@
-import Rockstar
+/// An internally used enum to keep the `ExternalValue` state.
+fileprivate enum ExternalState<T> {
+    case available(T)
+    case preserved(T?, Future<T>)
+    case error(Error)
+    case unavailable
+    case future(Future<T>)
+}
 
-public final class RemoteValue<T> {
+
+/// A value that is linked to the result of a function call such as an API call
+/// where the result is not readily available.
+public final class ExternalValue<T>: AnyBinding<T?> {
     public typealias LoadFunction = () -> Future<T>
     
-    private enum State {
-        case available(T)
-        case preserved(T?, Future<T>)
-        case error(Error)
-        case unavailable
-        case future(Future<T>)
-    }
-    
-    private var state: State
+    private var state: ExternalState<T>
     private let load: LoadFunction
     
+    /// Should only be used if you're explicitly interested in the value _now_
+    ///
+    /// Does not guarantee that the value has attempted to load yet
     public var current: T? {
         switch state {
         case .available(let value):
             return value
         case .preserved(let value, _):
             return value
+        case .unavailable:
+            _ = reload(invalidating: true)
+            return nil
         default:
             return nil
         }
     }
     
+    /// If the value is readily available, the Future will be precompleted with this result.
+    ///
+    /// Otherwise, the future will receive the (un-)successful value based on the function call's results
     public var futureValue: Future<T> {
         switch state {
         case .available(let value):
@@ -33,17 +44,18 @@ public final class RemoteValue<T> {
             if let current = current {
                 return Future(result: current)
             } else {
-                return reload(invalidatingCurrentValue: true)
+                return reload(invalidating: true)
             }
         case .error(let error):
             return Future(error: error)
         case .unavailable:
-            return reload(invalidatingCurrentValue: true)
+            return reload(invalidating: true)
         case .future(let future):
             return future
         }
     }
     
+    /// Creates a new ExternalValue which fetches the value from the
     public init(source: @escaping LoadFunction, preload: Bool = true) {
         self.load = source
         
@@ -51,17 +63,27 @@ public final class RemoteValue<T> {
             let future = source()
             self.state = .future(future)
             
+            super.init(bound: nil)
+            
             future.then { value in
                 self.state = .available(value)
-                }.catch { error in
-                    self.state = .error(error)
+                self.update(to: value)
+            }.catch { error in
+                self.state = .error(error)
+                self.update(to: nil)
+            }.onCancel {
+                self.update(to: nil)
             }
         } else {
             self.state = .unavailable
+            
+            super.init(bound: nil)
         }
     }
     
-    public func reload(invalidatingCurrentValue invalidate: Bool) -> Future<T> {
+    /// Reloads the local value. Allows invalidation of the local value so that the currently
+    /// present value is released and a new value is required.
+    public func reload(invalidating invalidate: Bool) -> Future<T> {
         let future = load()
         
         if invalidate {
@@ -72,10 +94,15 @@ public final class RemoteValue<T> {
         
         future.then { value in
             self.state = .available(value)
-            }.catch { error in
-                self.state = .error(error)
+            self.update(to: value)
+        }.catch { error in
+            self.state = .error(error)
+            self.update(to: nil)
+        }.onCancel {
+            self.update(to: nil)
         }
         
         return future
     }
 }
+

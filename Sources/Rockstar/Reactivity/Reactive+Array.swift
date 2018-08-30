@@ -1,4 +1,18 @@
 extension Array {
+    /// Takes all futures in th the array and joins them into a single `Future<[T]>``.
+    ///
+    ///     // Friends is `[Future<User>]
+    ///     let friends = user.friends.map { friendId -> Future<User. in
+    ///         return api.fetchUser(byId: friendId)
+    ///     }
+    ///
+    ///     friends.joined() // Future<[User]>
+    ///
+    /// Used to simplify logic where many futures are found of the same type.
+    ///
+    /// `ordered` can be set to `false` if the order in which results are put into the array are not important
+    ///
+    /// If `ordered` is true, the array is guaranteed to have the same resolved values at the indices their futures were at
     public func joined<T>(ordered: Bool = true) -> Future<[T]> where Element == Future<T> {
         if ordered {
             return _orderedJoin()
@@ -7,6 +21,7 @@ extension Array {
         }
     }
     
+    /// An internal implementation for ordered `joined`
     private func _orderedJoin<T>() -> Future<[T]> where Element == Future<T> {
         var values = [T]()
         values.reserveCapacity(self.count)
@@ -38,6 +53,7 @@ extension Array {
         return promise.future
     }
     
+    /// An internal implementation for unordered `joined`
     private func _unorderedJoin<T>() -> Future<[T]> where Element == Future<T> {
         var values = [T]()
         var size = self.count
@@ -65,45 +81,11 @@ extension Array {
         return promise.future
     }
     
-    public func asyncReduce<Value>(_ element: Value, _ function: @escaping (Value, Element) throws -> Future<Value>) -> Future<Value> {
-        var iterator = self.makeIterator()
-        var element = Future(result: element)
-        var cancelled = false
-        
-        let promise = Promise<Value> {
-            cancelled = true
-        }
-        
-        func next() {
-            if cancelled {
-                return
-            }
-            
-            if let iterable = iterator.next() {
-                element = element.flatMap { element in
-                    let element = try function(element, iterable)
-                    
-                    return element
-                }.ifNotCancelled(run: next)
-            } else {
-                element.onCompletion(promise.fulfill)
-            }
-        }
-        
-        next()
-        
-        return promise.future
-    }
-    
-    public func asyncMap<T, B>(_ function: @escaping (T) throws -> (B)) -> ReadStream<B> where Element == Future<T> {
-        return self.streamed(sequentially: true).map(function)
-    }
-    
-    /// TODO: Should the next element be streamed after flatMap returned successfully?
-    public func asyncFlatMap<T, B>(_ function: @escaping (T) throws -> (Future<B>)) -> ReadStream<B> where Element == Future<T> {
-        return self.streamed(sequentially: true).flatMap(function)
-    }
-    
+    /// Drains all entities in the array into the stream
+    ///
+    /// If `sequentially` is true, the values will be sent to the stream in the order of which they occur in the array
+    ///
+    /// Otherwise, the order will be ignored and the order in the stream is equal to the order in which the futures are completed
     public func streamed<T>(sequentially: Bool) -> ReadStream<T> where Element == Future<T> {
         let writeStream = WriteStream<T>()
         
@@ -130,6 +112,7 @@ extension Array {
 }
 
 extension Future {
+    /// FIXME: Joined?
     public func flattened<T>() -> Future<[T]> where FutureValue == [Future<T>] {
         return self.flatMap { sequence in
             var values = [T]()
@@ -159,9 +142,16 @@ extension Future {
             return promise.future
         }
     }
-}
-
-extension Future {
+    
+    /// After completion filters all elements in the array which are `nil`
+    ///
+    /// Returns an array containing the non-nil elements in original order
+    ///
+    ///     let ids = [UserId]()
+    ///
+    ///     // fetchUser returns `Future<User?>`
+    ///     let userResults: [Future<User?>] = ids.map(api.fetchUser)
+    ///     let foundUsers: Future<[User]> = results.flatten().filteringNil()
     public func filteringNil<T>() -> Future<[T]> where FutureValue == [T?] {
         return self.map { array in
             return array.compactMap { $0 }
@@ -170,6 +160,14 @@ extension Future {
 }
 
 extension ReadStream where FutureValue: Sequence {
+    /// Takes all elements individually in the sequence and maps them to an array of the new type
+    ///
+    ///     let chatMessages: ReadStream<[ChatMessage]> = ...
+    ///
+    ///     // ReadStream<[String]>
+    ///     chatMessages.mapContents { message in
+    ///         return message.text
+    ///     }
     public func mapContents<NewValue>(
         _ transform: @escaping (FutureValue.Element) throws -> NewValue
     ) -> ReadStream<[NewValue]> {
@@ -178,6 +176,14 @@ extension ReadStream where FutureValue: Sequence {
         }
     }
     
+    /// Takes all elements individually in the sequence and maps them to an array of a Future containing the new type
+    ///
+    ///     let notifications: ReadStream<[Notification]> = ...
+    ///
+    ///     // ReadStream<[User]>
+    ///     notifications.mapContents { notification -> Future<User> in
+    ///         return api.fetchUser(byId: notification.senderId)
+    ///     }
     public func flatMapContents<NewValue>(
         _ transform: @escaping (FutureValue.Element) throws -> Future<NewValue>
     ) -> ReadStream<[NewValue]> {
@@ -188,6 +194,15 @@ extension ReadStream where FutureValue: Sequence {
 }
 
 extension Future where FutureValue: Sequence {
+    /// Takes all elements individually in the sequence and maps them to an array of the new type
+    ///
+    ///     // Future<[ChatMessage]>
+    ///     let chatMessages = api.fetchChatMessages()
+    ///
+    ///     // Future<[String]>
+    ///     chatMessages.mapContents { message in
+    ///         return message.text
+    ///     }
     public func mapContents<NewValue>(
         _ transform: @escaping (FutureValue.Element) throws -> NewValue
     ) -> Future<[NewValue]> {
@@ -196,6 +211,15 @@ extension Future where FutureValue: Sequence {
         }
     }
     
+    /// Takes all elements individually in the sequence and maps them to an array of a Future containing the new type
+    ///
+    ///     // Future<[Notification]>
+    ///     let notifications = api.fetchNotifications()
+    ///
+    ///     // Future<[User]>
+    ///     notifications.mapContents { notification -> Future<User> in
+    ///         return api.fetchUser(byId: notification.senderId)
+    ///     }
     public func flatMapContents<NewValue>(
         _ transform: @escaping (FutureValue.Element) throws -> Future<NewValue>
     ) -> Future<[NewValue]> {

@@ -27,6 +27,9 @@
 		249B84C12136DDB5001C009A /* RemoteValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84C02136DDB5001C009A /* RemoteValue.swift */; };
 		249B84C32136DE0B001C009A /* Reactivity+Change.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84C22136DE0B001C009A /* Reactivity+Change.swift */; };
 		249B84C52136DE5B001C009A /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84C42136DE5B001C009A /* Thread.swift */; };
+		249B84C92136E2CE001C009A /* BindableCollectoin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84C82136E2CE001C009A /* BindableCollectoin.swift */; };
+		249B84CB2136E502001C009A /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84CA2136E502001C009A /* Lock.swift */; };
+		249B84CD2137C64D001C009A /* Reactivity+Nil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84CC2137C64D001C009A /* Reactivity+Nil.swift */; };
 		OBJ_240 /* c-atomics.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_209 /* c-atomics.c */; };
 		OBJ_247 /* shim.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_135 /* shim.c */; };
 		OBJ_254 /* shim.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_128 /* shim.c */; };
@@ -161,8 +164,7 @@
 		OBJ_455 /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_50 /* Future.swift */; };
 		OBJ_456 /* FutureResult+Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_51 /* FutureResult+Thread.swift */; };
 		OBJ_457 /* FutureResult+Timers.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_52 /* FutureResult+Timers.swift */; };
-		OBJ_458 /* InputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_53 /* InputStream.swift */; };
-		OBJ_459 /* ObservableValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_54 /* ObservableValue.swift */; };
+		OBJ_458 /* WriteStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_53 /* WriteStream.swift */; };
 		OBJ_460 /* Observation.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_55 /* Observation.swift */; };
 		OBJ_461 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_56 /* Promise.swift */; };
 		OBJ_462 /* Reactive+Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_57 /* Reactive+Array.swift */; };
@@ -519,6 +521,9 @@
 		249B84C02136DDB5001C009A /* RemoteValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteValue.swift; sourceTree = "<group>"; };
 		249B84C22136DE0B001C009A /* Reactivity+Change.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reactivity+Change.swift"; sourceTree = "<group>"; };
 		249B84C42136DE5B001C009A /* Thread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
+		249B84C82136E2CE001C009A /* BindableCollectoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindableCollectoin.swift; sourceTree = "<group>"; };
+		249B84CA2136E502001C009A /* Lock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = "<group>"; };
+		249B84CC2137C64D001C009A /* Reactivity+Nil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reactivity+Nil.swift"; sourceTree = "<group>"; };
 		OBJ_10 /* AnalyticsCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsCollector.swift; sourceTree = "<group>"; };
 		OBJ_100 /* OpenSSLHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSSLHandler.swift; sourceTree = "<group>"; };
 		OBJ_101 /* OpenSSLServerHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSSLServerHandler.swift; sourceTree = "<group>"; };
@@ -641,8 +646,7 @@
 		OBJ_50 /* Future.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Future.swift; sourceTree = "<group>"; };
 		OBJ_51 /* FutureResult+Thread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FutureResult+Thread.swift"; sourceTree = "<group>"; };
 		OBJ_52 /* FutureResult+Timers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FutureResult+Timers.swift"; sourceTree = "<group>"; };
-		OBJ_53 /* InputStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputStream.swift; sourceTree = "<group>"; };
-		OBJ_54 /* ObservableValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservableValue.swift; sourceTree = "<group>"; };
+		OBJ_53 /* WriteStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteStream.swift; sourceTree = "<group>"; };
 		OBJ_55 /* Observation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observation.swift; sourceTree = "<group>"; };
 		OBJ_56 /* Promise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		OBJ_57 /* Reactive+Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reactive+Array.swift"; sourceTree = "<group>"; };
@@ -1147,6 +1151,7 @@
 		OBJ_18 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				249B84CA2136E502001C009A /* Lock.swift */,
 				OBJ_19 /* Byte.swift */,
 				OBJ_20 /* Environment.swift */,
 				OBJ_21 /* Error.swift */,
@@ -1288,8 +1293,7 @@
 				OBJ_50 /* Future.swift */,
 				OBJ_51 /* FutureResult+Thread.swift */,
 				OBJ_52 /* FutureResult+Timers.swift */,
-				OBJ_53 /* InputStream.swift */,
-				OBJ_54 /* ObservableValue.swift */,
+				OBJ_53 /* WriteStream.swift */,
 				OBJ_55 /* Observation.swift */,
 				OBJ_56 /* Promise.swift */,
 				OBJ_57 /* Reactive+Array.swift */,
@@ -1300,6 +1304,8 @@
 				249B84C02136DDB5001C009A /* RemoteValue.swift */,
 				249B84C22136DE0B001C009A /* Reactivity+Change.swift */,
 				249B84C42136DE5B001C009A /* Thread.swift */,
+				249B84C82136E2CE001C009A /* BindableCollectoin.swift */,
+				249B84CC2137C64D001C009A /* Reactivity+Nil.swift */,
 			);
 			path = Reactivity;
 			sourceTree = "<group>";
@@ -2050,6 +2056,7 @@
 				OBJ_423 /* AnalyticsCollector.swift in Sources */,
 				OBJ_424 /* MeasurementDataTypes.swift in Sources */,
 				OBJ_425 /* Reference.swift in Sources */,
+				249B84CB2136E502001C009A /* Lock.swift in Sources */,
 				OBJ_426 /* Application.swift in Sources */,
 				249B84C12136DDB5001C009A /* RemoteValue.swift in Sources */,
 				OBJ_427 /* RichText.swift in Sources */,
@@ -2063,6 +2070,7 @@
 				OBJ_433 /* Hex.swift in Sources */,
 				OBJ_434 /* ParameterSet.swift in Sources */,
 				OBJ_435 /* RichTextHelpers.swift in Sources */,
+				249B84CD2137C64D001C009A /* Reactivity+Nil.swift in Sources */,
 				OBJ_436 /* Source.swift in Sources */,
 				OBJ_437 /* Time.swift in Sources */,
 				OBJ_438 /* URL.swift in Sources */,
@@ -2084,14 +2092,14 @@
 				OBJ_455 /* Future.swift in Sources */,
 				OBJ_456 /* FutureResult+Thread.swift in Sources */,
 				OBJ_457 /* FutureResult+Timers.swift in Sources */,
-				OBJ_458 /* InputStream.swift in Sources */,
-				OBJ_459 /* ObservableValue.swift in Sources */,
+				OBJ_458 /* WriteStream.swift in Sources */,
 				OBJ_460 /* Observation.swift in Sources */,
 				OBJ_461 /* Promise.swift in Sources */,
 				OBJ_462 /* Reactive+Array.swift in Sources */,
 				OBJ_463 /* Reactive+Optional.swift in Sources */,
 				OBJ_464 /* Reactivity+KeyPaths.swift in Sources */,
 				OBJ_465 /* ReadStream.swift in Sources */,
+				249B84C92136E2CE001C009A /* BindableCollectoin.swift in Sources */,
 				OBJ_466 /* AsyncService.swift in Sources */,
 				OBJ_467 /* Services.swift in Sources */,
 				OBJ_468 /* SyncService.swift in Sources */,

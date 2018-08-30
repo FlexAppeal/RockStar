@@ -1,8 +1,9 @@
+/// 
 internal final class BindChangeContext<Bound> {
     let value: Bound
     var previousHandlers = Set<ObjectIdentifier>()
     
-    init(value: Bound, initiator: _AnyBinding<Bound>) {
+    init(value: Bound, initiator: AnyBinding<Bound>) {
         self.value = value
         
         for next in initiator.cascades {
@@ -26,10 +27,10 @@ internal final class BindChangeContext<Bound> {
 }
 
 struct CascadedBind<Bound>: Hashable {
-    weak var binding: _AnyBinding<Bound>?
+    weak var binding: AnyBinding<Bound>?
     let id: ObjectIdentifier
     
-    init(binding: _AnyBinding<Bound>) {
+    init(binding: AnyBinding<Bound>) {
         self.id = ObjectIdentifier(binding)
         self.binding = binding
     }
@@ -43,7 +44,7 @@ struct CascadedBind<Bound>: Hashable {
     }
 }
 
-public class _AnyBinding<Bound> {
+public class AnyBinding<Bound> {
     internal var bound: Bound {
         didSet {
             writeStream.next(bound)
@@ -62,7 +63,7 @@ public class _AnyBinding<Bound> {
         self.bound = bound
     }
     
-    public func update(to value: Bound) {
+    internal func update(to value: Bound) {
         self.bound = value
         
         if cascades.count > 0 {
@@ -70,7 +71,7 @@ public class _AnyBinding<Bound> {
         }
     }
     
-    public func bind(to binding: _AnyBinding<Bound>, bidirectionally: Bool = false) {
+    public func bind(to binding: AnyBinding<Bound>, bidirectionally: Bool = false) {
         binding.update(to: self.bound)
         
         self.cascades.insert(CascadedBind(binding: binding))
@@ -92,7 +93,7 @@ public class _AnyBinding<Bound> {
     }
 }
 
-public final class Binding<Bound>: _AnyBinding<Bound> {
+public final class Binding<Bound>: AnyBinding<Bound> {
     public var currentValue: Bound {
         get {
             return bound
@@ -102,12 +103,16 @@ public final class Binding<Bound>: _AnyBinding<Bound> {
         }
     }
     
+    public override func update(to value: Bound) {
+        super.update(to: value)
+    }
+    
     public init(_ value: Bound) {
         super.init(bound: value)
     }
 }
 
-public final class ComputedBinding<Bound>: _AnyBinding<Bound> {
+public final class ComputedBinding<Bound>: AnyBinding<Bound> {
     public private(set) var currentValue: Bound {
         get {
             return bound
@@ -122,7 +127,7 @@ public final class ComputedBinding<Bound>: _AnyBinding<Bound> {
     }
 }
 
-extension _AnyBinding {
+extension AnyBinding {
     public func map<T>(_ mapper: @escaping (Bound) -> T) -> ComputedBinding<T> {
         let binding = ComputedBinding<T>(mapper(bound))
         

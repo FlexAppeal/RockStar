@@ -1,5 +1,9 @@
 extension Future {
-    /// MARK - Normal
+    /// Writes the successful result to value at the writable value at the keyPath
+    /// in the second argument in the class provided in the first argument.
+    ///
+    ///    api.login(email: "admin@example.com", password: 'admin")
+    ///       .write(to: ApplicationState.defaut, atKeyPath: \.currentUser)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> Future<FutureValue> {
         return self.then { value in
@@ -8,6 +12,11 @@ extension Future {
         }
     }
 
+    /// Writes the successful result to value at the writable computed property's specified by the keypath
+    /// in the second argument in the class provided in the first argument.
+    ///
+    ///    api.login(email: "admin@example.com", password: 'admin")
+    ///       .write(to: ApplicationState.defaut, atKeyPath: \.currentUser)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue>) -> Future<FutureValue> {
         return self.then { value in
@@ -16,7 +25,13 @@ extension Future {
         }
     }
     
-    /// MARK - Optional
+    /// Writes the successful result to value at the writable value at the keyPath
+    /// in the second argument in the class provided in the first argument.
+    ///
+    /// Functions similarly to the other computed property, except non-optional values can also be written to optional values thanks to this function.
+    ///
+    ///    api.login(email: "admin@example.com", password: 'admin")
+    ///       .write(to: ApplicationState.defaut, atKeyPath: \.currentUser)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue?>) -> Future<FutureValue> {
         return self.then { value in
@@ -25,6 +40,13 @@ extension Future {
         }
     }
     
+    /// Writes the successful result to value at the writable computed property's specified by the keypath
+    /// in the second argument in the class provided in the first argument.
+    ///
+    /// Functions similarly to the other computed property, except non-optional values can also be written to optional values thanks to this function.
+    ///
+    ///    api.login(email: "admin@example.com", password: 'admin")
+    ///       .write(to: ApplicationState.defaut, atKeyPath: \.currentUser)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue?>) -> Future<FutureValue> {
         return self.then { value in
@@ -41,7 +63,10 @@ extension Future {
 }
 
 extension ReadStream {
-    /// MARK - Normal
+    /// Writes all successful changes to value at the writable value at the keyPath
+    /// in the second argument in the class provided in the first argument.
+    ///
+    ///    textInput.textUpdates.write(to: titleBar, atKePath: \.string)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> ReadStream<FutureValue> {
         return self.then { value in
@@ -50,6 +75,10 @@ extension ReadStream {
         }
     }
     
+    /// Writes all successful changes to value at the writable computed property at the keyPath
+    /// in the second argument in the class provided in the first argument.
+    ///
+    ///    textInput.textUpdates.write(to: titleBar, atKePath: \.string)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue>) -> ReadStream<FutureValue> {
         return self.then { value in
@@ -58,8 +87,12 @@ extension ReadStream {
         }
     }
     
-    /// MARK - Optional
-    
+    /// Writes all successful changes to value at the writable value at the keyPath
+    /// in the second argument in the class provided in the first argument.
+    ///
+    /// Functions similarly to the other computed property, except non-optional values can also be written to optional values thanks to this function.
+    ///
+    ///    textInput.textUpdates.write(to: titleBar, atKePath: \.string)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue?>) -> ReadStream<FutureValue> {
         return self.then { value in
@@ -68,6 +101,13 @@ extension ReadStream {
         }
     }
     
+    
+    /// Writes all successful changes to value at the writable computed property at the keyPath
+    /// in the second argument in the class provided in the first argument.
+    ///
+    /// Functions similarly to the other computed property, except non-optional values can also be written to optional values thanks to this function.
+    ///
+    ///    textInput.textUpdates.write(to: titleBar, atKePath: \.string)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue?>) -> ReadStream<FutureValue> {
         return self.then { value in

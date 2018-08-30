@@ -1,6 +1,12 @@
+// TODO: Stream & Binding support
+
 import Dispatch
 
 extension Future {
+    /// Switches to a new thread before continueing async processing
+    ///
+    /// This is especially useful for UIKit operations on iOS where the main thread
+    /// is required for GUI changes.
     public func switchThread(to thread: AnyThread) -> Future<FutureValue> {
         let promise = Promise<FutureValue>(onCancel: self.cancel)
         
@@ -13,25 +19,13 @@ extension Future {
         promise.onCancel(run: self.cancel)
         return promise.future
     }
-    
-    public func timeout(
-        _ timeout: RSTimeout,
-        throwing error: Error = PromiseTimeout()
-    ) -> Future<FutureValue> {
-        let promise = Promise<FutureValue>(onCancel: self.cancel)
-        self.onCompletion(promise.fulfill)
-        
-        timeout.execute {
-            self.cancel()
-            promise.fail(error)
-        }
-        
-        return promise.future
-    }
 }
 
-
 extension ReadStream {
+    /// Switches to a new thread before continueing async processing
+    ///
+    /// This is especially useful for UIKit operations on iOS where the main thread
+    /// is required for GUI changes.
     public func switchThread(to thread: AnyThread) -> ReadStream<FutureValue> {
         let writeStream = WriteStream<FutureValue>()
         
@@ -42,20 +36,6 @@ extension ReadStream {
         }
         
         writeStream.onCancel(run: self.cancel)
-        return writeStream.listener
-    }
-    
-    public func timeout(
-        _ timeout: RSTimeout,
-        throwing error: Error = PromiseTimeout()
-    ) -> ReadStream<FutureValue> {
-        let writeStream = WriteStream<FutureValue>()
-        self.onCompletion(writeStream.write)
-        
-        timeout.execute {
-            writeStream.fatal(error)
-        }
-        
         return writeStream.listener
     }
 }

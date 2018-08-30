@@ -1,8 +1,9 @@
-extension Future: ExpressibleByIntegerLiteral where FutureValue == Int {
-    public typealias IntegerLiteralType = Int
+extension Future: ExpressibleByIntegerLiteral where FutureValue: ExpressibleByIntegerLiteral {
+    public typealias IntegerLiteralType = FutureValue.IntegerLiteralType
     
-    public init(integerLiteral value: Int) {
-        self.init(result: value)
+    /// Creates a precompleted future using the initializer of the `FutureValue` type's Integer literal initializer
+    public init(integerLiteral value: FutureValue.IntegerLiteralType) {
+        self.init(result: FutureValue(integerLiteral: value))
     }
 }
 
@@ -37,39 +38,12 @@ extension Future: ExpressibleByArrayLiteral where FutureValue: _ArrayInitializab
 }
 
 extension Future: ExpressibleByNilLiteral where FutureValue: ExpressibleByNilLiteral {
+    /// Creates a precompleted future using the initializer of the `FutureValue` type's nil literal initializer
+    ///
+    /// Particularly useful for futures that contain an optional and are known to contain a `nil` value
+    ///
+    ///     let user: Future<User?> = nil
     public init(nilLiteral: ()) {
         self.init(result: nil)
     }
-}
-
-extension Future {
-    public func ifNil<B>(run: @escaping () -> ()) -> Future<FutureValue> where FutureValue == Optional<B> {
-        return self.then { value in
-            if value == nil {
-                run()
-            }
-        }
-    }
-    
-    public func ifNotNil<B>(run: @escaping (B) -> ()) -> Future<FutureValue> where FutureValue == Optional<B> {
-        return self.then { value in
-            if let value = value {
-                run(value)
-            }
-        }
-    }
-    
-    public func assertNotNil<B>() -> Future<B> where FutureValue == Optional<B> {
-        return self.map { value in
-            guard let value = value else {
-                throw ValueUnwrappedNil()
-            }
-            
-            return value
-        }
-    }
-}
-
-struct ValueUnwrappedNil: Error {
-    var location = SourceLocation()
 }
