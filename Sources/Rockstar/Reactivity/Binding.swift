@@ -1,8 +1,5 @@
 import Foundation
 
-// TODO: Examples
-// TODO: Bidirectional computed bindings
-// TODO: Make (manually defined) bindings codable where the contained value is codable
 // TODO: Bidirectionally update computed bindings
 // TODO: Binding unit test helpers
 
@@ -154,15 +151,17 @@ public class AnyBinding<Bound> {
 ///         return pages[index]
 ///     }.bind(to: pageView.renderedPage)
 public final class Binding<Bound>: AnyBinding<Bound> {
+    /// Allows modification of the currentValue using a more natural syntax
     public var currentValue: Bound {
         get {
             return bound
         }
         set {
-            bound = newValue
+            update(to: newValue)
         }
     }
     
+    /// Changes the value, triggering bindings and the readStream
     public override func update(to value: Bound) {
         super.update(to: value)
     }
