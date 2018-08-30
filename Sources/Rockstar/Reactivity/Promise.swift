@@ -1,13 +1,18 @@
-// TODO: Promise examples
-
 import Foundation
 
+// TODO: Promise examples
+
 /// Specified the default settings for promises statically
-public enum PromiseConfig {
+public enum RockstarConfig {
     /// Defines whether promises are threadSafe by default.
     ///
     /// This behaviour can always be overridden in the `Promise` initializer
-    public static var threadSafe = true
+    public static var threadSafePromises = true
+    
+    /// Defines whether bindings are threadSafe by default.
+    ///
+    /// This behaviour can always be overridden in the `Promise` initializer
+    public static var threadSafeBindings = true
 }
 
 /// Promises are types that provide a single notification during their lifetime.
@@ -77,12 +82,12 @@ public final class Promise<FutureValue> {
     private var callbacks = [FutureCallback<FutureValue>]()
     
     /// Creates a new promise. Allows overriding the thread safety for advanced users.
-    public init(threadSafe: Bool = PromiseConfig.threadSafe) {
+    public init(threadSafe: Bool = RockstarConfig.threadSafePromises) {
         self.lock = threadSafe ? .init() : nil
     }
     
     /// Creates a new promise with a cancel action. Allows overriding the thread safety for advanced users.
-    internal convenience init(threadSafe: Bool = PromiseConfig.threadSafe, onCancel: @escaping () -> ()) {
+    internal convenience init(threadSafe: Bool = RockstarConfig.threadSafePromises, onCancel: @escaping () -> ()) {
         self.init(threadSafe: threadSafe)
         
         self.cancelAction = onCancel

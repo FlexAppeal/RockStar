@@ -1,4 +1,14 @@
-/// 
+import Foundation
+
+// TODO: Examples
+// TODO: Bidirectional computed bindings
+// TODO: Make (manually defined) bindings codable where the contained value is codable
+// TODO: Codable helpers for futures
+// TODO: Bidirectionally update computed bindings
+
+/// Keeps track of all bindings that have been updated to a new value
+///
+/// Recursively iterates over all bindings and updates them
 internal final class BindChangeContext<Bound> {
     let value: Bound
     var previousHandlers = Set<ObjectIdentifier>()
@@ -15,9 +25,18 @@ internal final class BindChangeContext<Bound> {
         guard !self.previousHandlers.contains(cascade.id) else { return }
         
         if let binding = cascade.binding {
+            // Add to the list of notified bindings so this loop doesn't go on forever
             self.previousHandlers.insert(cascade.id)
             
-            binding.bound = value
+            func notifyUpdate() {
+                binding.bound = value
+            }
+            
+            if let newThread = binding.newThread {
+                newThread.execute(notifyUpdate)
+            } else {
+                notifyUpdate()
+            }
             
             for next in binding.cascades {
                 self.cascade(for: next)
@@ -26,6 +45,7 @@ internal final class BindChangeContext<Bound> {
     }
 }
 
+/// Stores a weak reference to a binding and updates it when one is available
 struct CascadedBind<Bound>: Hashable {
     weak var binding: AnyBinding<Bound>?
     let id: ObjectIdentifier
@@ -44,6 +64,12 @@ struct CascadedBind<Bound>: Hashable {
     }
 }
 
+/// An type that generalizes all types of bindings
+///
+/// Bindings are wrappers around a value that can notify other bindings of changes,
+/// get notified of changes and bind their results to another (non-binding) type
+///
+/// This is used to reduce state complexity and improve stability
 public class AnyBinding<Bound> {
     internal var bound: Bound {
         didSet {
@@ -53,25 +79,55 @@ public class AnyBinding<Bound> {
     
     private let writeStream = WriteStream<Bound>()
     
+    /// A stream that emits only successful change notifications
     public var readStream: ReadStream<Bound> {
         return writeStream.listener
     }
     
+    /// Used for applying thread safety when requested
+    private var lock: NSRecursiveLock?
+    
+    /// Switches to this thread when updating if set
+    internal var newThread: AnyThread?
     var cascades = Set<CascadedBind<Bound>>()
     
-    internal init(bound: Bound) {
-        self.bound = bound
+    /// An un-thread safe function that is ideally called directly fafter initialization
+    ///
+    /// Changes the thread to the new value for each update
+    public func setThread(to thread: AnyThread) {
+        self.newThread = thread
     }
     
-    internal func update(to value: Bound) {
-        self.bound = value
+    /// This *must* be inernal as it's dependent on the specific Binding implementation
+    internal init(bound: Bound, threadSafe: Bool) {
+        self.bound = bound
         
-        if cascades.count > 0 {
-            _ = BindChangeContext<Bound>(value: bound, initiator: self)
+        if threadSafe {
+            lock = NSRecursiveLock()
         }
     }
     
-    public func bind(to binding: AnyBinding<Bound>, bidirectionally: Bool = false) {
+    /// Updates the current value of this binding according to locking/thread preferences and cascades to peers
+    internal func update(to value: Bound) {
+        func run() {
+            lock.withLock {
+                self.bound = value
+                
+                if cascades.count > 0 {
+                    _ = BindChangeContext<Bound>(value: bound, initiator: self)
+                }
+            }
+        }
+        
+        if let newThread = newThread {
+            newThread.execute(run)
+        } else {
+            run()
+        }
+    }
+    
+    /// Cannot bind to computed bindings because they are programmatically defined and do not (yet) work bidirectionally
+    public func bind(to binding: Binding<Bound>, bidirectionally: Bool = false) {
         binding.update(to: self.bound)
         
         self.cascades.insert(CascadedBind(binding: binding))
@@ -93,6 +149,19 @@ public class AnyBinding<Bound> {
     }
 }
 
+/// A manually managed bindable value that represents a mutable value like any other.
+///
+/// Used with helpers to reduce state complexity and increase stability.
+///
+/// Initially it will only be a wrapper around another value. Can be bound to other types and synchronize between many bindings.
+///
+///     let pages = [Page]()
+///     let pageIndex = Binding(0)
+///
+///     // Changes the rendered page when the index changes
+///     pageIndex.map { index in
+///         return pages[index]
+///     }.bind(to: pageView.renderedPage)
 public final class Binding<Bound>: AnyBinding<Bound> {
     public var currentValue: Bound {
         get {
@@ -107,12 +176,25 @@ public final class Binding<Bound>: AnyBinding<Bound> {
         super.update(to: value)
     }
     
-    public init(_ value: Bound) {
-        super.init(bound: value)
+    /// Creates a new binding based on a concrete value
+    public init(_ value: Bound, threadSafe: Bool = RockstarConfig.threadSafeBindings) {
+        super.init(bound: value, threadSafe: threadSafe)
     }
 }
 
+/// A computed, programmatically defined bindable value that represents a computed value like any other. Cannot be written to and is derived from another binding and always (in-)directly from a manually managed binding. d d
+///
+/// Used with helpers to reduce state complexity and increase stability.
+///
+///     let pages = [Page]()
+///     let pageIndex = Binding(0)
+///
+///     // Changes the rendered page when the index changes
+///     pageIndex.map { index in
+///         return pages[index]
+///     }.bind(to: pageView.renderedPage)
 public final class ComputedBinding<Bound>: AnyBinding<Bound> {
+    /// Allow sreading but not writing the currentValue because the value is programmatically defined
     public private(set) var currentValue: Bound {
         get {
             return bound
@@ -122,12 +204,14 @@ public final class ComputedBinding<Bound>: AnyBinding<Bound> {
         }
     }
     
-    internal init(_ value: Bound) {
-        super.init(bound: value)
+    /// Can not be manually instantiated since the value is programmatically defined
+    internal init(_ value: Bound, threadSafe: Bool = RockstarConfig.threadSafeBindings) {
+        super.init(bound: value, threadSafe: threadSafe)
     }
 }
 
 extension AnyBinding {
+    /// Maps any binding to a computed binding
     public func map<T>(_ mapper: @escaping (Bound) -> T) -> ComputedBinding<T> {
         let binding = ComputedBinding<T>(mapper(bound))
         
@@ -136,6 +220,3 @@ extension AnyBinding {
         return binding
     }
 }
-
-// TODO: Make binding codable where the contained value is codable
-// TODO: Bidirectionally update computed bindings

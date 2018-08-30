@@ -1,5 +1,3 @@
-// TODO: Stream & Binding support
-
 import Dispatch
 
 extension Future {

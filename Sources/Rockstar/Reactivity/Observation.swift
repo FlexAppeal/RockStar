@@ -8,8 +8,6 @@ public indirect enum Observation<FutureValue> {
     /// An error
     case failure(Error)
     
-    // TODO: Work around this with a helper struct `Cancellable<Void>`?
-    
     /// The request for information was cancelled
     ///
     /// No further (un-)successful data will be emitted

@@ -1,5 +1,3 @@
-// TODO: Stream & Binding support
-
 /// Used by RockStar as the default promise timeout error
 public struct PromiseTimeout: Error {
     public init() {}
@@ -59,21 +57,5 @@ extension Future {
     /// is further processed.
     public func withDelayedCompletion<T>(untilAfter future: Future<T>) -> Future<FutureValue> {
         return future.transform(to: self)
-    }
-}
-
-extension ReadStream {
-    public func timeout(
-        _ timeout: RSTimeout,
-        throwing error: Error = PromiseTimeout()
-        ) -> ReadStream<FutureValue> {
-        let writeStream = WriteStream<FutureValue>()
-        self.onCompletion(writeStream.write)
-        
-        timeout.execute {
-            writeStream.fatal(error)
-        }
-        
-        return writeStream.listener
     }
 }

@@ -38,7 +38,7 @@ public struct ReadStream<FutureValue> {
     public func map<R>(_ mapper: @escaping (FutureValue) throws -> (R)) -> ReadStream<R> {
         // TODO: Don't create a new WriteStream
         let newWriteStream = WriteStream<R>()
-        writer.onCancel(run: self.cancel)
+        newWriteStream.onCancel(run: self.cancel)
         
         self.writeStream?.registerCallback { result in
             do {
@@ -69,7 +69,7 @@ public struct ReadStream<FutureValue> {
     public func flatMap<R>(_ mapper: @escaping (FutureValue) throws -> (Future<R>)) -> ReadStream<R> {
         // TODO: Don't create a new WriteStream
         let newWriteStream = WriteStream<R>()
-        writer.onCancel(run: self.cancel)
+        newWriteStream.onCancel(run: self.cancel)
         
         self.then { value in
             do {
@@ -179,7 +179,7 @@ public struct ReadStream<FutureValue> {
     public func flatten<T>() -> ReadStream<T> where FutureValue == Future<T> {
         // TODO: Don't create a new WriteStream
         let write = WriteStream<T>()
-        writer.onCancel(run: self.cancel)
+        write.onCancel(run: self.cancel)
         
         self.then { future in
             future.then(write.next).catch(write.error).onCancel(write.cancel)
@@ -245,7 +245,7 @@ public struct ReadStream<FutureValue> {
     public func errorMap(_ map: @escaping (Error) throws -> (Error)) -> ReadStream<FutureValue> {
         // TODO: Don't create a new WriteStream
         let writeStream = WriteStream<FutureValue>()
-        writer.onCancel(run: self.cancel)
+        writeStream.onCancel(run: self.cancel)
         
         self.then(writeStream.next).catch { base in
             do {

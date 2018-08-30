@@ -1,3 +1,6 @@
+// TODO: Bindings + literals
+// TODO: +/- for (lhs: binding, rhs: binding) and (lhs: binding, rhs: bound)
+
 extension Future: ExpressibleByIntegerLiteral where FutureValue: ExpressibleByIntegerLiteral {
     public typealias IntegerLiteralType = FutureValue.IntegerLiteralType
     
