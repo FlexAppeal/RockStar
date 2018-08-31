@@ -31,8 +31,10 @@ public struct HTTPStatus: ExpressibleByIntegerLiteral, RawRepresentable {
     }
 }
 
-public struct HTTPRequest {
+public struct HTTPRequest: Hashable {
     private let internalId = UUID()
+    
+    public var hashValue: Int { return internalId.hashValue }
     
     public static func ==(lhs: HTTPRequest, rhs: HTTPRequest) -> Bool {
         return lhs.internalId == rhs.internalId
