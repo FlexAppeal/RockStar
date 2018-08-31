@@ -7,12 +7,18 @@ RockStar is a Swift framework for frontend programming in iOS 10+, macOS 10.12+ 
 
 RockStar is split up into a few modules:
 
-- [Services (dependency inversion)](docs/dependency-inversion,md)
-- [Reactivity](docs/reactivity.md)
+<!-- - [Services (dependency inversion)](docs/dependency-inversion,md) -->
+- Services
+- [Reactivity](docs/reactivity/concepts.md)
 - Helpers
-    - [NSURLSession services](docs/services/url-session.md)
+    - NSURLSession services
+    - Logging
+    - Runtime analytics
+    - Testing
+<!-- - Helpers -->
+    <!-- - [NSURLSession services](docs/services/url-session.md)
     - [Logging](docs/services/logging.md)
-    - [Runtime Analytics](docs/services/runtime-analytics.md)
+    - [Runtime Analytics](docs/services/runtime-analytics.md) -->
 
 <!-- - [Testing](docs/testing.md) -->
 
