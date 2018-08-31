@@ -1,8 +1,5 @@
 import Foundation
 
-#if canImport(Alamofire)
-@_exported import protocol Alamofire.URLRepresentable
-#else
 public protocol URLRepresentable {
     func makeURL() throws -> URL
 }
@@ -24,4 +21,3 @@ extension String: URLRepresentable {
         return url
     }
 }
-#endif

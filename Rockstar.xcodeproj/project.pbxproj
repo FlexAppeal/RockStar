@@ -133,10 +133,8 @@
 		OBJ_410 /* CNIOLinux.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "swift-nio::CNIOLinux::Product" /* CNIOLinux.framework */; };
 		OBJ_423 /* AnalyticsCollector.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* AnalyticsCollector.swift */; };
 		OBJ_424 /* MeasurementDataTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* MeasurementDataTypes.swift */; };
-		OBJ_425 /* Reference.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* Reference.swift */; };
-		OBJ_426 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* Application.swift */; };
 		OBJ_427 /* RichText.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* RichText.swift */; };
-		OBJ_428 /* Theming.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* Theming.swift */; };
+		OBJ_428 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* Color.swift */; };
 		OBJ_429 /* Byte.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* Byte.swift */; };
 		OBJ_430 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* Environment.swift */; };
 		OBJ_431 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* Error.swift */; };
@@ -179,7 +177,6 @@
 		OBJ_476 /* AttributedString+RichText.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_89 /* AttributedString+RichText.swift */; };
 		OBJ_478 /* RockstarApple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rockstar::RockstarApple::Product" /* RockstarApple.framework */; };
 		OBJ_479 /* Rockstar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rockstar::Rockstar::Product" /* Rockstar.framework */; };
-		OBJ_487 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_84 /* Configuration.swift */; };
 		OBJ_490 /* Rockstar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Rockstar::Rockstar::Product" /* Rockstar.framework */; };
 		OBJ_497 /* HMAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_76 /* HMAC.swift */; };
 		OBJ_498 /* Hash.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_77 /* Hash.swift */; };
@@ -549,7 +546,6 @@
 		OBJ_125 /* c_nio_sha1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = c_nio_sha1.h; sourceTree = "<group>"; };
 		OBJ_126 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = /Users/joannisorlandos/Projects/Rockstar/Rockstar.xcodeproj/GeneratedModuleMap/CNIOSHA1/module.modulemap; sourceTree = "<group>"; };
 		OBJ_128 /* shim.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = shim.c; sourceTree = "<group>"; };
-		OBJ_13 /* Reference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reference.swift; sourceTree = "<group>"; };
 		OBJ_130 /* c_nio_linux.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = c_nio_linux.h; sourceTree = "<group>"; };
 		OBJ_131 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = /Users/joannisorlandos/Projects/Rockstar/Rockstar.xcodeproj/GeneratedModuleMap/CNIOLinux/module.modulemap; sourceTree = "<group>"; };
 		OBJ_135 /* shim.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = shim.c; sourceTree = "<group>"; };
@@ -560,7 +556,6 @@
 		OBJ_142 /* TLSEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TLSEvents.swift; sourceTree = "<group>"; };
 		OBJ_145 /* atomics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = atomics.swift; sourceTree = "<group>"; };
 		OBJ_146 /* lock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lock.swift; sourceTree = "<group>"; };
-		OBJ_15 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		OBJ_153 /* AddressedEnvelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressedEnvelope.swift; sourceTree = "<group>"; };
 		OBJ_154 /* BaseSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSocket.swift; sourceTree = "<group>"; };
 		OBJ_155 /* BaseSocketChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseSocketChannel.swift; sourceTree = "<group>"; };
@@ -579,7 +574,7 @@
 		OBJ_167 /* ChannelPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelPipeline.swift; sourceTree = "<group>"; };
 		OBJ_168 /* CircularBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularBuffer.swift; sourceTree = "<group>"; };
 		OBJ_169 /* Codec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Codec.swift; sourceTree = "<group>"; };
-		OBJ_17 /* Theming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theming.swift; sourceTree = "<group>"; };
+		OBJ_17 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		OBJ_170 /* CompositeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositeError.swift; sourceTree = "<group>"; };
 		OBJ_171 /* DeadChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadChannel.swift; sourceTree = "<group>"; };
 		OBJ_172 /* Embedded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Embedded.swift; sourceTree = "<group>"; };
@@ -674,7 +669,6 @@
 		OBJ_80 /* PBKDF2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PBKDF2.swift; sourceTree = "<group>"; };
 		OBJ_81 /* SHA1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SHA1.swift; sourceTree = "<group>"; };
 		OBJ_82 /* SHA256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SHA256.swift; sourceTree = "<group>"; };
-		OBJ_84 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		OBJ_87 /* NIO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NIO.swift; sourceTree = "<group>"; };
 		OBJ_89 /* AttributedString+RichText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttributedString+RichText.swift"; sourceTree = "<group>"; };
 		OBJ_92 /* RockstarTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RockstarTests.swift; sourceTree = "<group>"; };
@@ -930,14 +924,6 @@
 			path = ".build/checkouts/swift-nio.git--6700915045182984639/Sources/NIOPriorityQueue";
 			sourceTree = SOURCE_ROOT;
 		};
-		OBJ_12 /* Cache */ = {
-			isa = PBXGroup;
-			children = (
-				OBJ_13 /* Reference.swift */,
-			);
-			path = Cache;
-			sourceTree = "<group>";
-		};
 		OBJ_122 /* CNIOSHA1 */ = {
 			isa = PBXGroup;
 			children = (
@@ -1025,9 +1011,8 @@
 		OBJ_14 /* GUI */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_15 /* Application.swift */,
 				OBJ_16 /* RichText.swift */,
-				OBJ_17 /* Theming.swift */,
+				OBJ_17 /* Color.swift */,
 			);
 			path = GUI;
 			sourceTree = "<group>";
@@ -1155,7 +1140,6 @@
 			children = (
 				249B84CA2136E502001C009A /* Lock.swift */,
 				OBJ_19 /* Byte.swift */,
-				OBJ_20 /* Environment.swift */,
 				OBJ_21 /* Error.swift */,
 				OBJ_22 /* Generics.swift */,
 				OBJ_23 /* Hex.swift */,
@@ -1328,6 +1312,7 @@
 		OBJ_61 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				OBJ_20 /* Environment.swift */,
 				OBJ_62 /* AsyncService.swift */,
 				OBJ_63 /* Services.swift */,
 				OBJ_64 /* SyncService.swift */,
@@ -1390,7 +1375,6 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_9 /* Analytics */,
-				OBJ_12 /* Cache */,
 				OBJ_14 /* GUI */,
 				OBJ_18 /* Helpers */,
 				OBJ_31 /* Logging */,
@@ -1407,7 +1391,6 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_69 /* NativeTypes.swift */,
-				OBJ_84 /* Configuration.swift */,
 				24315233212C220900D08955 /* NetworkStatus.swift */,
 			);
 			name = RockstarApple;
@@ -2058,12 +2041,10 @@
 				2437CB5D2135E76F008F500A /* Reactivity+Reduce.swift in Sources */,
 				OBJ_423 /* AnalyticsCollector.swift in Sources */,
 				OBJ_424 /* MeasurementDataTypes.swift in Sources */,
-				OBJ_425 /* Reference.swift in Sources */,
 				249B84CB2136E502001C009A /* Lock.swift in Sources */,
-				OBJ_426 /* Application.swift in Sources */,
 				249B84C12136DDB5001C009A /* RemoteValue.swift in Sources */,
 				OBJ_427 /* RichText.swift in Sources */,
-				OBJ_428 /* Theming.swift in Sources */,
+				OBJ_428 /* Color.swift in Sources */,
 				OBJ_429 /* Byte.swift in Sources */,
 				OBJ_430 /* Environment.swift in Sources */,
 				249B84C32136DE0B001C009A /* Reactivity+Change.swift in Sources */,
@@ -2123,7 +2104,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_487 /* Configuration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

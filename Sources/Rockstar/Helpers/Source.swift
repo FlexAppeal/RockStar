@@ -1,3 +1,4 @@
+/// Represents a location in the application's source code
 public struct SourceLocation {
     public let file: String
     public let line: UInt
