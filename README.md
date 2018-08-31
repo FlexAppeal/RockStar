@@ -18,8 +18,30 @@ RockStar is split up into a few modules:
 
 ## Example
 
-```Swift
-let
+```swift
+index.map { index in
+    return pages[index]
+}.bind(to: pageView.renderedPage) // Changes the rendered page when the index changes
+
+navBar.next.onClick.then { index += 1 } // These operators also works on bindings
+navBar.previous.onClick.then { index -= 1}
+
+index.reduceMap(==, pages.count) // `true` for the last page
+    .map(!) // `!lastPage``{"data":[]}
+    .bind(to: navBar.next, atKeyPath: \.isUserInteractionEnabled) // disables on last page
+
+index.reduceMap(==, 0) // `true` for the first page
+    .map(!)
+    .bind(to: navBar.previous, atKeyPath: \.isUserInteractionEnabled)
+
+// new > old == forward
+index.changeMap(>).map { forward -> AnimationDirection in
+    if forward {
+        return .rightToLeft
+    } else {
+        return .leftToRight
+    }
+}.then(currentPage.reload) // takes the animation direction as argument
 ```
 
 ## Installation
