@@ -6,9 +6,9 @@ extension Future {
     ///       .write(to: ApplicationState.defaut, atKeyPath: \.currentUser)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> Future<FutureValue> {
+        weak var type = type
         return self.then { value in
-            var type = type
-            type[keyPath: path] = value
+            type?[keyPath: path] = value
         }
     }
 
@@ -19,9 +19,9 @@ extension Future {
     ///       .write(to: ApplicationState.defaut, atKeyPath: \.currentUser)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue>) -> Future<FutureValue> {
+        weak var type = type
         return self.then { value in
-            let type = type
-            type[keyPath: path] = value
+            type?[keyPath: path] = value
         }
     }
     
@@ -34,9 +34,9 @@ extension Future {
     ///       .write(to: ApplicationState.defaut, atKeyPath: \.currentUser)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue?>) -> Future<FutureValue> {
+        weak var type = type
         return self.then { value in
-            var type = type
-            type[keyPath: path] = value
+            type?[keyPath: path] = value
         }
     }
     
@@ -49,9 +49,9 @@ extension Future {
     ///       .write(to: ApplicationState.defaut, atKeyPath: \.currentUser)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue?>) -> Future<FutureValue> {
+        weak var type = type
         return self.then { value in
-            let type = type
-            type[keyPath: path] = value
+            type?[keyPath: path] = value
         }
     }
     
@@ -69,9 +69,9 @@ extension ReadStream {
     ///    textInput.textUpdates.write(to: titleBar, atKePath: \.string)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue>) -> ReadStream<FutureValue> {
+        weak var type = type
         return self.then { value in
-            var type = type
-            type[keyPath: path] = value
+            type?[keyPath: path] = value
         }
     }
     
@@ -81,9 +81,9 @@ extension ReadStream {
     ///    textInput.textUpdates.write(to: titleBar, atKePath: \.string)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue>) -> ReadStream<FutureValue> {
+        weak var type = type
         return self.then { value in
-            let type = type
-            type[keyPath: path] = value
+            type?[keyPath: path] = value
         }
     }
     
@@ -95,9 +95,9 @@ extension ReadStream {
     ///    textInput.textUpdates.write(to: titleBar, atKePath: \.string)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: WritableKeyPath<O, FutureValue?>) -> ReadStream<FutureValue> {
+        weak var type = type
         return self.then { value in
-            var type = type
-            type[keyPath: path] = value
+            type?[keyPath: path] = value
         }
     }
     
@@ -110,9 +110,9 @@ extension ReadStream {
     ///    textInput.textUpdates.write(to: titleBar, atKePath: \.string)
     @discardableResult
     public func write<O: AnyObject>(to type: O, atKeyPath path: ReferenceWritableKeyPath<O, FutureValue?>) -> ReadStream<FutureValue> {
+        weak var type = type
         return self.then { value in
-            let type = type
-            type[keyPath: path] = value
+            type?[keyPath: path] = value
         }
     }
 }

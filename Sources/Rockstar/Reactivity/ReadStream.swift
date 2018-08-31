@@ -209,7 +209,7 @@ public struct ReadStream<FutureValue> {
     ///     // sendButton.onClick is a `ReadStream<Void>`
     ///     sendButton.onClick
     ///               .transform(to: chatBox, atKeyPath: \.string)
-    ///               .filter { $0.isEmpty } // <-----
+    ///               .filter { !$0.isEmpty } // <-----
     ///               .map(ChatMessage.init)
     ///               .then(chat.next)
     ///               .then(api.sendMessage)
@@ -219,13 +219,13 @@ public struct ReadStream<FutureValue> {
     ///
     ///     stream.map(ChatMessageCell.init).then(chatTable.append)
     ///
-    /// Returns a similar ReadStream containing only values that passed the test where it returned `false`
-    public func filter(_ condition: @escaping (FutureValue) -> (Bool)) -> ReadStream<FutureValue> {
+    /// Returns a similar ReadStream containing only values that passed the test where it returned `true`
+    public func filter(_ keeping: @escaping (FutureValue) -> (Bool)) -> ReadStream<FutureValue> {
         let writer = WriteStream<FutureValue>()
         writer.onCancel(run: self.cancel)
         
         self.then { value in
-            if !condition(value) {
+            if keeping(value) {
                 writer.next(value)
             }
         }.catch { error in
