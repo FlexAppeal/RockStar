@@ -174,13 +174,14 @@ public struct ReadStream<FutureValue> {
         }
     }
     
+    /// Flattens all futures in this stream so the returned Stream is just an unordered sequence of the future's (un-)successful results
     public func flatten<T>() -> ReadStream<T> where FutureValue == Future<T> {
         let write = WriteStream<T>()
         write.onCancel(run: self.cancel)
         
         self.then { future in
             future.then(write.next).catch(write.error).onCancel(write.cancel)
-            }.catch(write.error).onCancel(write.cancel)
+        }.catch(write.error).onCancel(write.cancel)
         
         return write.listener
     }
@@ -232,6 +233,20 @@ public struct ReadStream<FutureValue> {
         }.catch(writer.error).onCancel(writer.cancel)
         
         return writer.listener
+    }
+    
+    /// Captures the provided value weakly. If the value is deinitialized the stream will no longer emit events
+    public func and<O: AnyObject>(weaklyCaptured object: O) -> ReadStream<(O, FutureValue)> {
+        weak var object = object
+        let writeStream = WriteStream<(O, FutureValue)>()
+        
+        self.then { value in
+            if let object = object {
+                writeStream.next((object ,value))
+            }
+        }.catch(writeStream.error).onCancel(writeStream.cancel)
+        
+        return writeStream.listener
     }
     
     /// Maps the error to a new type which can be used for debugging or improvements in error handling.
