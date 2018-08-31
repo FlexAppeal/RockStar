@@ -9,15 +9,15 @@ public struct RSTimeInterval {
     }
     
     public static func seconds(_ seconds: Int) -> RSTimeInterval {
-        return .milliseconds(seconds * 1_000_000_000)
+        return .nanoseconds(seconds * 1_000_000_000)
     }
     
     public static func milliseconds(_ ms: Int) -> RSTimeInterval {
-        return .milliseconds(ms * 1_000_000)
+        return .nanoseconds(ms * 1_000_000)
     }
     
     public static func microseconds(_ ms: Int) -> RSTimeInterval {
-        return .milliseconds(ms * 1_000)
+        return .nanoseconds(ms * 1_000)
     }
     
     public static func nanoseconds(_ ns: Int) -> RSTimeInterval {
