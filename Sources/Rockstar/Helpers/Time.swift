@@ -2,19 +2,45 @@ import Foundation
 import Dispatch
 
 public struct RSTimeInterval {
-    public let dispatch: DispatchTimeInterval
-//    public var seconds: Double {
-//        switch dispatch {
-//            case .seconds(<#T##Int#>)
-//        }
-//    }
+    public internal(set) var nanoseconds: Int
+    
+    public var dispatch: DispatchTimeInterval {
+        return DispatchTimeInterval.nanoseconds(nanoseconds)
+    }
     
     public static func seconds(_ seconds: Int) -> RSTimeInterval {
-        return .dispatch(.seconds(seconds))
+        return .milliseconds(seconds * 1_000_000_000)
+    }
+    
+    public static func milliseconds(_ ms: Int) -> RSTimeInterval {
+        return .milliseconds(ms * 1_000_000)
+    }
+    
+    public static func microseconds(_ ms: Int) -> RSTimeInterval {
+        return .milliseconds(ms * 1_000)
+    }
+    
+    public static func nanoseconds(_ ns: Int) -> RSTimeInterval {
+        return RSTimeInterval(nanoseconds: ns)
+    }
+    
+    public static func seconds(_ seconds: Double) -> RSTimeInterval {
+        return .milliseconds(Int(seconds * 1000)) // Don't trust more precision
     }
     
     public static func dispatch(_ interval: DispatchTimeInterval) -> RSTimeInterval {
-        return RSTimeInterval(dispatch: interval)
+        switch interval {
+        case .seconds(let s):
+            return .nanoseconds(s * 1_000_000_000)
+        case .milliseconds(let ms):
+            return .nanoseconds(ms * 1_000_000)
+        case .microseconds(let ms):
+            return .nanoseconds(ms * 1_000)
+        case .nanoseconds(let ns):
+            return .nanoseconds(ns)
+        case .never:
+            return .nanoseconds(.max)
+        }
     }
 }
 
