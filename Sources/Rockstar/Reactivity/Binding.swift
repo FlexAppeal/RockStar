@@ -125,6 +125,9 @@ public class AnyBinding<Bound> {
         }
     }
     
+    // TODO: Writable computed property binding
+    
+    /// Writes any update notifications to this Binding to the value in the provided Object (class) in the value at the keyoath specified
     public func bind<C: AnyObject>(to object: C, atKeyPath path: WritableKeyPath<C, Bound>) {
         weak var object = object
         

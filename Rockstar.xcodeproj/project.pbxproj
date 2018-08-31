@@ -161,7 +161,7 @@
 		OBJ_451 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_46 /* Binding.swift */; };
 		OBJ_452 /* Future+Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_47 /* Future+Error.swift */; };
 		OBJ_453 /* Future+ExtraHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_48 /* Future+ExtraHelpers.swift */; };
-		OBJ_454 /* Future+Literals.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_49 /* Future+Literals.swift */; };
+		OBJ_454 /* Reactivity+Literals.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_49 /* Reactivity+Literals.swift */; };
 		OBJ_455 /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_50 /* Future.swift */; };
 		OBJ_456 /* FutureResult+Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_51 /* FutureResult+Thread.swift */; };
 		OBJ_457 /* FutureResult+Timers.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_52 /* FutureResult+Timers.swift */; };
@@ -644,7 +644,7 @@
 		OBJ_46 /* Binding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
 		OBJ_47 /* Future+Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Future+Error.swift"; sourceTree = "<group>"; };
 		OBJ_48 /* Future+ExtraHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Future+ExtraHelpers.swift"; sourceTree = "<group>"; };
-		OBJ_49 /* Future+Literals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Future+Literals.swift"; sourceTree = "<group>"; };
+		OBJ_49 /* Reactivity+Literals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reactivity+Literals.swift"; sourceTree = "<group>"; };
 		OBJ_50 /* Future.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Future.swift; sourceTree = "<group>"; };
 		OBJ_51 /* FutureResult+Thread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FutureResult+Thread.swift"; sourceTree = "<group>"; };
 		OBJ_52 /* FutureResult+Timers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FutureResult+Timers.swift"; sourceTree = "<group>"; };
@@ -1291,7 +1291,7 @@
 				OBJ_46 /* Binding.swift */,
 				OBJ_47 /* Future+Error.swift */,
 				OBJ_48 /* Future+ExtraHelpers.swift */,
-				OBJ_49 /* Future+Literals.swift */,
+				OBJ_49 /* Reactivity+Literals.swift */,
 				OBJ_50 /* Future.swift */,
 				OBJ_51 /* FutureResult+Thread.swift */,
 				OBJ_52 /* FutureResult+Timers.swift */,
@@ -2091,7 +2091,7 @@
 				OBJ_451 /* Binding.swift in Sources */,
 				OBJ_452 /* Future+Error.swift in Sources */,
 				OBJ_453 /* Future+ExtraHelpers.swift in Sources */,
-				OBJ_454 /* Future+Literals.swift in Sources */,
+				OBJ_454 /* Reactivity+Literals.swift in Sources */,
 				OBJ_455 /* Future.swift in Sources */,
 				OBJ_456 /* FutureResult+Thread.swift in Sources */,
 				2461C22C2138B82A0077FA7A /* Bindings+Codable.swift in Sources */,

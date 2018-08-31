@@ -10,6 +10,16 @@ extension AnyBinding {
     ///     var entities: [Element] = ...
     ///     let index = Binding(0)
     ///     let disableNextButton: ComputedBinding<Bool> = index.reduceMap(==, entities.count - 1)
+    ///
+    /// Operators are also useful for other smaller computational transformations.
+    ///
+    ///     // Shows 3 photos at a time
+    ///     let firstImageIndex: Binding<Int> = 0
+    ///     let secondImageIndex = index.reduceMap(+, 1)
+    ///     let lastImageIndex = index.reduceMap(+, 2)
+    ///
+    ///     imageIndex += 3
+    ///     // other indices are also 3 higher
     public func reduceMap<T, C>(_ function: @escaping (Bound, T) -> C, value: T) -> ComputedBinding<C> {
         return self.map { bound in
             return function(bound, value)
@@ -17,6 +27,7 @@ extension AnyBinding {
     }
 
     /// Uses a function and a static value. Uses this binding's updates and maps those changes using the function.
+    /// Useful when you want to join 2 binded values to compute a new binding.
     ///
     /// Puts this binding's value at the `lhs` of the function, and the other binding's current value on the `rhs`.
     ///

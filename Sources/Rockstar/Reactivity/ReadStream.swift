@@ -36,7 +36,6 @@ public struct ReadStream<FutureValue> {
     ///
     /// Error/Cancelled statesw will be cascaded similar to Futures.
     public func map<R>(_ mapper: @escaping (FutureValue) throws -> (R)) -> ReadStream<R> {
-        // TODO: Don't create a new WriteStream
         let newWriteStream = WriteStream<R>()
         newWriteStream.onCancel(run: self.cancel)
         
@@ -67,7 +66,6 @@ public struct ReadStream<FutureValue> {
     ///
     /// Error/Cancelled statesw will be cascaded similar to Futures.
     public func flatMap<R>(_ mapper: @escaping (FutureValue) throws -> (Future<R>)) -> ReadStream<R> {
-        // TODO: Don't create a new WriteStream
         let newWriteStream = WriteStream<R>()
         newWriteStream.onCancel(run: self.cancel)
         
@@ -177,7 +175,6 @@ public struct ReadStream<FutureValue> {
     }
     
     public func flatten<T>() -> ReadStream<T> where FutureValue == Future<T> {
-        // TODO: Don't create a new WriteStream
         let write = WriteStream<T>()
         write.onCancel(run: self.cancel)
         
@@ -190,7 +187,6 @@ public struct ReadStream<FutureValue> {
     
     /// Maps the stream but filters optionals that are `nil`
     public func filterMap<T>(_  mapper: @escaping (FutureValue) -> T?) -> ReadStream<T> {
-        // TODO: Don't create a new WriteStream
         let writer = WriteStream<T>()
         writer.onCancel(run: self.cancel)
         
@@ -224,7 +220,6 @@ public struct ReadStream<FutureValue> {
     ///
     /// Returns a similar ReadStream containing only values that passed the test where it returned `false`
     public func filter(_ condition: @escaping (FutureValue) -> (Bool)) -> ReadStream<FutureValue> {
-        // TODO: Don't create a new WriteStream
         let writer = WriteStream<FutureValue>()
         writer.onCancel(run: self.cancel)
         
@@ -243,7 +238,6 @@ public struct ReadStream<FutureValue> {
     ///
     /// Returns a new stream and cascades the successful and cancels states whilst mapping the errors.
     public func errorMap(_ map: @escaping (Error) throws -> (Error)) -> ReadStream<FutureValue> {
-        // TODO: Don't create a new WriteStream
         let writeStream = WriteStream<FutureValue>()
         writeStream.onCancel(run: self.cancel)
         
