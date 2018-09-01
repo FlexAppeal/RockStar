@@ -7,16 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		244733F820CE427000B8B943 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733F720CE427000B8B943 /* State.swift */; };
+		244733F820CE427000B8B943 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733F720CE427000B8B943 /* main.swift */; };
 		244733FF20CE496900B8B943 /* APITable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244733FE20CE496900B8B943 /* APITable.swift */; };
+		24525F812139AE41006B0630 /* Rockstar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24525F802139AE41006B0630 /* Rockstar.framework */; };
+		24525F832139B893006B0630 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24525F822139B893006B0630 /* APIClient.swift */; };
 		247FBCFB20CEDC0900EF0D6F /* PostSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247FBCFA20CEDC0900EF0D6F /* PostSource.swift */; };
-		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
-		607FACD81AFB9204008FA782 /* RootNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* RootNavigator.swift */; };
-		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
-		748CF7838A56ADB52F998810 /* Pods_Rockstar_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D46554295DD3791933B156E3 /* Pods_Rockstar_Example.framework */; };
+		82550E4CA39E2AA809FFA844 /* Pods_Rockstar_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D46554295DD3791933B156E3 /* Pods_Rockstar_Example.framework */; };
 		FF142DEF85C181B387848EBE /* Pods_Rockstar_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD39D23EC6CC7FD227B7445E /* Pods_Rockstar_Tests.framework */; };
 /* End PBXBuildFile section */
 
@@ -31,16 +30,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		244733F720CE427000B8B943 /* State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
+		244733F720CE427000B8B943 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		244733FE20CE496900B8B943 /* APITable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITable.swift; sourceTree = "<group>"; };
+		24525F7E2139ADE3006B0630 /* Rockstar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Rockstar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		24525F802139AE41006B0630 /* Rockstar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Rockstar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		24525F822139B893006B0630 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		247FBCFA20CEDC0900EF0D6F /* PostSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSource.swift; sourceTree = "<group>"; };
 		29C99320A7F9FD58011034E9 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		46E10EBCD77749AC8F0348C1 /* Pods-Rockstar_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rockstar_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Rockstar_Example/Pods-Rockstar_Example.release.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* Rockstar_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rockstar_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		607FACD71AFB9204008FA782 /* RootNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigator.swift; sourceTree = "<group>"; };
-		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* Rockstar_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Rockstar_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,7 +59,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				748CF7838A56ADB52F998810 /* Pods_Rockstar_Example.framework in Frameworks */,
+				24525F812139AE41006B0630 /* Rockstar.framework in Frameworks */,
+				82550E4CA39E2AA809FFA844 /* Pods_Rockstar_Example.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,15 +99,13 @@
 		607FACD21AFB9204008FA782 /* Example for Rockstar */ = {
 			isa = PBXGroup;
 			children = (
-				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				607FACD71AFB9204008FA782 /* RootNavigator.swift */,
-				607FACD91AFB9204008FA782 /* Main.storyboard */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
-				244733F720CE427000B8B943 /* State.swift */,
+				244733F720CE427000B8B943 /* main.swift */,
 				244733FE20CE496900B8B943 /* APITable.swift */,
 				247FBCFA20CEDC0900EF0D6F /* PostSource.swift */,
+				24525F822139B893006B0630 /* APIClient.swift */,
 			);
 			name = "Example for Rockstar";
 			path = Rockstar;
@@ -162,6 +160,8 @@
 		EA4C002F9FD39311938ABAE6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				24525F802139AE41006B0630 /* Rockstar.framework */,
+				24525F7E2139ADE3006B0630 /* Rockstar.framework */,
 				D46554295DD3791933B156E3 /* Pods_Rockstar_Example.framework */,
 				DD39D23EC6CC7FD227B7445E /* Pods_Rockstar_Tests.framework */,
 			);
@@ -256,7 +256,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
@@ -333,11 +332,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACD81AFB9204008FA782 /* RootNavigator.swift in Sources */,
-				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
-				244733F820CE427000B8B943 /* State.swift in Sources */,
+				244733F820CE427000B8B943 /* main.swift in Sources */,
 				247FBCFB20CEDC0900EF0D6F /* PostSource.swift in Sources */,
 				244733FF20CE496900B8B943 /* APITable.swift in Sources */,
+				24525F832139B893006B0630 /* APIClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,14 +358,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		607FACD91AFB9204008FA782 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				607FACDA1AFB9204008FA782 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		607FACDE1AFB9204008FA782 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -424,7 +414,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -470,7 +460,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -485,6 +475,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 6U5LP2533T;
 				INFOPLIST_FILE = Rockstar/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
@@ -501,6 +492,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 6U5LP2533T;
 				INFOPLIST_FILE = Rockstar/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";

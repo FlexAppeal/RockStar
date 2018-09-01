@@ -1,16 +1,18 @@
 PODS:
-  - Rockstar (0.1.0)
+  - Rockstar/RockstarApple (0.1.0)
+  - Rockstar/RockstarCore (0.1.0)
 
 DEPENDENCIES:
-  - Rockstar (from `../`)
+  - Rockstar/RockstarApple (from `../`)
+  - Rockstar/RockstarCore (from `../`)
 
 EXTERNAL SOURCES:
   Rockstar:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Rockstar: 8cc7ef6ed5da18c8e9c3576841da74555870934d
+  Rockstar: 65f66f88134021e136af5e8303736763de31e9d2
 
-PODFILE CHECKSUM: 594bd918ff79f4875388e54c07342a40fdf453dd
+PODFILE CHECKSUM: e7e098ff747cf0fb2c75dcdb9687358ce8a7414c
 
 COCOAPODS: 1.5.3

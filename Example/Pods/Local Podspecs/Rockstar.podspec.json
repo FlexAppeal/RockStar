@@ -18,7 +18,44 @@
   },
   "social_media_url": "https://twitter.com/joannisorlandos",
   "platforms": {
-    "ios": "8.0"
+    "ios": "10.0"
   },
-  "source_files": "Sources/Rockstar/**/*"
+  "subspecs": [
+    {
+      "name": "RockstarCore",
+      "source_files": "Sources/Rockstar/**/*"
+    },
+    {
+      "name": "RockstarApple",
+      "ios": {
+        "source_files": "Sources/RockstarUIKit/**/*"
+      },
+      "osx": {
+        "source_files": "Sources/RockstarAppKit/**/*"
+      },
+      "source_files": "Sources/RockstarApple/**/*"
+    },
+    {
+      "name": "RockstarTexture",
+      "source_files": "Sources/RockstarTexture/**/*"
+    },
+    {
+      "name": "RockstarNIO",
+      "platforms": {
+        "ios": "11.0"
+      },
+      "dependencies": {
+        "SwiftNIO": [
+
+        ],
+        "SwiftNIOTransportServices": [
+
+        ],
+        "SwiftNIOWebSocket": [
+
+        ]
+      },
+      "source_files": "Sources/RockstarNIO/**/*"
+    }
+  ]
 }
