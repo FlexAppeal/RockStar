@@ -45,6 +45,13 @@ public struct HTTPRequest: Hashable {
     public var headers: HTTPHeaders
     public var body: HTTPBody
     
+    public init(method: HTTPMethod, url: URL, headers: HTTPHeaders, body: HTTPBody) {
+        self.method = method
+        self.url = url
+        self.headers = headers
+        self.body = body
+    }
+    
     public func makeURLRequest() -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
