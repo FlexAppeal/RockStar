@@ -3,12 +3,12 @@ fileprivate extension String {
         return self + [Character](repeating: character, count: charCount - self.count)
     }
     
-    static let fatal = "FATAL".padded(to: 5)
-    static let error = "ERR".padded(to: 5)
-    static let warning = "WARN".padded(to: 5)
-    static let info = "INFO".padded(to: 5)
-    static let debug = "DEBUG".padded(to: 5)
-    static let verbose = "VERB".padded(to: 5)
+    static let fatal = "[FATAL]:".padded(to: 10)
+    static let error = "[ERR]:".padded(to: 10)
+    static let warning = "[WARN]:".padded(to: 10)
+    static let info = "[INFO]:".padded(to: 10)
+    static let debug = "[DEBUG]:".padded(to: 10)
+    static let verbose = "[VERB]:".padded(to: 10)
 }
 
 fileprivate extension LogLevel {
@@ -37,10 +37,11 @@ public struct PrintLogger: LogDestination, Service {
         }
         
         // These 2 prints statements are purposely separated even though they're similar. This is for performance and future-proofness
+        let base = message.level.shortCode + message.message + " @ \(message.location.file)"
         if detailed {
-            print("[\(message.level.shortCode)]: \(message.message) @ \(message.location.file) [line: \(message.location.line), column: \(message.location.column)]")
+            print(base + " [line: \(message.location.line), column: \(message.location.column)]")
         } else {
-            print("[\(message.level.shortCode)]: \(message.message) @ \(message.location.file)")
+            print(base)
         }
     }
 }
