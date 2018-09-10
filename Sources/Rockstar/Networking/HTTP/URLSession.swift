@@ -12,8 +12,8 @@ public struct HTTPClientConfig: Service {
 }
 
 public protocol HTTPClientMiddleware {
-    func transform(request: HTTPRequest) throws -> Future<HTTPRequest>
-    func transform(response: HTTPResponse, forRequest request: HTTPRequest) throws -> Future<HTTPResponse>
+    func transform(request: HTTPRequest, client: HTTPClient) throws -> Future<HTTPRequest>
+    func transform(response: HTTPResponse, forRequest request: HTTPRequest, client: HTTPClient) throws -> Future<HTTPResponse>
 }
 
 fileprivate extension HTTPResponse {
@@ -48,11 +48,11 @@ public final class RSHTTPClient: Service, HTTPClient {
         let allMiddleware = config.middleware
         
         var response = allMiddleware.asyncReduce(request) { request, middleware in
-            return try middleware.transform(request: request)
+            return try middleware.transform(request: request, client: self)
         }.flatMap { request in
             return self.session.request(request).flatMap { response in
                 return allMiddleware.asyncReduce(response) { response, middleware in
-                    return try middleware.transform(response: response, forRequest: request)
+                    return try middleware.transform(response: response, forRequest: request, client: self)
                 }
             }
         }
