@@ -68,7 +68,7 @@ struct CascadedBind<Bound>: Hashable {
 ///
 /// This is used to reduce state complexity and improve stability
 public class AnyBinding<Bound> {
-    internal var bound: Bound {
+    public internal(set) var bound: Bound {
         didSet {
             writeStream.next(bound)
         }

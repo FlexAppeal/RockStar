@@ -1,4 +1,4 @@
-extension Binding {
+extension AnyBinding {
     /// Keeps track of updates based on differences between the old and new value.
     ///
     ///     let currentIndex = Binding<Int>(0)
@@ -10,7 +10,7 @@ extension Binding {
     ///
     /// The initial computed property value is calculated from the `currentValue` of this binding.
     public func changeMap<T>(_ map: @escaping (Bound, Bound) -> T) -> ComputedBinding<T> {
-        var old = self.currentValue
+        var old = self.bound
         
         return self.map { new in
             defer {
