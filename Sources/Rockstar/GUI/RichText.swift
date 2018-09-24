@@ -148,6 +148,10 @@ public struct RichText: ExpressibleByStringLiteral {
     }
     
     public mutating func apply(attribute: RichTextAttribute, inRange range: Range<Int>? = nil) {
+        guard self.string.count >= 1 else {
+            return
+        }
+        
         let range = range ?? 0..<self.string.count &- 1
         
         assert(range.lowerBound >= 0, "The range starts at a negative offset")
