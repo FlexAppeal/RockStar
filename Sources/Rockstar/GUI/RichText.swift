@@ -152,12 +152,12 @@ public struct RichText: ExpressibleByStringLiteral {
             return
         }
         
-        let range = range ?? 0..<self.string.count &- 1
+        let range = range ?? 0..<self.string.count
         
         assert(range.lowerBound >= 0, "The range starts at a negative offset")
         
         /// TODO: Fail gracefully?
-        assert(range.upperBound < _string.count, "Range exceeds the RichText characters count")
+        assert(range.upperBound <= _string.count, "Range exceeds the RichText characters count")
         
         self.textAttributes.append(RangedRichTextAttributes(
             attribute: attribute,

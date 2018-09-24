@@ -28,7 +28,7 @@
 		249B84C12136DDB5001C009A /* RemoteValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84C02136DDB5001C009A /* RemoteValue.swift */; };
 		249B84C32136DE0B001C009A /* Reactivity+Change.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84C22136DE0B001C009A /* Reactivity+Change.swift */; };
 		249B84C52136DE5B001C009A /* Thread.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84C42136DE5B001C009A /* Thread.swift */; };
-		249B84C92136E2CE001C009A /* BindableCollectoin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84C82136E2CE001C009A /* BindableCollectoin.swift */; };
+		249B84C92136E2CE001C009A /* BindableCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84C82136E2CE001C009A /* BindableCollection.swift */; };
 		249B84CB2136E502001C009A /* Lock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84CA2136E502001C009A /* Lock.swift */; };
 		249B84CD2137C64D001C009A /* Reactivity+Nil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 249B84CC2137C64D001C009A /* Reactivity+Nil.swift */; };
 		OBJ_240 /* c-atomics.c in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_209 /* c-atomics.c */; };
@@ -520,7 +520,7 @@
 		249B84C02136DDB5001C009A /* RemoteValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteValue.swift; sourceTree = "<group>"; };
 		249B84C22136DE0B001C009A /* Reactivity+Change.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reactivity+Change.swift"; sourceTree = "<group>"; };
 		249B84C42136DE5B001C009A /* Thread.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Thread.swift; sourceTree = "<group>"; };
-		249B84C82136E2CE001C009A /* BindableCollectoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindableCollectoin.swift; sourceTree = "<group>"; };
+		249B84C82136E2CE001C009A /* BindableCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindableCollection.swift; sourceTree = "<group>"; };
 		249B84CA2136E502001C009A /* Lock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lock.swift; sourceTree = "<group>"; };
 		249B84CC2137C64D001C009A /* Reactivity+Nil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Reactivity+Nil.swift"; sourceTree = "<group>"; };
 		OBJ_10 /* AnalyticsCollector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsCollector.swift; sourceTree = "<group>"; };
@@ -1290,7 +1290,7 @@
 				249B84C02136DDB5001C009A /* RemoteValue.swift */,
 				249B84C22136DE0B001C009A /* Reactivity+Change.swift */,
 				249B84C42136DE5B001C009A /* Thread.swift */,
-				249B84C82136E2CE001C009A /* BindableCollectoin.swift */,
+				249B84C82136E2CE001C009A /* BindableCollection.swift */,
 				249B84CC2137C64D001C009A /* Reactivity+Nil.swift */,
 				2461C22B2138B82A0077FA7A /* Bindings+Codable.swift */,
 			);
@@ -2084,7 +2084,7 @@
 				OBJ_463 /* Reactive+Optional.swift in Sources */,
 				OBJ_464 /* Reactivity+KeyPaths.swift in Sources */,
 				OBJ_465 /* ReadStream.swift in Sources */,
-				249B84C92136E2CE001C009A /* BindableCollectoin.swift in Sources */,
+				249B84C92136E2CE001C009A /* BindableCollection.swift in Sources */,
 				OBJ_466 /* AsyncService.swift in Sources */,
 				OBJ_467 /* Services.swift in Sources */,
 				OBJ_468 /* SyncService.swift in Sources */,
