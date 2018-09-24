@@ -20,7 +20,7 @@ extension RichText {
         for attribute in self.textAttributes {
             attributedString.addAttributes(
                 attribute.foundationAttributes,
-                range: NSRange(location: attribute.from, length: attribute.to - attribute.from)
+                range: NSRange(location: attribute.from, length: attribute.to - attribute.from + 1) // Inclusive to
             )
         }
         

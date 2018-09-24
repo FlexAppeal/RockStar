@@ -189,8 +189,6 @@ public struct RichText: ExpressibleByStringLiteral {
     }
     
     public mutating func apply(font: TextFont, inRange range: Range<Int>? = nil) {
-        let range = range ?? 0..<self.string.count &- 1
-        
         self.apply(attribute: .font(font), inRange: range)
     }
 }
