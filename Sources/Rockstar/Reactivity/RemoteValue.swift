@@ -7,13 +7,12 @@ fileprivate enum ExternalState<T> {
     case future(Future<T>)
 }
 
-
 /// A value that is linked to the result of a function call such as an API call
 /// where the result is not readily available.
-public final class ExternalValue<T>: AnyBinding<T?> {
+public class ExternalValue<T>: AnyBinding<T?> {
     public typealias LoadFunction = () -> Future<T>
     
-    private var state: ExternalState<T>
+    fileprivate var state: ExternalState<T>
     private let load: LoadFunction
     
     /// Should only be used if you're explicitly interested in the value _now_
@@ -40,11 +39,11 @@ public final class ExternalValue<T>: AnyBinding<T?> {
         switch state {
         case .available(let value):
             return Future(result: value)
-        case .preserved(let current, _):
+        case .preserved(let current, let future):
             if let current = current {
                 return Future(result: current)
             } else {
-                return reload(invalidating: true)
+                return future
             }
         case .error(let error):
             return Future(error: error)
@@ -106,3 +105,18 @@ public final class ExternalValue<T>: AnyBinding<T?> {
     }
 }
 
+/// An ExternalValue of which yo can override the `current` state to circumvent needless API calls
+public final class MutableExternalValue<T>: ExternalValue<T> {
+    public override var current: T? {
+        get {
+            return super.current
+        }
+        set {
+            if let value = newValue {
+                self.state = .available(value)
+            } else {
+                self.state = .unavailable
+            }
+        }
+    }
+}
