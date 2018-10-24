@@ -18,6 +18,7 @@ public struct Future<FutureValue> {
         case promise(Promise<FutureValue>)
     }
 
+    var settings: PromiseSettings
     private let storage: Storage
     
     /// Indicates that the storage is not dependent on a Promise
@@ -45,15 +46,26 @@ public struct Future<FutureValue> {
     /// Creates a precompleted future with a failure state
     public init(error: Error) {
         self.storage = .concrete(.failure(error))
+        self.settings = .default
     }
     
     /// Creates a precompleted future with a successful state
     public init(result: FutureValue) {
         self.storage = .concrete(.success(result))
+        self.settings = .default
     }
     
     private init() {
         self.storage = .concrete(.cancelled)
+        self.settings = .default
+    }
+    
+    internal func makePromise<T>(ofType type: T.Type) -> Promise<T> {
+        return Promise(settings: self.settings)
+    }
+    
+    internal func makePromise() -> Promise<FutureValue> {
+        return makePromise(ofType: FutureValue.self)
     }
     
     /// A helper that will create a precompleted, cancelledm, future
@@ -64,6 +76,7 @@ public struct Future<FutureValue> {
     /// An internal function that creates a promise-linked future
     init(promise: Promise<FutureValue>) {
         self.storage = .promise(promise)
+        self.settings = promise.settings
     }
     
     /// Maps the successful result of this future into a new future type.
@@ -94,7 +107,7 @@ public struct Future<FutureValue> {
                 return Future<R>.cancelled
             }
         case .promise(let promise):
-            let newPromise = Promise<R>(onCancel: self.cancel)
+            let newPromise = self.makePromise(ofType: R.self)
             promise.registerCallback { result in
                 do {
                     switch result {
@@ -146,7 +159,7 @@ public struct Future<FutureValue> {
                 return Future<R>.cancelled
             }
         case .promise(let promise):
-            let newPromise = Promise<R>(onCancel: self.cancel)
+            let newPromise = self.makePromise(ofType: R.self)
             promise.future.then { value in
                 do {
                     try mapper(value).onCompletion(newPromise.fulfill)
@@ -332,7 +345,7 @@ public struct Future<FutureValue> {
     ///
     /// Successful states will be cascaded to the resulting future.
     public func errorMap(_ map: @escaping (Error) throws -> (Error)) -> Future<FutureValue> {
-        let promise = Promise<FutureValue>()
+        let promise = self.makePromise()
         
         self.then(promise.complete).catch { base in
             do {

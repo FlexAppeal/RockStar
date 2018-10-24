@@ -6,7 +6,7 @@ extension Future {
     /// This is especially useful for UIKit operations on iOS where the main thread
     /// is required for GUI changes.
     public func switchThread(to thread: AnyThread) -> Future<FutureValue> {
-        let promise = Promise<FutureValue>(onCancel: self.cancel)
+        let promise = self.makePromise()
         
         self.onCompletion { result in
             DispatchQueue.main.async {

@@ -15,6 +15,26 @@ public enum RockstarConfig {
     public static var threadSafeBindings = true
 }
 
+struct PromiseSettings {
+    /// Used for applying thread safety when requested
+    var lock: NSRecursiveLock?
+    
+    /// If the promise deinits without having a completed value whilst this value is `true`, the promise will fulfill itself as failed
+    ///
+    /// This specific property is not thread safe and should be changed directly after initialization
+    var failOnDeinit = false
+    
+    /// If the promise deinits without having a completed value whilst this value is `true`, the promise will fulfill itself as cancelled
+    ///
+    /// This specific property is not thread safe and should be changed directly after initialization
+    var cancelOnDeinit = true
+    
+    /// When set to true, all cancel requests will be ignored leaving the promise finalized state unaltered
+    var ignoreCancel = false
+    
+    static let `default` = PromiseSettings(lock: nil, failOnDeinit: false, cancelOnDeinit: true, ignoreCancel: false)
+}
+
 /// Promises are types that provide a single notification during their lifetime.
 ///
 /// After creating a promise, a `future` can be fabricated as a read-only API to this model where Promise itself is a write-only API to this model
@@ -37,16 +57,18 @@ public final class Promise<FutureValue> {
     /// This does not represent any final state, just the precense of one.
     public private(set) var isCompleted: Bool {
         get {
-            return lock.withLock {
+            return settings.lock.withLock {
                 return _finalized
             }
         }
         set {
-            lock.withLock {
+            settings.lock.withLock {
                 _finalized = newValue
             }
         }
     }
+    
+    internal var settings: PromiseSettings
     
     /// An internal detail that represents `isCompleted`.
     ///
@@ -62,13 +84,36 @@ public final class Promise<FutureValue> {
     /// If the promise deinits without having a completed value whilst this value is `true`, the promise will fulfill itself as failed
     ///
     /// This specific property is not thread safe and should be changed directly after initialization
-    public var failOnDeinit = true
+    var failOnDeinit: Bool {
+        get { return settings.failOnDeinit }
+        set {
+            settings.failOnDeinit = newValue
+            
+            if newValue {
+                cancelOnDeinit = false
+            }
+        }
+    }
+    
+    /// If the promise deinits without having a completed value whilst this value is `true`, the promise will fulfill itself as cancelled
+    ///
+    /// This specific property is not thread safe and should be changed directly after initialization
+    var cancelOnDeinit: Bool {
+        get { return settings.cancelOnDeinit }
+        set {
+            settings.cancelOnDeinit = newValue
+            
+            if newValue {
+                failOnDeinit = false
+            }
+        }
+    }
     
     /// When set to true, all cancel requests will be ignored leaving the promise finalized state unaltered
-    public var ignoreCancel = false
-    
-    /// Used for applying thread safety when requested
-    private let lock: NSRecursiveLock?
+    var ignoreCancel: Bool {
+        get { return settings.ignoreCancel }
+        set { settings.ignoreCancel = newValue }
+    }
     
     /// This closure is used to cancel the operation linked to this promise
     ///
@@ -82,8 +127,14 @@ public final class Promise<FutureValue> {
     private var callbacks = [FutureCallback<FutureValue>]()
     
     /// Creates a new promise. Allows overriding the thread safety for advanced users.
-    public init(threadSafe: Bool = RockstarConfig.threadSafePromises) {
-        self.lock = threadSafe ? .init() : nil
+    public convenience init(threadSafe: Bool = RockstarConfig.threadSafePromises) {
+        var settings = PromiseSettings.default
+        
+        if threadSafe {
+            settings.lock = NSRecursiveLock()
+        }
+        
+        self.init(settings: settings)
     }
     
     /// Creates a new promise with a cancel action. Allows overriding the thread safety for advanced users.
@@ -93,13 +144,17 @@ public final class Promise<FutureValue> {
         self.cancelAction = onCancel
     }
     
+    internal init(settings: PromiseSettings) {
+        self.settings = settings
+    }
+    
     /// Allows adding a cancel action after promie creation
     ///
     /// Cancel actions are useful for network related actions which allow closing the socket or ignoring the output related to this promise.
     ///
     /// Cancelling can help reduce performance impact of an now unneccesary operation
     public func onCancel(run: @escaping () -> ()) {
-        self.lock.withLock {
+        self.settings.lock.withLock {
             self.cancelAction = run
         }
     }
@@ -110,7 +165,7 @@ public final class Promise<FutureValue> {
     ///
     /// Otherwise, the callback will be called when the promise is finalized
     internal func registerCallback(_ callback: @escaping FutureCallback<FutureValue>) {
-        lock.withLock {
+        self.settings.lock.withLock {
             if let result = self.result {
                 callback(result)
             } else {
@@ -121,7 +176,7 @@ public final class Promise<FutureValue> {
     
     /// Used by promise's public functions to handle the
     private func triggerCallbacks(with result: Observation<FutureValue>) {
-        lock.withLock {
+        self.settings.lock.withLock {
             // A copy of callbacks is made first
             let callbacks = self.callbacks
             
@@ -175,6 +230,8 @@ public final class Promise<FutureValue> {
     deinit {
         if failOnDeinit {
             self.fail(NeverCompleted())
+        } else if cancelOnDeinit {
+            self.cancel()
         }
     }
 }

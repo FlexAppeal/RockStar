@@ -40,7 +40,7 @@ extension Future {
         _ timeout: RSTimeout,
         throwing error: Error = PromiseTimeout()
         ) -> Future<FutureValue> {
-        let promise = Promise<FutureValue>(onCancel: self.cancel)
+        let promise = self.makePromise()
         self.onCompletion(promise.fulfill)
         
         timeout.execute {
