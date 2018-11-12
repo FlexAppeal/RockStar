@@ -84,7 +84,7 @@ public final class Promise<FutureValue> {
     /// If the promise deinits without having a completed value whilst this value is `true`, the promise will fulfill itself as failed
     ///
     /// This specific property is not thread safe and should be changed directly after initialization
-    var failOnDeinit: Bool {
+    public var failOnDeinit: Bool {
         get { return settings.failOnDeinit }
         set {
             settings.failOnDeinit = newValue
@@ -98,7 +98,7 @@ public final class Promise<FutureValue> {
     /// If the promise deinits without having a completed value whilst this value is `true`, the promise will fulfill itself as cancelled
     ///
     /// This specific property is not thread safe and should be changed directly after initialization
-    var cancelOnDeinit: Bool {
+    public var cancelOnDeinit: Bool {
         get { return settings.cancelOnDeinit }
         set {
             settings.cancelOnDeinit = newValue
@@ -110,7 +110,7 @@ public final class Promise<FutureValue> {
     }
     
     /// When set to true, all cancel requests will be ignored leaving the promise finalized state unaltered
-    var ignoreCancel: Bool {
+    public var ignoreCancel: Bool {
         get { return settings.ignoreCancel }
         set { settings.ignoreCancel = newValue }
     }
