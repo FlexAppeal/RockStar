@@ -117,6 +117,8 @@ public final class MutableExternalValue<T>: ExternalValue<T> {
             } else {
                 self.state = .unavailable
             }
+            
+            self.writeStream.next(newValue)
         }
     }
 }

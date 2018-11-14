@@ -74,7 +74,7 @@ public class AnyBinding<Bound> {
         }
     }
     
-    private let writeStream = WriteStream<Bound>()
+    internal let writeStream = WriteStream<Bound>()
     
     /// A stream that emits only successful change notifications
     public var readStream: ReadStream<Bound> {
