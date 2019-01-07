@@ -59,7 +59,7 @@ extension Future: ExpressibleByNilLiteral where FutureValue: ExpressibleByNilLit
 }
 
 public func +=<F: FixedWidthInteger>(lhs: Binding<F>, rhs: F) {
-    return lhs.update(to: lhs.currentValue - rhs)
+    return lhs.update(to: lhs.currentValue + rhs)
 }
 
 public func -=<F: FixedWidthInteger>(lhs: Binding<F>, rhs: F) {
