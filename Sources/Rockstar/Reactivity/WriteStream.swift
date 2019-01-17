@@ -102,7 +102,7 @@ public final class WriteStream<FutureValue> {
         switch value {
         case .failure(let error): self.error(error)
         case .success(let value): self.next(value)
-        case .cancelled: self.write(.cancelled)
+        case .cancelled: self.cancel()
         }
     }
     
