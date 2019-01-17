@@ -148,16 +148,16 @@ public struct RichText: ExpressibleByStringLiteral {
     }
     
     public mutating func apply(attribute: RichTextAttribute, inRange range: Range<Int>? = nil) {
-        guard self.string.count >= 1 else {
+        guard self.string.utf16.count >= 1 else {
             return
         }
         
-        let range = range ?? 0..<self.string.count
+        let range = range ?? 0..<self.string.utf16.count
         
         assert(range.lowerBound >= 0, "The range starts at a negative offset")
         
         /// TODO: Fail gracefully?
-        assert(range.upperBound <= _string.count, "Range exceeds the RichText characters count")
+        assert(range.upperBound <= _string.utf16.count, "Range exceeds the RichText characters count")
         
         self.textAttributes.append(RangedRichTextAttributes(
             attribute: attribute,
