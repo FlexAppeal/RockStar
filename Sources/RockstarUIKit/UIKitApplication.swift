@@ -46,7 +46,7 @@ public final class UIKitApplication {
     }
 }
 
-public typealias UIApplicationLaunchOptions = [UIApplicationLaunchOptionsKey : Any]?
+public typealias UIApplicationLaunchOptions = [UIApplication.LaunchOptionsKey : Any]?
 
 internal final class _AppDelegate: UIResponder, UIApplicationDelegate {
     static let willFinishLaunching = Promise<UIApplication>()

@@ -36,7 +36,7 @@ extension NSAttributedString {
 }
 
 extension RangedRichTextAttributes {
-    var foundationAttributes: [NSAttributedStringKey: Any] {
+    var foundationAttributes: [NSAttributedString.Key: Any] {
         switch attribute {
         case .color(let color):
             return [

@@ -12,7 +12,7 @@ extension File {
             filename = name + ".jpeg"
         }
         
-        guard let data = UIImageJPEGRepresentation(image, quality) else { return nil }
+        guard let data = image.jpegData(compressionQuality: quality) else { return nil }
         
         return File(
             name: filename,
