@@ -15,23 +15,6 @@ extension Future: ExpressibleByBooleanLiteral where FutureValue == Bool {
     }
 }
 
-extension Binding: ExpressibleByIntegerLiteral where Bound: ExpressibleByIntegerLiteral {
-    public typealias IntegerLiteralType = Bound.IntegerLiteralType
-    
-    /// Creates a precompleted future using the initializer of the `FutureValue` type's Integer literal initializer
-    public convenience init(integerLiteral value: Bound.IntegerLiteralType) {
-        self.init(Bound(integerLiteral: value))
-    }
-}
-
-extension Binding: ExpressibleByBooleanLiteral where Bound == Bool {
-    public typealias BooleanLiteralType = Bool
-    
-    public convenience init(booleanLiteral value: Bool) {
-        self.init(value)
-    }
-}
-
 extension Future where FutureValue == Void {
     /// Returns an precompleted `Future<Void>`
     public static var done: Future<Void> {
