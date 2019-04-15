@@ -8,7 +8,7 @@ extension AnyBinding {
     /// Like all closures, operators are supported as a function.
     ///
     ///     var entities: [Element] = ...
-    ///     let index = Binding(0)
+    ///     let index = Binding<Int>(0)
     ///     let disableNextButton: ComputedBinding<Bool> = index.reduceMap(==, entities.count - 1)
     ///
     /// Operators are also useful for other smaller computational transformations.
@@ -34,7 +34,7 @@ extension AnyBinding {
     /// Like all closures, operators are supported as a function.
     ///
     ///     var entities: Binding<[Element]> = ...
-    ///     let index = Binding(0)
+    ///     let index = Binding<Int>(0)
     ///     let lastIndex = entities.map { $0.count - 1 }
     ///     let disableNextButton: ComputedBinding<Bool> = index.reduceMap(==, lastIndex)
     public func reduceMap<T, C>(_ function: @escaping (Bound, T) -> C, value: AnyBinding<T>) -> ComputedBinding<C> {

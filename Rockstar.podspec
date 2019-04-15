@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 APIs designed to leverage the existing ecosystems, providing swifty APIs to create faster and more robust apps.
                        DESC
 
-  s.swift_version = '4.1'
+  s.swift_version = '5.0'
   s.homepage         = 'https://github.com/RockStarSwift/RockStar'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'joannis' => 'joannis@orlandos.nl' }

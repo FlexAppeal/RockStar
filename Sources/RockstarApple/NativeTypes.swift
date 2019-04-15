@@ -51,7 +51,7 @@ extension RangedRichTextAttributes {
                 /// FIXME:
                 return [
                     .font: nativeFont,
-                    .underlineStyle: [] as NSUnderlineStyle
+                    .underlineStyle: NSUnderlineStyle.styleSingle
                 ]
             } else {
                 return [

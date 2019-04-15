@@ -147,7 +147,7 @@ public class AnyBinding<Bound> {
 /// Initially it will only be a wrapper around another value. Can be bound to other types and synchronize between many bindings.
 ///
 ///     let pages = [Page]()
-///     let pageIndex = Binding(0)
+///     let pageIndex = Binding<Int>(0)
 ///
 ///     // Changes the rendered page when the index changes
 ///     pageIndex.map { index in
@@ -191,7 +191,7 @@ public final class Binding<Bound>: AnyBinding<Bound> {
 /// Used with helpers to reduce state complexity and increase stability.
 ///
 ///     let pages = [Page]()
-///     let pageIndex = Binding(0)
+///     let pageIndex = Binding<Int>(0)
 ///
 ///     // Changes the rendered page when the index changes
 ///     pageIndex.map { index in
