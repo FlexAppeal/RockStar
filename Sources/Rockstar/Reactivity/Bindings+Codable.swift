@@ -2,7 +2,8 @@ import Foundation
 
 extension AnyBinding: Encodable where Bound: Encodable {
     public func encode(to encoder: Encoder) throws {
-        try self.bound.encode(to: encoder)
+        var container = try encoder.singleValueContainer()
+        try container.encode(bound)
     }
 }
 
