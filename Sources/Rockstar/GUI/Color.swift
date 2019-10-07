@@ -48,10 +48,10 @@ public struct Color {
     
     /// Creates a new Colour from a subset of floats with values in the 0.0-1.0 range
     public static func fromFloats(red: Float, green: Float, blue: Float, alpha: Float = 1.0) -> Color {
-        assert(red > 0 && red < 1, "Invalid floating point received for the red value")
-        assert(green > 0 && green < 1, "Invalid floating point received for the green value")
-        assert(blue > 0 && blue < 1, "Invalid floating point received for the blue value")
-        assert(alpha > 0 && alpha < 1, "Invalid floating point received for the alpha value")
+        assert(red > 0 && red <= 1, "Invalid floating point received for the red value")
+        assert(green > 0 && green <= 1, "Invalid floating point received for the green value")
+        assert(blue > 0 && blue <= 1, "Invalid floating point received for the blue value")
+        assert(alpha > 0 && alpha <= 1, "Invalid floating point received for the alpha value")
         
         let view = ByteView(
             red: UInt8(red * 255),
