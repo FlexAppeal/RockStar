@@ -57,7 +57,7 @@ public struct ContentResponse<C: ContentDecodable> {
                 throw ServiceNotFound()
             }
             
-            return decoder.decodeContent(C.self, from: e.body)
+            return decoder.decodeContent(C.self, from: response.body)
         } catch {
             return Future(error: error)
         }
