@@ -127,17 +127,19 @@ extension HTTPClient {
         from url: URLRepresentable,
         headers: HTTPHeaders
     ) -> Future<ContentResponse<C>> {
-        let request = HTTPRequest(
-            method: .get,
-            url: try url.makeURL(),
-            headers: headers,
-            body: HTTPBody()
-        )
-        
-        return wrapResponse(
-            self.request(request),
-            forRequest: request
-        )
+        return Future.do {
+            let request = HTTPRequest(
+                method: .get,
+                url: try url.makeURL(),
+                headers: headers,
+                body: HTTPBody()
+            )
+            
+            return self.wrapResponse(
+                self.request(request),
+                forRequest: request
+            )
+        }
     }
     
     public func put<Input: ContentEncodable, Output: ContentDecodable>(
@@ -158,7 +160,7 @@ extension HTTPClient {
                 body: body
             )
             
-            return wrapResponse(
+            return self.wrapResponse(
                 self.request(request),
                 forRequest: request
             )
@@ -183,7 +185,7 @@ extension HTTPClient {
                 body: body
             )
             
-            return wrapResponse(
+            return self.wrapResponse(
                 self.request(request),
                 forRequest: request
             )
@@ -207,7 +209,7 @@ extension HTTPClient {
                 body: body
             )
             
-            return wrapResponse(
+            return self.wrapResponse(
                 self.request(request),
                 forRequest: request
             )
@@ -219,17 +221,19 @@ extension HTTPClient {
         from url: URLRepresentable,
         headers: HTTPHeaders
     ) -> Future<ContentResponse<C>> {
-        let request = HTTPRequest(
-            method: .delete,
-            url: try url.makeURL(),
-            headers: headers,
-            body: HTTPBody()
-        )
-        
-        return wrapResponse(
-            self.request(request),
-            forRequest: request
-        )
+        return Future.do {
+            let request = HTTPRequest(
+                method: .delete,
+                url: try url.makeURL(),
+                headers: headers,
+                body: HTTPBody()
+            )
+            
+            return self.wrapResponse(
+                self.request(request),
+                forRequest: request
+            )
+        }
     }
     
     private func encode<C: ContentEncodable>(_ input: C) -> Future<HTTPBody> {
