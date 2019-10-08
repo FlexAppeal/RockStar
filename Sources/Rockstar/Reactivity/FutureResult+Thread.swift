@@ -9,7 +9,7 @@ extension Future {
         let promise = self.makePromise()
         
         self.onCompletion { result in
-            DispatchQueue.main.async {
+            thread.execute {
                 promise.fulfill(result)
             }
         }
@@ -28,7 +28,7 @@ extension ReadStream {
         let writeStream = WriteStream<FutureValue>()
         
         self.onCompletion { result in
-            DispatchQueue.main.async {
+            thread.execute {
                 writeStream.write(result)
             }
         }

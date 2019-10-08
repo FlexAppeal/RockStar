@@ -47,7 +47,8 @@ public protocol APIContent: Content {
 public protocol Model: Codable {}
 
 public struct ContentResponse<C: ContentDecodable> {
-    public let raw: HTTPResponse
+    public let request: HTTPRequest?
+    public let e: HTTPResponse
     
     public func decodeBody(to type: C.Type = C.self) -> Future<C> {
         do {
@@ -56,7 +57,7 @@ public struct ContentResponse<C: ContentDecodable> {
                 throw ServiceNotFound()
             }
             
-            return decoder.decodeContent(C.self, from: raw.body)
+            return decoder.decodeContent(C.self, from: e.body)
         } catch {
             return Future(error: error)
         }
