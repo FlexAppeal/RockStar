@@ -48,7 +48,7 @@ public protocol Model: Codable {}
 
 public struct ContentResponse<C: ContentDecodable> {
     public let request: HTTPRequest?
-    public let e: HTTPResponse
+    public let response: HTTPResponse
     
     public func decodeBody(to type: C.Type = C.self) -> Future<C> {
         do {
