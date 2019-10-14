@@ -1,3 +1,6 @@
+import Dispatch
+import Foundation
+
 /// Similar to the Promise in the Promise/Future relationship
 /// This is a write-only view into the Write/ReadStream relationship.
 ///
@@ -117,25 +120,37 @@ public final class WriteStream<FutureValue> {
     private func triggerCallbacks(with result: Observation<FutureValue>) {
         if isClosed { return }
         
-        let callbacks = self.callbacks
-        
-        if closeOnCancel, case .cancelled = result {
-            cancelAction?()
-            isClosed = true
-            self.callbacks = []
+        func execute() {
+            let callbacks = self.callbacks
+            
+            if closeOnCancel, case .cancelled = result {
+                cancelAction?()
+                isClosed = true
+                self.callbacks = []
+            }
+            
+            if closeOnError, case .failure = result {
+                isClosed = true
+                self.callbacks = []
+            }
+            
+            for callback in callbacks {
+                callback(result)
+            }
+            
+            if case .cancelled = result {
+                cancelAction?()
+            }
         }
         
-        if closeOnError, case .failure = result {
-            isClosed = true
-            self.callbacks = []
-        }
-        
-        for callback in callbacks {
-            callback(result)
-        }
-        
-        if case .cancelled = result {
-            cancelAction?()
+        if RockstarConfig.executeOnMainThread {
+            if Thread.current.isMainThread {
+                execute()
+            } else {
+                DispatchQueue.main.async(execute: execute)
+            }
+        } else {
+            execute()
         }
     }
     
