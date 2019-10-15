@@ -59,14 +59,10 @@ public final class Promise<FutureValue> {
     /// This does not represent any final state, just the precense of one.
     public private(set) var isCompleted: Bool {
         get {
-            return settings.lock.withLock {
-                return _finalized
-            }
+            return _finalized
         }
         set {
-            settings.lock.withLock {
-                _finalized = newValue
-            }
+            _finalized = newValue
         }
     }
     
@@ -178,8 +174,8 @@ public final class Promise<FutureValue> {
     
     /// Used by promise's public functions to handle the
     private func triggerCallbacks(with result: Observation<FutureValue>) {
-        self.settings.lock.withLock {
-            func execute() {
+        func execute() {
+            self.settings.lock.withLock {
                 // A copy of callbacks is made first
                 let callbacks = self.callbacks
                 
@@ -194,16 +190,16 @@ public final class Promise<FutureValue> {
                     callback(result)
                 }
             }
-            
-            if RockstarConfig.executeOnMainThread {
-                if Thread.current.isMainThread {
-                    execute()
-                } else {
-                    DispatchQueue.main.async(execute: execute)
-                }
-            } else {
+        }
+        
+        if RockstarConfig.executeOnMainThread {
+            if Thread.current.isMainThread {
                 execute()
+            } else {
+                DispatchQueue.main.async(execute: execute)
             }
+        } else {
+            execute()
         }
     }
     
