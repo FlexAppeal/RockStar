@@ -101,30 +101,13 @@ extension Array {
     public func asyncReduce<Value>(_ element: Value, _ function: @escaping (Value, Element) throws -> Future<Value>) -> Future<Value> {
         var iterator = self.makeIterator()
         var element = Future(result: element)
-        var cancelled = false
         
-        let promise = Promise<Value> {
-            cancelled = true
-        }
-        
-        func next() {
-            if cancelled {
-                return
-            }
-            
-            if let iterable = iterator.next() {
-                element = element.flatMap { element in
-                    let element = try function(element, iterable)
-                    
-                    return element
-                }.ifNotCancelled(run: next)
-            } else {
-                element.onCompletion(promise.fulfill)
+        while let iterable = iterator.next() {
+            element = element.flatMap { element in
+                return try function(element, iterable)
             }
         }
         
-        next()
-        
-        return promise.future
+        return element
     }
 }
