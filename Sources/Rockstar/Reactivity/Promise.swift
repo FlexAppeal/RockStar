@@ -174,7 +174,7 @@ public final class Promise<FutureValue> {
     ///
     /// Otherwise, the callback will be called when the promise is finalized
     internal func registerCallback(_ callback: @escaping FutureCallback<FutureValue>) {
-        promise.futureResult.whenComplete { result in
+        func complete() {
             switch result {
             case let .failure(error):
                 callback(.failure(error))
@@ -184,29 +184,29 @@ public final class Promise<FutureValue> {
                 callback(.cancelled)
             }
         }
+        
+        promise.futureResult.whenComplete { result in
+            if RockstarConfig.executeOnMainThread {
+                if Thread.current.isMainThread {
+                    complete()
+                } else {
+                    DispatchQueue.main.async(execute: complete)
+                }
+            } else {
+                complete()
+            }
+        }
     }
     
     /// Used by promise's public functions to handle the
     private func triggerCallbacks(with result: Observation<FutureValue>) {
-        func complete() {
-            switch result {
-            case .cancelled:
-                self.promise.succeed(.cancelled)
-            case let .failure(error):
-                self.promise.fail(error)
-            case let .success(result):
-                self.promise.succeed(.result(result))
-            }
-        }
-        
-        if RockstarConfig.executeOnMainThread {
-            if Thread.current.isMainThread {
-                complete()
-            } else {
-                DispatchQueue.main.async(execute: complete)
-            }
-        } else {
-            complete()
+        switch result {
+        case .cancelled:
+            self.promise.succeed(.cancelled)
+        case let .failure(error):
+            self.promise.fail(error)
+        case let .success(result):
+            self.promise.succeed(.result(result))
         }
     }
     
