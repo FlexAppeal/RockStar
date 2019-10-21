@@ -1,6 +1,0 @@
-framework module Rockstar {
-  umbrella header "Rockstar-umbrella.h"
-
-  export *
-  module * { export * }
-}

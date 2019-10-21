@@ -46,18 +46,18 @@ public struct Future<FutureValue> {
     /// Creates a precompleted future with a failure state
     public init(error: Error) {
         self.storage = .concrete(.failure(error))
-        self.settings = .default
+        self.settings = .default()
     }
     
     /// Creates a precompleted future with a successful state
     public init(result: FutureValue) {
         self.storage = .concrete(.success(result))
-        self.settings = .default
+        self.settings = .default()
     }
     
     private init() {
         self.storage = .concrete(.cancelled)
-        self.settings = .default
+        self.settings = .default()
     }
     
     internal func makePromise<T>(ofType type: T.Type) -> Promise<T> {

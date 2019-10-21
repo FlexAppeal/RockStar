@@ -1,25 +1,32 @@
 import Foundation
+@_exported import NIO
+@_exported import Dispatch
+@_exported import NIOTransportServices
 
 // TODO: Promise examples
 
 /// Specified the default settings for promises statically
 public enum RockstarConfig {
-    /// Defines whether promises are threadSafe by default.
-    ///
-    /// This behaviour can always be overridden in the `Promise` initializer
-    public static var threadSafePromises = true
-    
     /// Defines whether bindings are threadSafe by default.
     ///
     /// This behaviour can always be overridden in the `Promise` initializer
     public static var threadSafeBindings = true
     
     public static var executeOnMainThread = true
+    
+    public static let eventLoopGroup: EventLoopGroup = {
+        if #available(iOS 12, *) {
+            return NIOTSEventLoopGroup()
+        } else {
+            return MultiThreadedEventLoopGroup(numberOfThreads: 1)
+        }
+    }()
+    
+    public static let eventLoop = eventLoopGroup.next()
 }
 
 struct PromiseSettings {
-    /// Used for applying thread safety when requested
-    var lock: NSRecursiveLock?
+    let eventLoop: EventLoop
     
     /// If the promise deinits without having a completed value whilst this value is `true`, the promise will fulfill itself as failed
     ///
@@ -34,7 +41,19 @@ struct PromiseSettings {
     /// When set to true, all cancel requests will be ignored leaving the promise finalized state unaltered
     var ignoreCancel = false
     
-    static let `default` = PromiseSettings(lock: nil, failOnDeinit: false, cancelOnDeinit: true, ignoreCancel: false)
+    static var `default`: () -> PromiseSettings = {
+        PromiseSettings(
+            eventLoop: RockstarConfig.eventLoop,
+            failOnDeinit: false,
+            cancelOnDeinit: true,
+            ignoreCancel: false
+        )
+    }
+}
+
+enum CancelResult<FutureValue> {
+    case result(FutureValue)
+    case cancelled
 }
 
 /// Promises are types that provide a single notification during their lifetime.
@@ -47,6 +66,8 @@ struct PromiseSettings {
 ///
 /// The cancelled optimization can become very useful in providing a more smooth and optimized experience.
 public final class Promise<FutureValue> {
+    let promise: EventLoopPromise<CancelResult<FutureValue>>
+    
     /// Creates a Future that is linked to the results of this Promise.
     ///
     /// Futures can be given away as handles to read the results of this Promise.
@@ -75,7 +96,6 @@ public final class Promise<FutureValue> {
     /// Without locks this would have a chance of crashing.
     private var _finalized = false {
         didSet {
-            self.callbacks = []
             self.cancelAction = nil
         }
     }
@@ -122,29 +142,21 @@ public final class Promise<FutureValue> {
     /// Contains the final result of this future
     private var result: Observation<FutureValue>?
     
-    /// Contains all closures that are awaiting the `result` for further action
-    private var callbacks = [FutureCallback<FutureValue>]()
-    
     /// Creates a new promise. Allows overriding the thread safety for advanced users.
-    public convenience init(threadSafe: Bool = RockstarConfig.threadSafePromises) {
-        var settings = PromiseSettings.default
-        
-        if threadSafe {
-            settings.lock = NSRecursiveLock()
-        }
-        
-        self.init(settings: settings)
+    public convenience init() {
+        self.init(settings: .default())
     }
     
     /// Creates a new promise with a cancel action. Allows overriding the thread safety for advanced users.
-    internal convenience init(threadSafe: Bool = RockstarConfig.threadSafePromises, onCancel: @escaping () -> ()) {
-        self.init(threadSafe: threadSafe)
+    internal convenience init(onCancel: @escaping () -> ()) {
+        self.init()
         
         self.cancelAction = onCancel
     }
     
     internal init(settings: PromiseSettings) {
         self.settings = settings
+        self.promise = settings.eventLoop.makePromise()
     }
     
     /// Allows adding a cancel action after promie creation
@@ -153,9 +165,7 @@ public final class Promise<FutureValue> {
     ///
     /// Cancelling can help reduce performance impact of an now unneccesary operation
     public func onCancel(run: @escaping () -> ()) {
-        self.settings.lock.withLock {
-            self.cancelAction = run
-        }
+        self.cancelAction = run
     }
     
     /// Used by future that allows adding handlers for promise results
@@ -164,47 +174,39 @@ public final class Promise<FutureValue> {
     ///
     /// Otherwise, the callback will be called when the promise is finalized
     internal func registerCallback(_ callback: @escaping FutureCallback<FutureValue>) {
-        self.settings.lock.withLock {
-            if let result = self.result {
-                callback(result)
-            } else {
-                self.callbacks.append(callback)
+        promise.futureResult.whenComplete { result in
+            switch result {
+            case let .failure(error):
+                callback(.failure(error))
+            case let .success(.result(result)):
+                callback(.success(result))
+            case .success(.cancelled):
+                callback(.cancelled)
             }
         }
     }
     
     /// Used by promise's public functions to handle the
     private func triggerCallbacks(with result: Observation<FutureValue>) {
-        // A copy of callbacks is made first
-        let lock = self.settings.lock
-        let callbacks = lock.withLock { self.callbacks }
-        let didDeinit = self.didDeinit
-        
-        func execute() {
-            lock.withLock {
-                if !didDeinit {
-                    // Is completed will remove the callbacks
-                    // This way the futures won't indefinitely retain the promise (and vice-versa)
-                    // Preventing memory leaks
-                    self.isCompleted = true
-                    self.result = result
-                }
-                
-                // Callbacks are triggered after Promise's state is set so the closures can read details from the future/promise
-                for callback in callbacks {
-                    callback(result)
-                }
+        func complete() {
+            switch result {
+            case .cancelled:
+                self.promise.succeed(.cancelled)
+            case let .failure(error):
+                self.promise.fail(error)
+            case let .success(result):
+                self.promise.succeed(.result(result))
             }
         }
         
         if RockstarConfig.executeOnMainThread {
             if Thread.current.isMainThread {
-                execute()
+                complete()
             } else {
-                DispatchQueue.main.async(execute: execute)
+                DispatchQueue.main.async(execute: complete)
             }
         } else {
-            execute()
+            complete()
         }
     }
     

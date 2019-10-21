@@ -12,12 +12,13 @@ var package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-nio.git", from: "1.9.1"),
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.0.0"),
+        .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "1.0.0"),
     ],
     targets: [
         .target(
             name: "Rockstar",
-            dependencies: []),
+            dependencies: ["NIO", "NIOTransportServices"]),
         .target(
             name: "RockstarCrypto",
             dependencies: ["Rockstar"]),
@@ -40,13 +41,11 @@ package.products.append(
     )
 )
 
-#if canImport(UIKit)
 package.targets.append(
     .target(
         name: "RockstarUIKit",
         dependencies: ["Rockstar", "RockstarApple"]
     )
 )
-#endif
 
 /// Texture when it has a package.swift

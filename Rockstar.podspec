@@ -25,6 +25,8 @@ APIs designed to leverage the existing ecosystems, providing swifty APIs to crea
   s.ios.deployment_target   = '10.0'
 
   s.subspec 'RockstarCore' do |sp|
+    sp.dependency 'SwiftNIO'
+    sp.dependency 'SwiftNIOTransportServices'
     sp.source_files     = 'Sources/Rockstar/**/*'
   end
   
@@ -39,13 +41,5 @@ APIs designed to leverage the existing ecosystems, providing swifty APIs to crea
     sp.source_files  = 'Sources/RockstarTexture/**/*'
   end
 
-  s.subspec 'RockstarNIO' do |sp|
-    sp.ios.deployment_target = '11.0'
-
-    sp.dependency 'SwiftNIO'
-    sp.dependency 'SwiftNIOTransportServices'
-    sp.dependency 'SwiftNIOWebSocket'
-
-    sp.source_files  = 'Sources/RockstarNIO/**/*'
-  end
+  s.dependency 'SwiftNIO'
 end
