@@ -1,4 +1,4 @@
 module CNIOSHA1 {
-    umbrella "/Users/joannisorlandos/Projects/Rockstar/.build/checkouts/swift-nio.git--6700915045182984639/Sources/CNIOSHA1/include"
+    umbrella "/Volumes/Continaer2/Projects/Rockstar/.build/checkouts/swift-nio/Sources/CNIOSHA1/include"
     export *
 }

@@ -277,7 +277,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Rockstar_Example/Pods-Rockstar_Example-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Rockstar_Example/Pods-Rockstar_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Rockstar/Rockstar.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -286,7 +286,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Rockstar_Example/Pods-Rockstar_Example-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Rockstar_Example/Pods-Rockstar_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8280F4AD3A63D5A131E8772D /* [CP] Check Pods Manifest.lock */ = {

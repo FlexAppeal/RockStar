@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "summary": "Swifty APIs for creating clean apps",
   "description": "APIs designed to leverage the existing ecosystems, providing swifty APIs to create faster and more robust apps.",
-  "swift_version": "4.1",
+  "swift_versions": "5.0",
   "homepage": "https://github.com/RockStarSwift/RockStar",
   "license": {
     "type": "MIT",
@@ -57,5 +57,6 @@
       },
       "source_files": "Sources/RockstarNIO/**/*"
     }
-  ]
+  ],
+  "swift_version": "5.0"
 }

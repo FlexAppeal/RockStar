@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:4.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -27,89 +27,26 @@ var package = Package(
     ]
 )
 
-#if os(Linux)
-    package.targets.append(
-        .target(
-            name: "RockstarNIO",
-            dependencies: ["NIO", "Rockstar"]
-        )
+package.targets.append(
+    .target(
+        name: "RockstarApple",
+        dependencies: ["Rockstar"]
     )
-    package.dependencies.append(
-        .package(url: "https://github.com/apple/swift-nio-ssl.git", from: "1.2.0")
+)
+package.products.append(
+    .library(
+        name: "RockstarApple",
+        targets: ["RockstarApple"]
     )
-    package.products.append(
-        .library(
-            name: "RockstarNIO",
-            targets: ["RockstarNIO", "NIOOpenSSL"]
-        )
+)
+
+#if canImport(UIKit)
+package.targets.append(
+    .target(
+        name: "RockstarUIKit",
+        dependencies: ["Rockstar", "RockstarApple"]
     )
+)
 #endif
 
-#if os(macOS)
-    package.targets.append(
-        .target(
-            name: "RockstarApple",
-            dependencies: ["Rockstar"]
-        )
-    )
-    package.products.append(
-        .library(
-            name: "RockstarNIO",
-            targets: ["RockstarNIO"]
-        )
-    )
-    package.products.append(
-        .library(
-            name: "RockstarApple",
-            targets: ["RockstarApple"]
-        )
-    )
-
-    package.targets.append(
-        .target(
-            name: "RockstarAppKit",
-            dependencies: ["Rockstar", "RockstarApple"]
-        )
-    )
-    package.products.append(
-        .library(
-            name: "RockstarAppKit",
-            targets: ["RockstarAppKit"]
-        )
-    )
-
-    var NIOdeps: [Target.Dependency] = ["NIO", "Rockstar"]
-
-    if #available(iOS 12.0, macOS 10.14, *) {
-        package.dependencies.append(
-            .package(url: "https://github.com/apple/swift-nio-transport-services.git", from: "0.2.0")
-        )
-        NIOdeps.append("NIOTransportServices")
-    } else {
-        package.dependencies.append(
-            .package(url: "https://github.com/apple/swift-nio-ssl.git", from: "1.2.0")
-        )
-        NIOdeps.append("NIOOpenSSL")
-    }
-
-    package.targets.append(
-        .target(
-            name: "RockstarNIO",
-            dependencies: NIOdeps
-        )
-    )
-    package.targets.append(
-        .target(
-            name: "RockstarUIKit",
-            dependencies: ["Rockstar", "RockstarApple"]
-        )
-    )
-    package.products.append(
-        .library(
-            name: "RockstarUIKit",
-            targets: ["RockstarUIKit"]
-        )
-    )
-
-    /// Texture when it has a package.swift
-#endif
+/// Texture when it has a package.swift
