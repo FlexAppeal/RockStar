@@ -176,11 +176,12 @@ public final class Promise<FutureValue> {
     /// Used by promise's public functions to handle the
     private func triggerCallbacks(with result: Observation<FutureValue>) {
         // A copy of callbacks is made first
-        let callbacks = self.settings.lock.withLock { self.callbacks }
+        let lock = self.settings.lock
+        let callbacks = lock.withLock { self.callbacks }
         let didDeinit = self.didDeinit
         
         func execute() {
-            self.settings.lock.withLock {
+            lock.withLock {
                 if !didDeinit {
                     // Is completed will remove the callbacks
                     // This way the futures won't indefinitely retain the promise (and vice-versa)
