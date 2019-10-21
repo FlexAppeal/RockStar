@@ -55,6 +55,7 @@ public final class WriteStream<FutureValue> {
     
     /// If `true`, this stream cannot emit more information
     public private(set) var isClosed = false
+    private var didDeinit = false
     
     /// Creates a new WriteStream
     public init() {}
@@ -120,18 +121,22 @@ public final class WriteStream<FutureValue> {
     private func triggerCallbacks(with result: Observation<FutureValue>) {
         if isClosed { return }
         
+        let didDeinit = self.didDeinit
+        let callbacks = self.callbacks
+        
         func execute() {
-            let callbacks = self.callbacks
-            
-            if closeOnCancel, case .cancelled = result {
-                cancelAction?()
-                isClosed = true
-                self.callbacks = []
-            }
-            
-            if closeOnError, case .failure = result {
-                isClosed = true
-                self.callbacks = []
+            if !didDeinit {
+                if closeOnCancel, case .cancelled = result {
+                    self.cancelAction?()
+                    self.isClosed = true
+                    self.callbacks = []
+                    return
+                }
+                
+                if closeOnError, case .failure = result {
+                    self.isClosed = true
+                    self.callbacks = []
+                }
             }
             
             for callback in callbacks {
@@ -155,6 +160,8 @@ public final class WriteStream<FutureValue> {
     }
     
     deinit {
+        self.didDeinit = true
+        
         if cancelOnDeinit {
             self.cancel()
         }

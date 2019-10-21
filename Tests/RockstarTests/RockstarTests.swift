@@ -1,5 +1,14 @@
 import XCTest
-@testable import Rockstar
+import Rockstar
+
+@propertyWrapper
+final class Reference<T> {
+    var wrappedValue: T
+    
+    init(_ value: T) {
+        self.wrappedValue = value
+    }
+}
 
 final class RockstarTests: XCTestCase {
     func testHexColor() {
@@ -37,6 +46,20 @@ final class RockstarTests: XCTestCase {
         
         XCTAssertNotNil(Color(hex: "AAAAAA"))
         XCTAssertNotNil(Color(hex: "aaaaaa"))
+    }
+    
+    func testPromiseDeinit() {
+        var promise: Promise<Bool>? = Promise<Bool>()
+        let done = Reference(false)
+        
+        promise?.future.always {
+            done.wrappedValue = true
+        }
+        
+        promise = nil
+        
+        sleep(1)
+        XCTAssert(done.wrappedValue)
     }
     
     static var allTests = [
