@@ -66,6 +66,7 @@ public final class Promise<FutureValue> {
         }
     }
     
+    private var executeOnMainThread = RockstarConfig.executeOnMainThread
     private var didDeinit = false
     internal var settings: PromiseSettings
     
@@ -197,7 +198,7 @@ public final class Promise<FutureValue> {
             }
         }
         
-        if RockstarConfig.executeOnMainThread {
+        if executeOnMainThread {
             if Thread.current.isMainThread {
                 execute()
             } else {
@@ -243,15 +244,17 @@ public final class Promise<FutureValue> {
     }
     
     deinit {
-        self.didDeinit = true
-        
-        if failOnDeinit {
-            self.fail(NeverCompleted())
-        } else if cancelOnDeinit {
-            self.cancel()
+        withExtendedLifetime(self) {
+            self.didDeinit = true
+            self.executeOnMainThread = false
+            
+            if failOnDeinit {
+                self.fail(NeverCompleted())
+            } else if cancelOnDeinit {
+                self.cancel()
+            }
         }
     }
 }
 
 fileprivate struct NeverCompleted: Error {}
-
