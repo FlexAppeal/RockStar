@@ -174,7 +174,7 @@ public final class Promise<FutureValue> {
     ///
     /// Otherwise, the callback will be called when the promise is finalized
     internal func registerCallback(_ callback: @escaping FutureCallback<FutureValue>) {
-        func complete() {
+        func complete(with result: Result<CancelResult<FutureValue>, Error>) {
             switch result {
             case let .failure(error):
                 callback(.failure(error))
@@ -188,12 +188,14 @@ public final class Promise<FutureValue> {
         promise.futureResult.whenComplete { result in
             if RockstarConfig.executeOnMainThread {
                 if Thread.current.isMainThread {
-                    complete()
+                    complete(with: result)
                 } else {
-                    DispatchQueue.main.async(execute: complete)
+                    DispatchQueue.main.async {
+                        complete(with: result)
+                    }
                 }
             } else {
-                complete()
+                complete(with: result)
             }
         }
     }
