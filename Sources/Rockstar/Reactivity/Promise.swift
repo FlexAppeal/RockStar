@@ -21,20 +21,10 @@ struct PromiseSettings {
     /// Used for applying thread safety when requested
     var lock: NSRecursiveLock?
     
-    /// If the promise deinits without having a completed value whilst this value is `true`, the promise will fulfill itself as failed
-    ///
-    /// This specific property is not thread safe and should be changed directly after initialization
-    var failOnDeinit = false
-    
-    /// If the promise deinits without having a completed value whilst this value is `true`, the promise will fulfill itself as cancelled
-    ///
-    /// This specific property is not thread safe and should be changed directly after initialization
-    var cancelOnDeinit = true
-    
     /// When set to true, all cancel requests will be ignored leaving the promise finalized state unaltered
     var ignoreCancel = false
     
-    static let `default` = PromiseSettings(lock: nil, failOnDeinit: false, cancelOnDeinit: true, ignoreCancel: false)
+    static let `default` = PromiseSettings(lock: nil, ignoreCancel: false)
 }
 
 /// Promises are types that provide a single notification during their lifetime.
@@ -67,7 +57,6 @@ public final class Promise<FutureValue> {
     }
     
     private var executeOnMainThread = RockstarConfig.executeOnMainThread
-    private var didDeinit = false
     internal var settings: PromiseSettings
     
     /// An internal detail that represents `isCompleted`.
@@ -78,34 +67,6 @@ public final class Promise<FutureValue> {
         didSet {
             self.callbacks = []
             self.cancelAction = nil
-        }
-    }
-    
-    /// If the promise deinits without having a completed value whilst this value is `true`, the promise will fulfill itself as failed
-    ///
-    /// This specific property is not thread safe and should be changed directly after initialization
-    public var failOnDeinit: Bool {
-        get { return settings.failOnDeinit }
-        set {
-            settings.failOnDeinit = newValue
-            
-            if newValue {
-                cancelOnDeinit = false
-            }
-        }
-    }
-    
-    /// If the promise deinits without having a completed value whilst this value is `true`, the promise will fulfill itself as cancelled
-    ///
-    /// This specific property is not thread safe and should be changed directly after initialization
-    public var cancelOnDeinit: Bool {
-        get { return settings.cancelOnDeinit }
-        set {
-            settings.cancelOnDeinit = newValue
-            
-            if newValue {
-                failOnDeinit = false
-            }
         }
     }
     
@@ -179,17 +140,14 @@ public final class Promise<FutureValue> {
         // A copy of callbacks is made first
         let lock = self.settings.lock
         let callbacks = lock.withLock { self.callbacks }
-        let didDeinit = self.didDeinit
         
         func execute() {
             lock.withLock {
-                if !didDeinit {
-                    // Is completed will remove the callbacks
-                    // This way the futures won't indefinitely retain the promise (and vice-versa)
-                    // Preventing memory leaks
-                    self.isCompleted = true
-                    self.result = result
-                }
+                // Is completed will remove the callbacks
+                // This way the futures won't indefinitely retain the promise (and vice-versa)
+                // Preventing memory leaks
+                self.isCompleted = true
+                self.result = result
                 
                 // Callbacks are triggered after Promise's state is set so the closures can read details from the future/promise
                 for callback in callbacks {
@@ -241,19 +199,6 @@ public final class Promise<FutureValue> {
         if isCompleted { return }
         
         triggerCallbacks(with: result)
-    }
-    
-    deinit {
-        withExtendedLifetime(self) {
-            self.didDeinit = true
-            self.executeOnMainThread = false
-            
-            if failOnDeinit {
-                self.fail(NeverCompleted())
-            } else if cancelOnDeinit {
-                self.cancel()
-            }
-        }
     }
 }
 

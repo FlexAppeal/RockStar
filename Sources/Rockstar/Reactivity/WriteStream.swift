@@ -33,11 +33,6 @@ public final class WriteStream<FutureValue> {
     var result: Observation<FutureValue>?
     var callbacks = [FutureCallback<FutureValue>]()
     
-    /// If `true`, emits a cancel notification when this stream is deinitialized
-    ///
-    /// Defaults to `false`
-    public var cancelOnDeinit = false
-    
     /// If `true`, halts this Stream permanently after an error has been emitted
     ///
     /// Defaults to `false`
@@ -55,7 +50,6 @@ public final class WriteStream<FutureValue> {
     
     /// If `true`, this stream cannot emit more information
     public private(set) var isClosed = false
-    private var didDeinit = false
     
     /// Creates a new WriteStream
     public init() {}
@@ -121,22 +115,19 @@ public final class WriteStream<FutureValue> {
     private func triggerCallbacks(with result: Observation<FutureValue>) {
         if isClosed { return }
         
-        let didDeinit = self.didDeinit
         let callbacks = self.callbacks
         
         func execute() {
-            if !didDeinit {
-                if closeOnCancel, case .cancelled = result {
-                    self.cancelAction?()
-                    self.isClosed = true
-                    self.callbacks = []
-                    return
-                }
-                
-                if closeOnError, case .failure = result {
-                    self.isClosed = true
-                    self.callbacks = []
-                }
+            if closeOnCancel, case .cancelled = result {
+                self.cancelAction?()
+                self.isClosed = true
+                self.callbacks = []
+                return
+            }
+            
+            if closeOnError, case .failure = result {
+                self.isClosed = true
+                self.callbacks = []
             }
             
             for callback in callbacks {
@@ -156,14 +147,6 @@ public final class WriteStream<FutureValue> {
             }
         } else {
             execute()
-        }
-    }
-    
-    deinit {
-        self.didDeinit = true
-        
-        if cancelOnDeinit {
-            self.cancel()
         }
     }
 }
