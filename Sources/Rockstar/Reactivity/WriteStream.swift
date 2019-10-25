@@ -115,38 +115,24 @@ public final class WriteStream<FutureValue> {
     private func triggerCallbacks(with result: Observation<FutureValue>) {
         if isClosed { return }
         
-        let callbacks = self.callbacks
-        
-        func execute() {
-            if closeOnCancel, case .cancelled = result {
-                self.cancelAction?()
-                self.isClosed = true
-                self.callbacks = []
-                return
-            }
-            
-            if closeOnError, case .failure = result {
-                self.isClosed = true
-                self.callbacks = []
-            }
-            
-            for callback in callbacks {
-                callback(result)
-            }
-            
-            if case .cancelled = result {
-                cancelAction?()
-            }
+        if closeOnCancel, case .cancelled = result {
+            self.cancelAction?()
+            self.isClosed = true
+            self.callbacks = []
+            return
         }
         
-        if RockstarConfig.executeOnMainThread {
-            if Thread.current.isMainThread {
-                execute()
-            } else {
-                DispatchQueue.main.async(execute: execute)
-            }
-        } else {
-            execute()
+        if closeOnError, case .failure = result {
+            self.isClosed = true
+            self.callbacks = []
+        }
+        
+            for callback in self.callbacks {
+            callback(result)
+        }
+        
+        if case .cancelled = result {
+            cancelAction?()
         }
     }
 }

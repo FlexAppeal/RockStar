@@ -13,8 +13,6 @@ public enum RockstarConfig {
     ///
     /// This behaviour can always be overridden in the `Promise` initializer
     public static var threadSafeBindings = true
-    
-    public static var executeOnMainThread = true
 }
 
 struct PromiseSettings {
@@ -56,7 +54,6 @@ public final class Promise<FutureValue> {
         }
     }
     
-    private var executeOnMainThread = RockstarConfig.executeOnMainThread
     internal var settings: PromiseSettings
     
     /// An internal detail that represents `isCompleted`.
@@ -137,33 +134,17 @@ public final class Promise<FutureValue> {
     
     /// Used by promise's public functions to handle the
     private func triggerCallbacks(with result: Observation<FutureValue>) {
-        // A copy of callbacks is made first
-        let lock = self.settings.lock
-        let callbacks = lock.withLock { self.callbacks }
-        
-        func execute() {
-            lock.withLock {
-                // Is completed will remove the callbacks
-                // This way the futures won't indefinitely retain the promise (and vice-versa)
-                // Preventing memory leaks
-                self.isCompleted = true
-                self.result = result
-                
-                // Callbacks are triggered after Promise's state is set so the closures can read details from the future/promise
-                for callback in callbacks {
-                    callback(result)
-                }
+        self.settings.lock.withLock {
+            // Is completed will remove the callbacks
+            // This way the futures won't indefinitely retain the promise (and vice-versa)
+            // Preventing memory leaks
+            self.isCompleted = true
+            self.result = result
+            
+            // Callbacks are triggered after Promise's state is set so the closures can read details from the future/promise
+            for callback in self.callbacks {
+                callback(result)
             }
-        }
-        
-        if executeOnMainThread {
-            if Thread.current.isMainThread {
-                execute()
-            } else {
-                DispatchQueue.main.async(execute: execute)
-            }
-        } else {
-            execute()
         }
     }
     
