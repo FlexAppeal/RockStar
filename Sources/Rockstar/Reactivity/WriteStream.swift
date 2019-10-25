@@ -114,6 +114,7 @@ public final class WriteStream<FutureValue> {
     /// Used to trigger callbacks and possible close logic when writing a value
     private func triggerCallbacks(with result: Observation<FutureValue>) {
         if isClosed { return }
+        let callbacks = self.callbacks
         
         if closeOnCancel, case .cancelled = result {
             self.cancelAction?()
@@ -127,7 +128,7 @@ public final class WriteStream<FutureValue> {
             self.callbacks = []
         }
         
-            for callback in self.callbacks {
+        for callback in callbacks {
             callback(result)
         }
         

@@ -135,6 +135,8 @@ public final class Promise<FutureValue> {
     /// Used by promise's public functions to handle the
     private func triggerCallbacks(with result: Observation<FutureValue>) {
         self.settings.lock.withLock {
+            let callbacks = self.callbacks
+            
             // Is completed will remove the callbacks
             // This way the futures won't indefinitely retain the promise (and vice-versa)
             // Preventing memory leaks
@@ -142,7 +144,7 @@ public final class Promise<FutureValue> {
             self.result = result
             
             // Callbacks are triggered after Promise's state is set so the closures can read details from the future/promise
-            for callback in self.callbacks {
+            for callback in callbacks {
                 callback(result)
             }
         }
