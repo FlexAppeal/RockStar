@@ -93,12 +93,21 @@ public struct HTTPBody {
         self.storage = .data(data)
     }
     
-    var data: Data? {
+    public var data: Data? {
         switch storage {
         case .none:
             return nil
         case .data(let data):
             return data
+        }
+    }
+    
+    public func makeData() -> Future<Data?> {
+        switch storage {
+        case .none:
+            return nil
+        case .data(let data):
+            return Future(result: data)
         }
     }
 }
