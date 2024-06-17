@@ -97,10 +97,10 @@ extension JSONDecoder: ContentDecoder {
         func decode(_ storage: HTTPBody.Storage) -> Future<D> {
             do {
                 switch storage {
-                case .none:
-                    return Future(result: try self.decode(D.self, from: Data()))
                 case .data(let data):
                     return Future(result: try self.decode(D.self, from: data))
+                default:
+                    return Future(result: try self.decode(D.self, from: Data()))
                 }
             } catch {
                 return Future(error: error)
