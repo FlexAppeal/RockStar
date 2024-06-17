@@ -75,7 +75,6 @@ extension URLSessionConfiguration: Service {}
 extension URLSession: HTTPClient {
     public func request(_ request: HTTPRequest) -> Future<HTTPResponse> {
         let urlRequest = request.makeURLRequest()
-        
         return withBody(request.body.storage, on: urlRequest).flatMap { request in
             let promise = Promise<HTTPResponse>()
             
@@ -99,6 +98,9 @@ extension URLSession: HTTPClient {
         var request = request
         
         switch storage {
+        case .stream(let stream):
+            request.httpBodyStream = stream
+            return Future(result: request)
         case .data(let data):
             request.httpBody = data
             return Future(result: request)

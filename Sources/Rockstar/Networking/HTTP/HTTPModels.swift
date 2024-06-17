@@ -72,15 +72,9 @@ public struct HTTPResponse {
 
 public struct HTTPBody {
     internal indirect enum Storage {
+        case stream(InputStream)
         case data(Data)
         case none
-        
-        public var count: Int {
-            switch self {
-            case .data(let data): return data.count
-            case .none: return 0
-            }
-        }
     }
     
     internal let storage: Storage
@@ -93,21 +87,25 @@ public struct HTTPBody {
         self.storage = .data(data)
     }
     
+    public init(stream: InputStream) {
+        self.storage = .stream(stream)
+    }
+    
     public var data: Data? {
         switch storage {
-        case .none:
-            return nil
         case .data(let data):
             return data
+        default:
+            return nil
         }
     }
     
     public func makeData() -> Future<Data?> {
         switch storage {
-        case .none:
-            return nil
         case .data(let data):
             return Future(result: data)
+        default:
+            return nil
         }
     }
 }
